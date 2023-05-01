@@ -1,0 +1,10 @@
+/build
+/release
+/staging
+/debug
+
+google-services.json
+/debug/google-services.json
+/staging/google-services.json
+
+/src/main/assets/
