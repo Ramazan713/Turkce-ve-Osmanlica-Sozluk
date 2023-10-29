@@ -7,7 +7,7 @@ import com.masterplus.trdictionary.core.domain.constants.K
 import com.masterplus.trdictionary.core.domain.enums.CategoryEnum
 import com.masterplus.trdictionary.core.domain.enums.SubCategoryEnum
 import com.masterplus.trdictionary.features.word_detail.domain.repo.WordListDetailRepo
-import com.masterplus.trdictionary.features.word_detail.domain.model.WordCompletedInfo
+import com.masterplus.trdictionary.features.word_detail.domain.model.WordWithSimilar
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -17,7 +17,7 @@ class GetCategoryCompletedWordsPaging @Inject constructor(
     private val getCompletedInfo: GetCompletedWordInfo
 ) {
 
-    operator fun invoke(categoryEnum: CategoryEnum, subCategoryEnum: SubCategoryEnum, c: String?) : Flow<PagingData<WordCompletedInfo>>{
+    operator fun invoke(categoryEnum: CategoryEnum, subCategoryEnum: SubCategoryEnum, c: String?) : Flow<PagingData<WordWithSimilar>>{
         val config = PagingConfig(pageSize = K.wordsDetailPagerPageSize, enablePlaceholders = true,
             jumpThreshold = K.wordsDetailPagerJumpThreshold)
 

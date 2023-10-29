@@ -4,10 +4,10 @@ import com.masterplus.trdictionary.core.data.local.mapper.toSimpleResult
 import com.masterplus.trdictionary.core.domain.model.SimpleWordResult
 import com.masterplus.trdictionary.features.word_detail.data.mapper.toWordMeanings
 import com.masterplus.trdictionary.core.data.local.services.SingleWordDetailDao
-import com.masterplus.trdictionary.features.word_detail.domain.model.WordMeanings
+import com.masterplus.trdictionary.features.word_detail.domain.model.WordDetailMeanings
 import com.masterplus.trdictionary.features.word_detail.domain.repo.WordDetailRepo
-import com.masterplus.trdictionary.features.word_detail.data.mapper.toWordListInfoSimilarWords
-import com.masterplus.trdictionary.features.word_detail.domain.model.WordListInfoSimilarWords
+import com.masterplus.trdictionary.features.word_detail.data.mapper.toWordWithSimilar
+import com.masterplus.trdictionary.features.word_detail.domain.model.WordWithSimilarRelationModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -16,12 +16,12 @@ class WordDetailRepoImpl @Inject constructor(
     private val singleWordDetailDao: SingleWordDetailDao
 ): WordDetailRepo {
 
-    override fun getWordWithSimilarFlow(wordId: Int): Flow<WordListInfoSimilarWords?> {
+    override fun getWordWithSimilarFlow(wordId: Int): Flow<WordWithSimilarRelationModel?> {
         return singleWordDetailDao.getWordWithSimilarFlow(wordId)
-            .map { item->item?.toWordListInfoSimilarWords() }
+            .map { item->item?.toWordWithSimilar() }
     }
 
-    override suspend fun getWordMeaningsWithWordId(wordId: Int): WordMeanings? {
+    override suspend fun getWordMeaningsWithWordId(wordId: Int): WordDetailMeanings? {
         return singleWordDetailDao.getWordMeaningsByWordId(wordId)?.toWordMeanings()
     }
 
@@ -29,7 +29,7 @@ class WordDetailRepoImpl @Inject constructor(
         word: String,
         wordCount: Int,
         dictType: Int
-    ): WordMeanings? {
+    ): WordDetailMeanings? {
         return singleWordDetailDao.getWordExamplesByWordCount(word, dictType)?.toWordMeanings()
     }
 

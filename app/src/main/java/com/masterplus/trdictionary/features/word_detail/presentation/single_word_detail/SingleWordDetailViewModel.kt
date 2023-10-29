@@ -66,7 +66,7 @@ class SingleWordDetailViewModel @Inject constructor(
         loadDataJob?.cancel()
         loadDataJob = viewModelScope.launch {
             wordDetailUseCases.getCompletedWordFlow(wordId).collectLatest { word->
-                state = state.copy(wordModels = word?.allWordInfos ?: emptyList())
+                state = state.copy(allWords = word?.allWords ?: emptyList())
             }
         }
     }

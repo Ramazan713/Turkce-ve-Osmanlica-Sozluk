@@ -4,7 +4,7 @@ import androidx.paging.*
 import com.masterplus.trdictionary.core.data.local.entities.relations.SimpleWordResultRelation
 import com.masterplus.trdictionary.core.data.local.mapper.toSimpleResult
 import com.masterplus.trdictionary.core.domain.enums.ProverbIdiomEnum
-import com.masterplus.trdictionary.core.domain.enums.WordType
+import com.masterplus.trdictionary.core.domain.enums.DictType
 import com.masterplus.trdictionary.core.domain.model.SimpleWordResult
 import com.masterplus.trdictionary.core.data.local.services.WordListDao
 import com.masterplus.trdictionary.core.domain.enums.CategoryEnum
@@ -66,26 +66,26 @@ class WordListRepoImpl @Inject constructor(
             CategoryEnum.TrDict -> {
                 when(subCategoryEnum){
                     SubCategoryEnum.All -> {
-                        wordListDao.getWordsWithDictType(WordType.TR.dictId)
+                        wordListDao.getWordsWithDictType(DictType.TR.dictId)
                     }
                     SubCategoryEnum.Random -> {
-                        wordListDao.getWordsWithDictTypeRandomOrder(WordType.TR.dictId)
+                        wordListDao.getWordsWithDictTypeRandomOrder(DictType.TR.dictId)
                     }
                     SubCategoryEnum.Alphabetic -> {
-                        wordListDao.getAlphabeticWordsWithDictType(WordType.TR.dictId,c?:"a")
+                        wordListDao.getAlphabeticWordsWithDictType(DictType.TR.dictId,c?:"a")
                     }
                 }
             }
             CategoryEnum.OsmDict -> {
                 when(subCategoryEnum){
                     SubCategoryEnum.All -> {
-                        wordListDao.getWordsWithDictType(WordType.OSM.dictId)
+                        wordListDao.getWordsWithDictType(DictType.OSM.dictId)
                     }
                     SubCategoryEnum.Random -> {
-                        wordListDao.getWordsWithDictTypeRandomOrder(WordType.OSM.dictId)
+                        wordListDao.getWordsWithDictTypeRandomOrder(DictType.OSM.dictId)
                     }
                     SubCategoryEnum.Alphabetic -> {
-                        wordListDao.getAlphabeticWordsWithDictType(WordType.OSM.dictId,c?:"a")
+                        wordListDao.getAlphabeticWordsWithDictType(DictType.OSM.dictId,c?:"a")
                     }
                 }
             }

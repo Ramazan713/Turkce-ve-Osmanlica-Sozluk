@@ -1,15 +1,15 @@
 package com.masterplus.trdictionary.features.word_detail.data.repo
 
 import androidx.paging.*
+import com.masterplus.trdictionary.core.data.local.entities.relations.WordWithSimilarRelation
 import com.masterplus.trdictionary.core.domain.enums.CategoryEnum
 import com.masterplus.trdictionary.core.domain.enums.ProverbIdiomEnum
 import com.masterplus.trdictionary.core.domain.enums.SubCategoryEnum
-import com.masterplus.trdictionary.core.domain.enums.WordType
+import com.masterplus.trdictionary.core.domain.enums.DictType
 import com.masterplus.trdictionary.core.data.local.services.WordListDetailDao
+import com.masterplus.trdictionary.features.word_detail.data.mapper.toWordWithSimilar
+import com.masterplus.trdictionary.features.word_detail.domain.model.WordWithSimilarRelationModel
 import com.masterplus.trdictionary.features.word_detail.domain.repo.WordListDetailRepo
-import com.masterplus.trdictionary.core.data.local.entities.relations.WordListInfoSimilaritiesRelation
-import com.masterplus.trdictionary.features.word_detail.data.mapper.toWordListInfoSimilarWords
-import com.masterplus.trdictionary.features.word_detail.domain.model.WordListInfoSimilarWords
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -23,27 +23,27 @@ class WordListDetailRepoImpl @Inject constructor(
         subCategoryEnum: SubCategoryEnum,
         c: String?,
         pageConfig: PagingConfig
-    ): Flow<PagingData<WordListInfoSimilarWords>> {
+    ): Flow<PagingData<WordWithSimilarRelationModel>> {
         val pager = Pager(
             pageConfig,
             pagingSourceFactory = {getWordPagingSource(categoryEnum, subCategoryEnum, c)}
         )
-        return pager.flow.map { pagingData-> pagingData.map { it.toWordListInfoSimilarWords() } }
+        return pager.flow.map { pagingData-> pagingData.map { it.toWordWithSimilar() } }
     }
 
-    override fun getWordsByListId(listId: Int, pageConfig: PagingConfig): Flow<PagingData<WordListInfoSimilarWords>> {
+    override fun getWordsByListId(listId: Int, pageConfig: PagingConfig): Flow<PagingData<WordWithSimilarRelationModel>> {
         val pager = Pager(
             pageConfig,
             pagingSourceFactory = {wordListDao.getWordsByListId(listId)}
         )
-        return pager.flow.map { pagingData-> pagingData.map { it.toWordListInfoSimilarWords() } }
+        return pager.flow.map { pagingData-> pagingData.map { it.toWordWithSimilar() } }
     }
 
     private fun getWordPagingSource(
         categoryEnum: CategoryEnum,
         subCategoryEnum: SubCategoryEnum,
         c: String?
-    ): PagingSource<Int, WordListInfoSimilaritiesRelation> {
+    ): PagingSource<Int, WordWithSimilarRelation> {
         return when(categoryEnum){
             CategoryEnum.AllDict -> {
                 when(subCategoryEnum){
@@ -61,26 +61,26 @@ class WordListDetailRepoImpl @Inject constructor(
             CategoryEnum.TrDict -> {
                 when(subCategoryEnum){
                     SubCategoryEnum.All -> {
-                        wordListDao.getWordsWithDictType(WordType.TR.dictId)
+                        wordListDao.getWordsWithDictType(DictType.TR.dictId)
                     }
                     SubCategoryEnum.Random -> {
-                        wordListDao.getWordsWithDictTypeRandomOrder(WordType.TR.dictId)
+                        wordListDao.getWordsWithDictTypeRandomOrder(DictType.TR.dictId)
                     }
                     SubCategoryEnum.Alphabetic -> {
-                        wordListDao.getAlphabeticWordsWithDictType(WordType.TR.dictId,c?:"a")
+                        wordListDao.getAlphabeticWordsWithDictType(DictType.TR.dictId,c?:"a")
                     }
                 }
             }
             CategoryEnum.OsmDict -> {
                 when(subCategoryEnum){
                     SubCategoryEnum.All -> {
-                        wordListDao.getWordsWithDictType(WordType.OSM.dictId)
+                        wordListDao.getWordsWithDictType(DictType.OSM.dictId)
                     }
                     SubCategoryEnum.Random -> {
-                        wordListDao.getWordsWithDictTypeRandomOrder(WordType.OSM.dictId)
+                        wordListDao.getWordsWithDictTypeRandomOrder(DictType.OSM.dictId)
                     }
                     SubCategoryEnum.Alphabetic -> {
-                        wordListDao.getAlphabeticWordsWithDictType(WordType.OSM.dictId,c?:"a")
+                        wordListDao.getAlphabeticWordsWithDictType(DictType.OSM.dictId,c?:"a")
                     }
                 }
             }

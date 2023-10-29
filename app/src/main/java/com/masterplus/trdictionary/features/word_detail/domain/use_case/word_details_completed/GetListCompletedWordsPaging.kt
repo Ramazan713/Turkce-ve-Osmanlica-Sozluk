@@ -4,7 +4,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.masterplus.trdictionary.core.domain.constants.K
-import com.masterplus.trdictionary.features.word_detail.domain.model.WordCompletedInfo
+import com.masterplus.trdictionary.features.word_detail.domain.model.WordWithSimilar
 import com.masterplus.trdictionary.features.word_detail.domain.repo.WordListDetailRepo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -15,7 +15,7 @@ class GetListCompletedWordsPaging @Inject constructor(
     private val getCompletedInfo: GetCompletedWordInfo
 ) {
 
-    operator fun invoke(listId: Int) : Flow<PagingData<WordCompletedInfo>> {
+    operator fun invoke(listId: Int) : Flow<PagingData<WordWithSimilar>> {
         val config = PagingConfig(pageSize = K.wordsDetailPagerPageSize, enablePlaceholders = true,
             jumpThreshold = K.wordsDetailPagerJumpThreshold)
 

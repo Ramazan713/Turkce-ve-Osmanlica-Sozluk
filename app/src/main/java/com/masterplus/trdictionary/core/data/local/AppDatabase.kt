@@ -17,11 +17,14 @@ import com.masterplus.trdictionary.core.data.local.services.*
     entities = [
         AuthorEntity::class, CompoundWordsCrossRef::class, ExampleEntity::class,
         MeaningEntity::class, ProverbIdiomWordsCrossRef::class, WordEntity::class,
-        HistoryEntity::class, WordFtsEntity::class, ListWordsEntity::class,
+        HistoryEntity::class, ListWordsEntity::class, WordFtsEntity::class,
         ListEntity::class, SimilarWordsCrossRef::class, SavePointEntity::class,
         BackupMetaEntity::class
     ],
-    views = [WordListsViewEntity::class, ListViewEntity::class]
+    views = [
+        ExampleDetailsView::class, WordDetailView::class,
+        ListViewEntity::class
+    ]
 )
 abstract class AppDatabase: RoomDatabase() {
     abstract fun historyDao(): HistoryDao

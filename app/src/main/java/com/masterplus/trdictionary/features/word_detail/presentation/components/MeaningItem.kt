@@ -45,9 +45,9 @@ fun MeaningItem(
         meaningExamples.examples.forEach { exampleAuthor ->
             Text(
                 buildAnnotatedString {
-                    append(exampleAuthor.example.content)
+                    append(exampleAuthor.content)
                     withStyle(SpanStyle(fontWeight = FontWeight.W500)){
-                        append(" - ${exampleAuthor.author.name}")
+                        append(" - ${exampleAuthor.authorName}")
                     }
                 },
                 style = MaterialTheme.typography.bodyLarge,

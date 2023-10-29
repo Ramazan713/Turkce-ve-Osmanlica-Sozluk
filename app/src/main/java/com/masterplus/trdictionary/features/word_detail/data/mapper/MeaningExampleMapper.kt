@@ -7,6 +7,6 @@ import com.masterplus.trdictionary.features.word_detail.domain.model.MeaningExam
 fun MeaningExamplesRelation.toMeaningExamples(): MeaningExamples {
     return MeaningExamples(
         meaning = meaning.toMeaning(),
-        examples = examples.map { it.toExampleAuthor() }
+        examples = examples.map { it.toExampleDetail() }
     )
 }

@@ -17,7 +17,8 @@ import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.enums.SavePointType
 import com.masterplus.trdictionary.core.presentation.components.CustomModalBottomSheet
 import com.masterplus.trdictionary.core.presentation.features.select_list.select_list_dia.SelectListBottomContent
-import com.masterplus.trdictionary.features.word_detail.domain.model.WordCompletedInfo
+import com.masterplus.trdictionary.features.word_detail.domain.model.WordWithSimilar
+import com.masterplus.trdictionary.features.word_detail.domain.model.WordWithSimilarRelationModel
 import com.masterplus.trdictionary.features.word_detail.presentation.words_detail.shared.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -34,7 +35,7 @@ fun WordsDetailCategoryPage(
     state: WordsDetailCategoryState,
     sharedState: WordsDetailSharedState,
     onSharedEvent: (WordsDetailSharedEvent)->Unit,
-    pagingWords: LazyPagingItems<WordCompletedInfo>
+    pagingWords: LazyPagingItems<WordWithSimilar>
 ){
 
     val pagerState = rememberPagerState(initialPage = pos)

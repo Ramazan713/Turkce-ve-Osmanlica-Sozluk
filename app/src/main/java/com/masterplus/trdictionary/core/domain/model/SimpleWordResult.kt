@@ -1,6 +1,6 @@
 package com.masterplus.trdictionary.core.domain.model
 
-import com.masterplus.trdictionary.core.domain.enums.WordType
+import com.masterplus.trdictionary.core.domain.enums.DictType
 
 data class SimpleWordResult(
     val word: Word,
@@ -12,7 +12,5 @@ data class SimpleWordResult(
 
     val wordId get() = word.id
 
-    val dictType: WordType get() = word.dictType
-
-
+    val dictType: DictType get() = word.dictType
 }

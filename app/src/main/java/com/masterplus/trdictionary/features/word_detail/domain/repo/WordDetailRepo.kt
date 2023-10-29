@@ -1,17 +1,17 @@
 package com.masterplus.trdictionary.features.word_detail.domain.repo
 
 import com.masterplus.trdictionary.core.domain.model.SimpleWordResult
-import com.masterplus.trdictionary.features.word_detail.domain.model.WordMeanings
-import com.masterplus.trdictionary.features.word_detail.domain.model.WordListInfoSimilarWords
+import com.masterplus.trdictionary.features.word_detail.domain.model.WordDetailMeanings
+import com.masterplus.trdictionary.features.word_detail.domain.model.WordWithSimilarRelationModel
 import kotlinx.coroutines.flow.Flow
 
 interface WordDetailRepo {
 
-    fun getWordWithSimilarFlow(wordId: Int): Flow<WordListInfoSimilarWords?>
+    fun getWordWithSimilarFlow(wordId: Int): Flow<WordWithSimilarRelationModel?>
 
-    suspend fun getWordMeaningsWithWordId(wordId: Int): WordMeanings?
+    suspend fun getWordMeaningsWithWordId(wordId: Int): WordDetailMeanings?
 
-    suspend fun getWordExamplesByWordCount(word: String, wordCount: Int, dictType: Int): WordMeanings?
+    suspend fun getWordExamplesByWordCount(word: String, wordCount: Int, dictType: Int): WordDetailMeanings?
 
     suspend fun getCompoundSimpleWordsByWordId(wordId: Int): List<SimpleWordResult>
 

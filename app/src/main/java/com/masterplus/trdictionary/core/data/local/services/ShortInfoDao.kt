@@ -20,19 +20,16 @@ interface ShortInfoDao {
     suspend fun getWord(offset: Int): SimpleWordResultRelation?
 
 
-    @Transaction
     @Query("""
-        select count(*) from words W, ProverbIdiomWords PW where W.id = PW.wordId and
-        PW.type = :typeId
+        select count(*) from words where wordTypeId = :wordTypeId
     """)
-    suspend fun countWordsByTypeId(typeId: Int): Int
+    suspend fun countWordsByTypeId(wordTypeId: Int): Int
 
     @Transaction
     @Query("""
-        select W.* from words W, ProverbIdiomWords PW where W.id = PW.wordId and
-        PW.type = :typeId limit 1 offset :offset   
+        select * from words where wordTypeId = :wordTypeId limit 1 offset :offset   
     """)
-    suspend fun getWordByTypeId(typeId: Int, offset: Int): SimpleWordResultRelation?
+    suspend fun getWordByTypeId(wordTypeId: Int, offset: Int): SimpleWordResultRelation?
 
 
 }

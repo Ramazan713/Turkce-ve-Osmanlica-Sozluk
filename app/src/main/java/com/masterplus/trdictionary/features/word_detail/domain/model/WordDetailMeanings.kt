@@ -1,8 +1,8 @@
 package com.masterplus.trdictionary.features.word_detail.domain.model
 
-import com.masterplus.trdictionary.core.domain.model.Word
-
-data class WordMeanings(
-    val word: Word,
+data class WordDetailMeanings(
+    val wordDetail: WordDetail,
     val meanings: List<MeaningExamples>
-)
+){
+    val wordId get() = wordDetail.id
+}

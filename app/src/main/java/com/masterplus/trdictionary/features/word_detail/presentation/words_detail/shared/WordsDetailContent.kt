@@ -18,25 +18,26 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.paging.compose.LazyPagingItems
 import com.masterplus.trdictionary.R
+import com.masterplus.trdictionary.core.data.local.mapper.toWord
 import com.masterplus.trdictionary.core.presentation.components.buttons.PrimaryButton
 import com.masterplus.trdictionary.core.presentation.extensions.isLoading
 import com.masterplus.trdictionary.features.word_detail.domain.constants.ShareItemEnum
 import com.masterplus.trdictionary.features.word_detail.domain.model.AudioState
-import com.masterplus.trdictionary.features.word_detail.domain.model.WordCompletedInfo
-import com.masterplus.trdictionary.features.word_detail.domain.model.WordDetailInfoModel
+import com.masterplus.trdictionary.features.word_detail.domain.model.WordDetailMeanings
+import com.masterplus.trdictionary.features.word_detail.domain.model.WordWithSimilar
 import com.masterplus.trdictionary.features.word_detail.presentation.components.WordDetailItem
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun WordsDetailContent(
-    pagingWords: LazyPagingItems<WordCompletedInfo>,
-    pagerState: PagerState,
-    audioState: AudioState,
-    onEvent: (WordsDetailSharedEvent)->Unit,
-    onFavoriteClicked: (Int, WordDetailInfoModel)->Unit,
-    onShareMenuItemClicked: (Int, Int, Int, ShareItemEnum) -> Unit,
-    modifier: Modifier = Modifier
+        pagingWords: LazyPagingItems<WordWithSimilar>,
+        pagerState: PagerState,
+        audioState: AudioState,
+        onEvent: (WordsDetailSharedEvent)->Unit,
+        onFavoriteClicked: (Int, WordDetailMeanings)->Unit,
+        onShareMenuItemClicked: (Int, Int, Int, ShareItemEnum) -> Unit,
+        modifier: Modifier = Modifier
 ){
 
     val scope = rememberCoroutineScope()
@@ -72,16 +73,16 @@ fun WordsDetailContent(
                         modifier = Modifier.fillMaxSize()
                     ){
                         itemsIndexed(
-                            completedWord.allWordInfos,
-                            key = {_,it->it.wordId}
+                            completedWord.allWords,
+                            key = {_,it -> it.wordDetail.id}
                         ){index,wordDetail->
                             WordDetailItem(
-                                wordModel = wordDetail,
+                                wordMeanings = wordDetail,
                                 showButtons = index == 0,
                                 audioState = audioState,
                                 onShareMenuItemClicked = {
-                                    val randomOrder = completedWord.wordInfo.word.randomOrder
-                                    onShareMenuItemClicked(index,wordDetail.word.id,randomOrder,it)
+                                    val randomOrder = completedWord.wordDetail.randomOrder
+                                    onShareMenuItemClicked(index,wordDetail.wordDetail.id,randomOrder,it)
                                 },
                                 onFavoritePressed = {
                                     onFavoriteClicked(index,wordDetail)
@@ -95,22 +96,22 @@ fun WordsDetailContent(
                                 },
                                 onVolumePressed = {
                                     onEvent(WordsDetailSharedEvent.ListenWord(
-                                        wordDetail.wordListInfo.wordMeaning.word
+                                        wordDetail.wordDetail.toWord()
                                     ))
                                 },
                                 onProverbIdiomWordsClicked = {
-                                    onEvent(
-                                        WordsDetailSharedEvent.ShowDialog(true,
-                                            WordsDetailSharedDialogEvent.ShowProverbIdiomsWords(wordDetail.proverbIdioms)
-                                        )
-                                    )
+//                                    onEvent(
+//                                        WordsDetailSharedEvent.ShowDialog(true,
+//                                            WordsDetailSharedDialogEvent.ShowProverbIdiomsWords(wordDetail.proverbIdioms)
+//                                        )
+//                                    )
                                 },
                                 onCompoundWordsClicked = {
-                                    onEvent(
-                                        WordsDetailSharedEvent.ShowDialog(true,
-                                            WordsDetailSharedDialogEvent.ShowCompoundWords(wordDetail.compoundWords)
-                                        )
-                                    )
+//                                    onEvent(
+//                                        WordsDetailSharedEvent.ShowDialog(true,
+//                                            WordsDetailSharedDialogEvent.ShowCompoundWords(wordDetail.compoundWords)
+//                                        )
+//                                    )
                                 }
                             )
                         }

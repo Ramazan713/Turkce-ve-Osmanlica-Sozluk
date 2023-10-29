@@ -4,11 +4,11 @@ import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
 import com.masterplus.trdictionary.core.data.local.entities.SimilarWordsCrossRef
-import com.masterplus.trdictionary.core.data.local.entities.WordEntity
+import com.masterplus.trdictionary.core.data.local.views.WordDetailView
 
-data class WordListInfoSimilaritiesRelation(
+data class WordWithSimilarRelation(
     @Embedded
-    val wordInfo: WordListInfoRelation,
+    val wordInfo: WordMeaningsRelation,
 
     @Relation(
         parentColumn = "id",
@@ -19,5 +19,5 @@ data class WordListInfoSimilaritiesRelation(
             entityColumn = "similarWordId"
         )
     )
-    val similarityWords: List<WordEntity>,
+    val similarityWords: List<WordDetailView>,
 )

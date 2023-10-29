@@ -32,7 +32,7 @@ fun WordListSharedUiEventManage(
                                     shareResult.link.shareText(context)
                                 }
                                 is ShareWordUseCases.ShareWordResult.ShareWord -> {
-                                    shareResult.wordMeanings?.word?.word?.shareText(context)
+                                    shareResult.wordMeanings?.wordDetail?.word?.shareText(context)
                                 }
                                 is ShareWordUseCases.ShareWordResult.ShareWordWithMeanings -> {
                                     shareResult.wordMeanings?.share(context)

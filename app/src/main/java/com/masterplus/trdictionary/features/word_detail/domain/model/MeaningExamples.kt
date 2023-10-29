@@ -4,5 +4,5 @@ import com.masterplus.trdictionary.core.domain.model.Meaning
 
 data class MeaningExamples(
     val meaning: Meaning,
-    val examples: List<ExampleAuthor>
+    val examples: List<ExampleDetail>
 )

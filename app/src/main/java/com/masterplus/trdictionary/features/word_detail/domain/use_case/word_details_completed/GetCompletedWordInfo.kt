@@ -7,33 +7,17 @@ import javax.inject.Inject
 class GetCompletedWordInfo @Inject constructor(
     private val wordDetailRepo: WordDetailRepo
 ){
-
-    suspend operator fun invoke(word: WordListInfoSimilarWords): WordCompletedInfo {
-        val parentWordDetail = getWordDetailInfo(word.wordListInfo)
-        val wordDetails = word.similarWords.mapNotNull {
+    suspend operator fun invoke(word: WordWithSimilarRelationModel): WordWithSimilar {
+        val similarWords = word.similarWords.mapNotNull {
             getWordDetailInfoFromWordId(it.id)
         }
 
-        return WordCompletedInfo(wordInfo = parentWordDetail, similarWordsInfo = wordDetails)
-    }
-
-    private suspend fun getWordDetailInfoFromWordId(wordId: Int): WordDetailInfoModel?{
-        val wordMeanings = wordDetailRepo.getWordMeaningsWithWordId(wordId) ?: return null
-
-        val wordListInfo = WordListInfo(wordMeanings,false, inFavorite = false)
-
-        return getWordDetailInfo(wordListInfo)
-    }
-
-    private suspend fun getWordDetailInfo(wordListInfo: WordListInfo): WordDetailInfoModel {
-        val wordId = wordListInfo.wordMeaning.word.id
-        val compoundWords = wordDetailRepo.getCompoundSimpleWordsByWordId(wordId)
-        val proverbIdioms = wordDetailRepo.getProverbIdiomWordsBywordId(wordId)
-
-        return WordDetailInfoModel(
-            wordListInfo = wordListInfo,
-            proverbIdioms = proverbIdioms,
-            compoundWords = compoundWords
+        return WordWithSimilar(
+            wordDetailMeanings = word.wordDetailMeanings,
+            similarWords = similarWords
         )
+    }
+    private suspend fun getWordDetailInfoFromWordId(wordId: Int): WordDetailMeanings?{
+        return wordDetailRepo.getWordMeaningsWithWordId(wordId)
     }
 }

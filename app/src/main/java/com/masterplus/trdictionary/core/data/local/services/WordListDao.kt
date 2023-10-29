@@ -11,21 +11,21 @@ interface WordListDao {
 
     @Transaction
     @Query("""
-        select * from words where dictType = :dictType and showInQuery = 1 order by lower(searchWord)
+        select * from words where dictTypeId = :dictTypeId and showInQuery = 1 order by lower(searchWord)
     """)
-    fun getWordsWithDictType(dictType: Int): PagingSource<Int, SimpleWordResultRelation>
+    fun getWordsWithDictType(dictTypeId: Int): PagingSource<Int, SimpleWordResultRelation>
 
     @Transaction
     @Query("""
-        select * from words where dictType = :dictType and showInQuery = 1 and word Like :c||'%' order by lower(word)
+        select * from words where dictTypeId = :dictTypeId and showInQuery = 1 and word Like :c||'%' order by lower(word)
     """)
-    fun getAlphabeticWordsWithDictType(dictType: Int,c: String): PagingSource<Int, SimpleWordResultRelation>
+    fun getAlphabeticWordsWithDictType(dictTypeId: Int, c: String): PagingSource<Int, SimpleWordResultRelation>
 
     @Transaction
     @Query("""
-        select * from words where dictType = :dictType and showInQuery = 1 order by randomOrder
+        select * from words where dictTypeId = :dictTypeId and showInQuery = 1 order by randomOrder
     """)
-    fun getWordsWithDictTypeRandomOrder(dictType: Int): PagingSource<Int, SimpleWordResultRelation>
+    fun getWordsWithDictTypeRandomOrder(dictTypeId: Int): PagingSource<Int, SimpleWordResultRelation>
 
 
     @Transaction
@@ -49,24 +49,23 @@ interface WordListDao {
 
     @Transaction
     @Query("""
-        select W.* from words W, ProverbIdiomWords PW where W.id = PW.wordId and
-        PW.type = :typeId and W.showInQuery = 1 order by lower(W.searchWord)
+        select * from words where wordTypeId = :wordTypeId and showInQuery = 1 order by lower(searchWord)
     """)
-    fun getAllProverbIdiomWords(typeId: Int): PagingSource<Int, SimpleWordResultRelation>
+    fun getAllProverbIdiomWords(wordTypeId: Int): PagingSource<Int, SimpleWordResultRelation>
 
     @Transaction
     @Query("""
-        select W.* from words W, ProverbIdiomWords PW where W.id = PW.wordId and
-        PW.type = :typeId and W.showInQuery = 1 and W.word Like :c||'%' order by lower(W.word)
+        select * from words where wordTypeId = :wordTypeId 
+        and showInQuery = 1 and word Like :c||'%' order by lower(word)
     """)
-    fun getAllProverbIdiomAlphabeticWords(typeId: Int,c: String): PagingSource<Int, SimpleWordResultRelation>
+    fun getAllProverbIdiomAlphabeticWords(wordTypeId: Int, c: String): PagingSource<Int, SimpleWordResultRelation>
 
     @Transaction
     @Query("""
-        select W.* from words W, ProverbIdiomWords PW where W.id = PW.wordId and W.showInQuery = 1 and
-        PW.type = :typeId order by W.randomOrder
+        select * from words where showInQuery = 1 and
+        wordTypeId = :wordTypeId order by randomOrder
     """)
-    fun getAllProverbIdiomWordsRandomOrder(typeId: Int): PagingSource<Int, SimpleWordResultRelation>
+    fun getAllProverbIdiomWordsRandomOrder(wordTypeId: Int): PagingSource<Int, SimpleWordResultRelation>
 
 
 

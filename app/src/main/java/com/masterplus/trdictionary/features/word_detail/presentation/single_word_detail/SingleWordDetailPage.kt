@@ -13,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.*
 import com.masterplus.trdictionary.R
+import com.masterplus.trdictionary.core.data.local.mapper.toWord
 import com.masterplus.trdictionary.core.domain.constants.K
 import com.masterplus.trdictionary.core.domain.model.*
 import com.masterplus.trdictionary.core.presentation.components.CustomModalBottomSheet
@@ -64,11 +65,11 @@ fun SingleWordDetailPage(
                 }
             }else{
                 itemsIndexed(
-                    state.wordModels,
+                    state.allWords,
                     key = {_,it->it.wordId}
                 ){index,wordModel->
                     WordDetailItem(
-                        wordModel = wordModel,
+                        wordMeanings = wordModel,
                         showButtons = index == 0,
                         modifier = Modifier.padding(vertical = 7.dp),
                         onFavoritePressed = {
@@ -79,26 +80,26 @@ fun SingleWordDetailPage(
                                     SingleWordDetailModalEvent.ShowSelectList(wordModel.wordId)))
                         },
                         onVolumePressed = {
-                            onEvent(SingleWordDetailEvent.ListenWord(wordModel.wordListInfo.wordMeaning.word))
+                            onEvent(SingleWordDetailEvent.ListenWord(wordModel.wordDetail.toWord()))
                         },
                         onProverbIdiomWordsClicked = {
-                            onEvent(SingleWordDetailEvent.ShowDialog(true,
-                                    SingleWordDetailDialogEvent.ShowProverbIdiomsWords(wordModel.proverbIdioms)
-                                )
-                            )
+//                            onEvent(SingleWordDetailEvent.ShowDialog(true,
+//                                    SingleWordDetailDialogEvent.ShowProverbIdiomsWords(wordModel.proverbIdioms)
+//                                )
+//                            )
                         },
                         onCompoundWordsClicked = {
-                            onEvent(SingleWordDetailEvent.ShowDialog(true,
-                                SingleWordDetailDialogEvent.ShowCompoundWords(wordModel.compoundWords)
-                            ))
+//                            onEvent(SingleWordDetailEvent.ShowDialog(true,
+//                                SingleWordDetailDialogEvent.ShowCompoundWords(wordModel.compoundWords)
+//                            ))
                         },
                         onShareMenuItemClicked = {sharedItem->
                             when(sharedItem){
                                 ShareItemEnum.ShareWord -> {
-                                    wordModel.word.word.shareText(context)
+                                    wordModel.wordDetail.word.shareText(context)
                                 }
                                 ShareItemEnum.ShareWordMeaning -> {
-                                    wordModel.wordListInfo.wordMeaning.share(context)
+                                    wordModel.share(context)
                                 }
                                 ShareItemEnum.ShareLink -> {
                                     val wordIdStr = wordModel.wordId.addPrefixZeros(K.DeepLink.numberZerosLength)

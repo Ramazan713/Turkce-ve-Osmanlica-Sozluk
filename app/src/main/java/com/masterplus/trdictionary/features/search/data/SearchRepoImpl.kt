@@ -4,7 +4,7 @@ import com.masterplus.trdictionary.core.data.local.entities.relations.SimpleWord
 import com.masterplus.trdictionary.core.data.local.mapper.toSimpleResult
 import com.masterplus.trdictionary.core.domain.enums.CategoryEnum
 import com.masterplus.trdictionary.core.domain.enums.ProverbIdiomEnum
-import com.masterplus.trdictionary.core.domain.enums.WordType
+import com.masterplus.trdictionary.core.domain.enums.DictType
 import com.masterplus.trdictionary.core.data.local.services.SearchDao
 import com.masterplus.trdictionary.core.domain.constants.KPref
 import com.masterplus.trdictionary.core.domain.model.SimpleWordResult
@@ -63,20 +63,20 @@ class SearchRepoImpl @Inject constructor(
             CategoryEnum.TrDict -> {
                 when(searchKind){
                     SearchKind.Word -> {
-                        searchDao.searchWordsWithDictType(ftsQueryForSearch, likeQueryForOrder,queryRaw,WordType.TR.dictId,searchResultCount)
+                        searchDao.searchWordsWithDictType(ftsQueryForSearch, likeQueryForOrder,queryRaw,DictType.TR.dictId,searchResultCount)
                     }
                     SearchKind.Meaning -> {
-                        searchDao.searchWordsFromMeaningWithDictType(likeQueryForSearch, likeQueryForOrder,queryRaw,WordType.TR.dictId,searchResultCount)
+                        searchDao.searchWordsFromMeaningWithDictType(likeQueryForSearch, likeQueryForOrder,queryRaw,DictType.TR.dictId,searchResultCount)
                     }
                 }
             }
             CategoryEnum.OsmDict -> {
                 when(searchKind){
                     SearchKind.Word -> {
-                        searchDao.searchWordsWithDictType(ftsQueryForSearch, likeQueryForOrder,queryRaw,WordType.OSM.dictId,searchResultCount)
+                        searchDao.searchWordsWithDictType(ftsQueryForSearch, likeQueryForOrder,queryRaw,DictType.OSM.dictId,searchResultCount)
                     }
                     SearchKind.Meaning -> {
-                        searchDao.searchWordsFromMeaningWithDictType(likeQueryForSearch, likeQueryForOrder,queryRaw,WordType.OSM.dictId,searchResultCount)
+                        searchDao.searchWordsFromMeaningWithDictType(likeQueryForSearch, likeQueryForOrder,queryRaw,DictType.OSM.dictId,searchResultCount)
                     }
                 }
             }

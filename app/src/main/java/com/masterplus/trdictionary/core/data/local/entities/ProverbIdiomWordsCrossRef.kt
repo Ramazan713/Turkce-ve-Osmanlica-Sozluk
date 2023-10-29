@@ -18,14 +18,12 @@ import androidx.room.*
 )
 data class ProverbIdiomWordsCrossRef(
     @PrimaryKey(autoGenerate = false)
-    val id: Int,
+    val id: Int?,
 
     val groupId: Int,
 
     val wordId: Int,
 
     @ColumnInfo(defaultValue = "0")
-    val orderItem: Int,
-
-    val type: Int
+    val orderItem: Int
 )

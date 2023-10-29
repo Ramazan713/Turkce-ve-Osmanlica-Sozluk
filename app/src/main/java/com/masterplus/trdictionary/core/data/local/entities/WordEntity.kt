@@ -23,7 +23,10 @@ data class WordEntity(
     @ColumnInfo(defaultValue = "0")
     val randomOrder: Int,
 
-    val dictType: Int,
+    val dictTypeId: Int,
+
+    @ColumnInfo(defaultValue = "1")
+    val wordTypeId: Int,
 
     @ColumnInfo(defaultValue = "1")
     val showTTS: Boolean

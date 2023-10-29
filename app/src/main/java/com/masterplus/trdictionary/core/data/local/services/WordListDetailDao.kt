@@ -4,76 +4,76 @@ import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import com.masterplus.trdictionary.core.data.local.entities.relations.WordListInfoSimilaritiesRelation
+import com.masterplus.trdictionary.core.data.local.entities.relations.WordWithSimilarRelation
 
 @Dao
 interface WordListDetailDao {
 
     @Transaction
     @Query("""
-        select * from words where dictType = :dictType and showInQuery = 1 order by lower(searchWord)
+        select * from wordDetailsView where dictTypeId = :dictTypeId and showInQuery = 1 order by lower(searchWord)
     """)
-    fun getWordsWithDictType(dictType: Int): PagingSource<Int, WordListInfoSimilaritiesRelation>
+    fun getWordsWithDictType(dictTypeId: Int): PagingSource<Int, WordWithSimilarRelation>
 
     @Transaction
     @Query("""
-        select * from words where dictType = :dictType and showInQuery = 1 and word Like :c||'%' order by lower(word)
+        select * from wordDetailsView where dictTypeId = :dictTypeId and showInQuery = 1 and word Like :c||'%' order by lower(word)
     """)
-    fun getAlphabeticWordsWithDictType(dictType: Int,c: String): PagingSource<Int, WordListInfoSimilaritiesRelation>
+    fun getAlphabeticWordsWithDictType(dictTypeId: Int, c: String): PagingSource<Int, WordWithSimilarRelation>
 
     @Transaction
     @Query("""
-        select * from words where dictType = :dictType and showInQuery = 1 order by randomOrder
+        select * from wordDetailsView where dictTypeId = :dictTypeId and showInQuery = 1 order by randomOrder
     """)
-    fun getWordsWithDictTypeRandomOrder(dictType: Int): PagingSource<Int, WordListInfoSimilaritiesRelation>
-
-
-    @Transaction
-    @Query("""
-        select * from words where showInQuery = 1 order by lower(searchWord)
-    """)
-    fun getAllWords(): PagingSource<Int, WordListInfoSimilaritiesRelation>
-
-    @Transaction
-    @Query("""
-        select * from words where showInQuery = 1 and word Like :c||'%' order by lower(word)
-    """)
-    fun getAllAlphabeticWords(c: String): PagingSource<Int, WordListInfoSimilaritiesRelation>
-
-    @Transaction
-    @Query("""
-        select * from words where showInQuery = 1 order by randomOrder
-    """)
-    fun getAllWordsRandomOrder(): PagingSource<Int, WordListInfoSimilaritiesRelation>
+    fun getWordsWithDictTypeRandomOrder(dictTypeId: Int): PagingSource<Int, WordWithSimilarRelation>
 
 
     @Transaction
     @Query("""
-        select W.* from words W, ProverbIdiomWords PW where W.id = PW.wordId and W.showInQuery = 1 and
-        PW.type = :typeId order by lower(W.searchWord)
+        select * from wordDetailsView where showInQuery = 1 order by lower(searchWord)
     """)
-    fun getAllProverbIdiomWords(typeId: Int): PagingSource<Int, WordListInfoSimilaritiesRelation>
+    fun getAllWords(): PagingSource<Int, WordWithSimilarRelation>
 
     @Transaction
     @Query("""
-        select W.* from words W, ProverbIdiomWords PW where W.id = PW.wordId and W.showInQuery = 1 and
-        PW.type = :typeId and W.word Like :c||'%' order by lower(W.word)
+        select * from wordDetailsView where showInQuery = 1 and word Like :c||'%' order by lower(word)
     """)
-    fun getAllProverbIdiomAlphabeticWords(typeId: Int,c: String): PagingSource<Int, WordListInfoSimilaritiesRelation>
+    fun getAllAlphabeticWords(c: String): PagingSource<Int, WordWithSimilarRelation>
 
     @Transaction
     @Query("""
-        select W.* from words W, ProverbIdiomWords PW where W.id = PW.wordId and W.showInQuery = 1 and
-        PW.type = :typeId order by W.randomOrder
+        select * from wordDetailsView where showInQuery = 1 order by randomOrder
     """)
-    fun getAllProverbIdiomWordsRandomOrder(typeId: Int): PagingSource<Int, WordListInfoSimilaritiesRelation>
+    fun getAllWordsRandomOrder(): PagingSource<Int, WordWithSimilarRelation>
 
 
     @Transaction
     @Query("""
-        select W.* from words W, listWords LW where W.id = LW.wordId and W.showInQuery = 1 and
+        select * from wordDetailsView where showInQuery = 1 and
+        wordTypeId = :wordTypeId order by lower(searchWord)
+    """)
+    fun getAllProverbIdiomWords(wordTypeId: Int): PagingSource<Int, WordWithSimilarRelation>
+
+    @Transaction
+    @Query("""
+        select * from wordDetailsView where showInQuery = 1 and
+        wordTypeId = :wordTypeId and word Like :c||'%' order by lower(word)
+    """)
+    fun getAllProverbIdiomAlphabeticWords(wordTypeId: Int, c: String): PagingSource<Int, WordWithSimilarRelation>
+
+    @Transaction
+    @Query("""
+        select * from wordDetailsView where showInQuery = 1 and
+        wordTypeId = :wordTypeId order by randomOrder
+    """)
+    fun getAllProverbIdiomWordsRandomOrder(wordTypeId: Int): PagingSource<Int, WordWithSimilarRelation>
+
+
+    @Transaction
+    @Query("""
+        select W.* from wordDetailsView W, listWords LW where W.id = LW.wordId and W.showInQuery = 1 and
         LW.listId = :listId order by pos desc
     """)
-    fun getWordsByListId(listId: Int): PagingSource<Int, WordListInfoSimilaritiesRelation>
+    fun getWordsByListId(listId: Int): PagingSource<Int, WordWithSimilarRelation>
 
 }

@@ -18,17 +18,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.R
+import com.masterplus.trdictionary.core.data.local.mapper.toWord
 import com.masterplus.trdictionary.core.domain.enums.IconInfo
 import com.masterplus.trdictionary.core.presentation.components.CustomDropdownBarMenu
 import com.masterplus.trdictionary.core.presentation.components.buttons.PrimaryButton
 import com.masterplus.trdictionary.features.word_detail.domain.constants.ShareItemEnum
-import com.masterplus.trdictionary.features.word_detail.domain.model.WordDetailInfoModel
 import com.masterplus.trdictionary.features.word_detail.domain.model.AudioState
+import com.masterplus.trdictionary.features.word_detail.domain.model.WordDetailMeanings
 
 
 @Composable
 fun WordDetailItem(
-    wordModel: WordDetailInfoModel,
+    wordMeanings: WordDetailMeanings,
     modifier: Modifier = Modifier,
     onProverbIdiomWordsClicked: ()->Unit,
     onCompoundWordsClicked: ()->Unit,
@@ -39,20 +40,20 @@ fun WordDetailItem(
     onShareMenuItemClicked: (ShareItemEnum)->Unit,
     showButtons: Boolean = true,
 ){
-    val word = wordModel.wordListInfo.wordMeaning.word
+    val word = wordMeanings.wordDetail
     val shape = MaterialTheme.shapes.medium
 
-    val favoriteIconInfo = remember(wordModel.inFavorite) {
+    val favoriteIconInfo = remember(word.inFavorite) {
         derivedStateOf {
-            val isFavorite = wordModel.inFavorite
+            val isFavorite = word.inFavorite
             IconInfo(if(isFavorite)R.drawable.ic_baseline_favorite_24 else R.drawable.ic_baseline_favorite_border_24,
                 tintColor = if(isFavorite) Color.Red else null)
         }
     }
 
-    val listIconInfo = remember(wordModel.inAnyList) {
+    val listIconInfo = remember(word.inAnyList) {
         derivedStateOf {
-            val inList = wordModel.inAnyList
+            val inList = word.inAnyList
             IconInfo(if(inList) R.drawable.ic_baseline_library_add_check_24 else R.drawable.ic_outline_library_add_24)
         }
     }
@@ -120,7 +121,7 @@ fun WordDetailItem(
             }
         }
 
-        wordModel.meanings.let { meanings->
+        wordMeanings.meanings.let { meanings->
             meanings.forEach { meaning->
                 MeaningItem(
                     meaningExamples = meaning,
@@ -130,11 +131,11 @@ fun WordDetailItem(
             }
         }
 
-        if(wordModel.proverbIdioms.isNotEmpty() || wordModel.compoundWords.isNotEmpty()){
+        if(word.hasProverbIdioms || word.hasCompoundWords){
             Spacer(Modifier.padding(vertical = 7.dp))
         }
 
-        if(wordModel.proverbIdioms.isNotEmpty()){
+        if(word.hasProverbIdioms){
             PrimaryButton(
                 title = stringResource(R.string.proverb_idiom_text_c),
                 onClick = onProverbIdiomWordsClicked,
@@ -142,7 +143,7 @@ fun WordDetailItem(
             )
         }
 
-        if(wordModel.compoundWords.isNotEmpty()){
+        if(word.hasCompoundWords){
             PrimaryButton(
                 title = stringResource(R.string.compound_words_c),
                 onClick = onCompoundWordsClicked,

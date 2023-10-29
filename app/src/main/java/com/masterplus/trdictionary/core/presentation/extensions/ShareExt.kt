@@ -12,7 +12,7 @@ import androidx.compose.ui.text.withStyle
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.util.ToastHelper
 import com.masterplus.trdictionary.core.domain.util.UiText
-import com.masterplus.trdictionary.features.word_detail.domain.model.WordMeanings
+import com.masterplus.trdictionary.features.word_detail.domain.model.WordDetailMeanings
 
 
 fun String.shareText(context: Context){
@@ -31,9 +31,9 @@ fun String.copyClipboardText(context: Context,clipboardManager: ClipboardManager
     ToastHelper.showMessage(UiText.Resource(R.string.copied),context)
 }
 
-fun WordMeanings.share(context: Context){
+fun WordDetailMeanings.share(context: Context){
     val wordMeanings = this
-    val wordContent = wordMeanings.word.word
+    val wordContent = wordMeanings.wordDetail.word
     val content = buildAnnotatedString {
         withStyle(SpanStyle(fontWeight = FontWeight.Bold)){
             append("$wordContent\n\n")
@@ -48,9 +48,9 @@ fun WordMeanings.share(context: Context){
             }
             append("${meaningExamples.meaning.meaning}\n")
             meaningExamples.examples.forEach { exampleAuthor ->
-                append("* ${exampleAuthor.example.content}")
+                append("* ${exampleAuthor.content}")
                 withStyle(SpanStyle(fontWeight = FontWeight.W500)){
-                    append(" - ${exampleAuthor.author.name}")
+                    append(" - ${exampleAuthor.authorName}")
                 }
             }
             append("\n")
