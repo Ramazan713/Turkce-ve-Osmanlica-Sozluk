@@ -160,7 +160,8 @@ private fun ShowModal(
     onEvent: (ShowListEvent)->Unit
 ){
     CustomModalBottomSheet(
-        onDismissRequest = {onEvent(ShowListEvent.ShowModal(false))}
+        onDismissRequest = {onEvent(ShowListEvent.ShowModal(false))},
+        skipHalfExpanded = true
     ){
         when(event){
             is ShowListModelEvent.ShowSelectBottomMenu -> {

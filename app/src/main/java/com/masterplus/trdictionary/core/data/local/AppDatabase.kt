@@ -1,5 +1,6 @@
 package com.masterplus.trdictionary.core.data.local
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.masterplus.trdictionary.core.data.local.entities.*
@@ -9,11 +10,13 @@ import com.masterplus.trdictionary.core.data.local.entities.ListEntity
 import com.masterplus.trdictionary.core.data.local.views.ListViewEntity
 import com.masterplus.trdictionary.core.data.local.entities.ListWordsEntity
 import com.masterplus.trdictionary.core.data.local.entities.SavePointEntity
+import com.masterplus.trdictionary.core.data.local.migrations.Migration1To2Spec
+import com.masterplus.trdictionary.core.data.local.migrations.Migration2To3Spec
 import com.masterplus.trdictionary.core.data.local.services.*
 
 @Database(
-    version = 1,
-    exportSchema = false,
+    version = 3,
+    exportSchema = true,
     entities = [
         AuthorEntity::class, CompoundWordsCrossRef::class, ExampleEntity::class,
         MeaningEntity::class, ProverbIdiomWordsCrossRef::class, WordEntity::class,
@@ -24,6 +27,10 @@ import com.masterplus.trdictionary.core.data.local.services.*
     views = [
         ExampleDetailsView::class, WordDetailView::class,
         ListViewEntity::class
+    ],
+    autoMigrations = [
+        AutoMigration(1,2,Migration1To2Spec::class),
+        AutoMigration(2,3, Migration2To3Spec::class)
     ]
 )
 abstract class AppDatabase: RoomDatabase() {
