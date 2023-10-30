@@ -22,7 +22,7 @@ import androidx.paging.compose.LazyPagingItems
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.model.SimpleWordResult
 import com.masterplus.trdictionary.core.presentation.components.SimpleWordItem
-import com.masterplus.trdictionary.core.presentation.extensions.isLoading
+import com.masterplus.trdictionary.core.extensions.isLoading
 
 @ExperimentalFoundationApi
 @Composable

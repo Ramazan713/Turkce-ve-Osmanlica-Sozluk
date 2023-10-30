@@ -11,7 +11,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
 import com.masterplus.trdictionary.core.domain.util.ToastHelper
-import com.masterplus.trdictionary.core.presentation.extensions.refreshApp
+import com.masterplus.trdictionary.core.extensions.refreshApp
 import com.masterplus.trdictionary.core.presentation.features.premium.PremiumEvent
 import com.masterplus.trdictionary.core.presentation.features.premium.PremiumState
 import com.masterplus.trdictionary.core.presentation.features.premium.PremiumUiEvent

@@ -7,7 +7,7 @@ import com.masterplus.trdictionary.core.domain.enums.SavePointDestination
 import com.masterplus.trdictionary.core.domain.enums.SavePointType
 import com.masterplus.trdictionary.core.domain.enums.SubCategoryEnum
 import com.masterplus.trdictionary.core.domain.model.Word
-import com.masterplus.trdictionary.core.presentation.extensions.addPrefixZeros
+import com.masterplus.trdictionary.core.extensions.addPrefixZeros
 import com.masterplus.trdictionary.features.word_detail.domain.constants.ShareItemEnum
 import com.masterplus.trdictionary.features.word_detail.domain.repo.WordDetailRepo
 import com.masterplus.trdictionary.features.word_detail.domain.repo.WordListRepo

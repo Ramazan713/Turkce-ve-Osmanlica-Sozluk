@@ -9,9 +9,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.res.stringResource
 import com.masterplus.trdictionary.R
-import com.masterplus.trdictionary.core.presentation.dialog_body.SelectMenuItemDialog
+import com.masterplus.trdictionary.core.presentation.selectors.SelectMenuItemDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowSelectNumberDialog
-import com.masterplus.trdictionary.core.presentation.extensions.visibleMiddlePosition
+import com.masterplus.trdictionary.core.extensions.visibleMiddlePosition
 import com.masterplus.trdictionary.core.presentation.features.edit_savepoint.EditSavePointPage
 import com.masterplus.trdictionary.features.word_detail.domain.constants.ShareItemEnum
 

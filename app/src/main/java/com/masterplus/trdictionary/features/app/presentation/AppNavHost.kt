@@ -89,7 +89,8 @@ fun AppNavHost(
                 navController.navigateToSelectSavePoint(typeId,filter,title)
             },
             onNavigateToArchive = {navController.navigateToArchiveList()},
-            onNavigateToSettings = { navController.navigateToSettings() }
+            onNavigateToSettings = { navController.navigateToSettings() },
+            windowWidthSizeClass = windowWidthSizeClass
         )
 
         archiveListPage(

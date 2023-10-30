@@ -7,7 +7,7 @@ import com.masterplus.trdictionary.core.domain.enums.SearchResultEnum
 import com.masterplus.trdictionary.core.domain.enums.ThemeEnum
 import com.masterplus.trdictionary.core.domain.model.premium.PremiumProduct
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDialog
-import com.masterplus.trdictionary.core.presentation.dialog_body.ShowSelectRadioItemAlertDialog
+import com.masterplus.trdictionary.core.presentation.selectors.ShowSelectRadioItemAlertDialog
 import com.masterplus.trdictionary.core.presentation.features.premium.ShowPremiumProductDialog
 import com.masterplus.trdictionary.features.settings.presentation.SettingDialogEvent
 import com.masterplus.trdictionary.features.settings.presentation.SettingEvent

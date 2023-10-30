@@ -23,7 +23,7 @@ import com.masterplus.trdictionary.R
 fun ListViewItem(
     listView: ListView,
     onClick: ()->Unit,
-    onMenuClick: ()->Unit,
+    trailingItem: @Composable() () -> Unit,
     modifier: Modifier = Modifier
 ){
     val shape = MaterialTheme.shapes.medium
@@ -61,8 +61,6 @@ fun ListViewItem(
                 style = MaterialTheme.typography.bodyMedium
             )
         }
-        IconButton(onClick = onMenuClick){
-            Icon(painter = painterResource(R.drawable.ic_baseline_more_vert_24),contentDescription = null)
-        }
+        trailingItem()
     }
 }

@@ -6,8 +6,8 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
-import com.masterplus.trdictionary.core.presentation.extensions.share
-import com.masterplus.trdictionary.core.presentation.extensions.shareText
+import com.masterplus.trdictionary.core.extensions.share
+import com.masterplus.trdictionary.core.extensions.shareText
 import com.masterplus.trdictionary.features.word_detail.domain.use_case.share.ShareWordUseCases
 import kotlinx.coroutines.flow.collectLatest
 

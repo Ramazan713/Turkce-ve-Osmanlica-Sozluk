@@ -1,4 +1,4 @@
-package com.masterplus.trdictionary.core.presentation.components.selections
+package com.masterplus.trdictionary.core.presentation.selectors
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,7 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.enums.IMenuItemEnum
-import com.masterplus.trdictionary.core.presentation.extensions.noRippleClickable
+import com.masterplus.trdictionary.core.extensions.noRippleClickable
 
 
 @Composable

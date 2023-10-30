@@ -36,5 +36,19 @@ enum class ShowListBottomMenuEnum: IMenuItemEnum {
 
         override val iconInfo: IconInfo
             get() = IconInfo(drawableId = R.drawable.ic_baseline_content_copy_24)
+    };
+
+    companion object{
+        fun from(isRemovable: Boolean): List<ShowListBottomMenuEnum>{
+            return ShowListBottomMenuEnum.values()
+                .filter {
+                    if(!isRemovable){
+                        return@filter listOf(Rename, Copy).contains(it)
+                    }
+                    true
+                }
+                .toList()
+        }
     }
+
 }

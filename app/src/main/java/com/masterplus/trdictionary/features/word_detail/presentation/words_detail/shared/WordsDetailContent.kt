@@ -20,7 +20,7 @@ import androidx.paging.compose.LazyPagingItems
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.data.local.mapper.toWord
 import com.masterplus.trdictionary.core.presentation.components.buttons.PrimaryButton
-import com.masterplus.trdictionary.core.presentation.extensions.isLoading
+import com.masterplus.trdictionary.core.extensions.isLoading
 import com.masterplus.trdictionary.features.word_detail.domain.constants.ShareItemEnum
 import com.masterplus.trdictionary.features.word_detail.domain.model.AudioState
 import com.masterplus.trdictionary.features.word_detail.domain.model.WordDetailMeanings

@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.masterplus.trdictionary.R
-import com.masterplus.trdictionary.core.presentation.extensions.launchPlayApp
-import com.masterplus.trdictionary.core.presentation.extensions.shareApp
+import com.masterplus.trdictionary.core.extensions.launchPlayApp
+import com.masterplus.trdictionary.core.extensions.shareApp
 import com.masterplus.trdictionary.features.settings.presentation.components.SettingItem
 import com.masterplus.trdictionary.features.settings.presentation.components.SettingSectionItem
 

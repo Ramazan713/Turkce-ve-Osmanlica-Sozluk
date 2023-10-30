@@ -26,7 +26,7 @@ import com.masterplus.trdictionary.core.presentation.components.buttons.PrimaryB
 import com.masterplus.trdictionary.core.presentation.dialog_body.CustomDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.LoadingDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDialog
-import com.masterplus.trdictionary.core.presentation.extensions.refreshApp
+import com.masterplus.trdictionary.core.extensions.refreshApp
 import com.masterplus.trdictionary.features.settings.presentation.components.SelectableText
 import com.masterplus.trdictionary.features.settings.presentation.components.TextIcon
 import kotlinx.coroutines.flow.collectLatest

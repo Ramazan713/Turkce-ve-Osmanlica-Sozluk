@@ -1,4 +1,4 @@
-package com.masterplus.trdictionary.core.presentation.components.selections
+package com.masterplus.trdictionary.core.presentation.selectors
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +22,7 @@ import com.masterplus.trdictionary.R
 
 
 @Composable
-fun <T: IMenuItemEnum>CustomDropdownBarMenu(
+fun <T: IMenuItemEnum> CustomDropdownBarMenu(
     modifier: Modifier = Modifier,
     items: List<T>,
     onItemChange: ((T)->Unit)? = null,

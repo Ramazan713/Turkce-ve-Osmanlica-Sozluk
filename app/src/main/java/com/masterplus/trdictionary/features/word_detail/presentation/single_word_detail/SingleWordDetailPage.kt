@@ -18,9 +18,9 @@ import com.masterplus.trdictionary.core.domain.constants.K
 import com.masterplus.trdictionary.core.domain.model.*
 import com.masterplus.trdictionary.core.presentation.components.CustomModalBottomSheet
 import com.masterplus.trdictionary.core.presentation.components.navigation.CustomTopAppBar
-import com.masterplus.trdictionary.core.presentation.extensions.addPrefixZeros
-import com.masterplus.trdictionary.core.presentation.extensions.share
-import com.masterplus.trdictionary.core.presentation.extensions.shareText
+import com.masterplus.trdictionary.core.extensions.addPrefixZeros
+import com.masterplus.trdictionary.core.extensions.share
+import com.masterplus.trdictionary.core.extensions.shareText
 import com.masterplus.trdictionary.core.presentation.features.select_list.select_list_dia.SelectListBottomContent
 import com.masterplus.trdictionary.features.word_detail.domain.constants.ShareItemEnum
 import com.masterplus.trdictionary.features.word_detail.presentation.components.ShowSimpleWordsDialog

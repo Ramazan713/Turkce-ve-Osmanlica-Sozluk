@@ -1,6 +1,7 @@
 package com.masterplus.trdictionary.features.list.presentation.show_list.navigation
 
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -16,6 +17,7 @@ fun NavGraphBuilder.showListPage(
     onNavigateToDetailList: (listId: Int)->Unit,
     onNavigateToSelectSavePoint: (String,List<Int>,Int)->Unit,
     onNavigateToSettings: ()->Unit,
+    windowWidthSizeClass: WindowWidthSizeClass
 ){
     composable(RouteList){
 
@@ -27,7 +29,8 @@ fun NavGraphBuilder.showListPage(
             onNavigateToArchive = onNavigateToArchive,
             onNavigateToSettings = onNavigateToSettings,
             state = listViewModel.state,
-            onEvent = listViewModel::onEvent
+            onEvent = listViewModel::onEvent,
+            windowWidthSizeClass = windowWidthSizeClass
         )
     }
 }

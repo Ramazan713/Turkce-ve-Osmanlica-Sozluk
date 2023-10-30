@@ -21,7 +21,7 @@ import com.masterplus.trdictionary.features.list.presentation.components.ListVie
 import com.masterplus.trdictionary.core.domain.util.ToastHelper
 import com.masterplus.trdictionary.core.presentation.components.CustomModalBottomSheet
 import com.masterplus.trdictionary.core.presentation.components.navigation.CustomTopAppBar
-import com.masterplus.trdictionary.core.presentation.dialog_body.SelectMenuItemBottomContent
+import com.masterplus.trdictionary.core.presentation.selectors.SelectMenuItemBottomContent
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowGetTextDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDialog
 import com.masterplus.trdictionary.R
@@ -82,12 +82,9 @@ fun ArchiveListPage(
                     onClick = {
                         onNavigateToDetailList(item.id?:0)
                     },
-                    onMenuClick = {
-                        onEvent(
-                            ArchiveListEvent.ShowModal(true,
-                                ArchiveListModalEvent.ShowSelectBottomMenu(item),
-                            ))
-                    }
+                    trailingItem = {
+
+                    },
                 )
             }
         }

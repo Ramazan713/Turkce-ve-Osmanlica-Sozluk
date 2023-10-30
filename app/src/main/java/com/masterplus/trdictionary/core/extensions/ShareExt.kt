@@ -1,4 +1,4 @@
-package com.masterplus.trdictionary.core.presentation.extensions
+package com.masterplus.trdictionary.core.extensions
 
 import android.content.Context
 import android.content.Intent

@@ -18,9 +18,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.R
-import com.masterplus.trdictionary.core.data.local.mapper.toWord
 import com.masterplus.trdictionary.core.domain.enums.IconInfo
-import com.masterplus.trdictionary.core.presentation.components.CustomDropdownBarMenu
+import com.masterplus.trdictionary.core.presentation.selectors.CustomDropdownBarMenu
 import com.masterplus.trdictionary.core.presentation.components.buttons.PrimaryButton
 import com.masterplus.trdictionary.features.word_detail.domain.constants.ShareItemEnum
 import com.masterplus.trdictionary.features.word_detail.domain.model.AudioState

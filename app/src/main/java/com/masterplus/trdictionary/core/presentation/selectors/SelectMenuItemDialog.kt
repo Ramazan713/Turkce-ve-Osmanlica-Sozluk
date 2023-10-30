@@ -1,4 +1,4 @@
-package com.masterplus.trdictionary.core.presentation.components.selections
+package com.masterplus.trdictionary.core.presentation.selectors
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*

@@ -16,7 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.enums.CategoryEnum
-import com.masterplus.trdictionary.core.presentation.components.CustomDropdownMenu
+import com.masterplus.trdictionary.core.presentation.selectors.CustomDropdownMenu
 import com.masterplus.trdictionary.core.presentation.components.buttons.NegativeButton
 import com.masterplus.trdictionary.core.presentation.components.buttons.PrimaryButton
 import com.masterplus.trdictionary.core.presentation.dialog_body.CustomDialog

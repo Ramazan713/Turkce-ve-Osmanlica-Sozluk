@@ -15,7 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.R
-import com.masterplus.trdictionary.core.presentation.components.CustomDropdownBarMenu
+import com.masterplus.trdictionary.core.presentation.selectors.CustomDropdownBarMenu
 import com.masterplus.trdictionary.core.presentation.components.EmptySearchField
 import com.masterplus.trdictionary.core.presentation.components.navigation.CustomTopAppBar
 import com.masterplus.trdictionary.core.presentation.features.premium.ShowPremiumActiveDialog

@@ -1,15 +1,26 @@
 package com.masterplus.trdictionary.features.list.presentation.show_list
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandIn
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -21,11 +32,13 @@ import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.enums.SavePointDestination
 import com.masterplus.trdictionary.core.domain.enums.SavePointType
+import com.masterplus.trdictionary.core.domain.model.ListView
 import com.masterplus.trdictionary.core.domain.util.ToastHelper
-import com.masterplus.trdictionary.core.presentation.components.CustomDropdownBarMenu
+import com.masterplus.trdictionary.core.extensions.isScrollingUp
+import com.masterplus.trdictionary.core.presentation.selectors.CustomDropdownBarMenu
 import com.masterplus.trdictionary.core.presentation.components.CustomModalBottomSheet
 import com.masterplus.trdictionary.core.presentation.components.navigation.CustomTopAppBar
-import com.masterplus.trdictionary.core.presentation.dialog_body.SelectMenuItemBottomContent
+import com.masterplus.trdictionary.core.presentation.selectors.SelectMenuItemBottomContent
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowGetTextDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDialog
 
@@ -44,12 +57,14 @@ fun ShowListPage(
     onNavigateToSettings: ()->Unit,
     state: ShowListState,
     onEvent: (ShowListEvent) -> Unit,
+    windowWidthSizeClass: WindowWidthSizeClass
 ){
     val context = LocalContext.current
 
-    val lazyListState = rememberLazyListState()
+    val lazyGridState = rememberLazyGridState()
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
+    val isScrollingUp = lazyGridState.isScrollingUp()
 
     state.message?.let { message->
         LaunchedEffect(message){
@@ -58,12 +73,18 @@ fun ShowListPage(
         }
     }
 
+    LaunchedEffect(key1 = isScrollingUp){
+        println("isScrollingUp: $isScrollingUp")
+    }
+
+
     Scaffold(
         topBar = {
             CustomTopAppBar(
                 title = stringResource(R.string.list),
                 scrollBehavior = topAppBarScrollBehavior,
                 actions = {
+
                     IconButton(onClick = {
                         onNavigateToArchive()
                     }){
@@ -88,52 +109,64 @@ fun ShowListPage(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    onEvent(
-                        ShowListEvent.ShowDialog(true,
-                        ShowListDialogEvent.TitleToAddList
-                    ))
-                },
-            ){
-                Icon(Icons.Default.Add,contentDescription = stringResource(R.string.add_list))
-            }
+            GetFab(
+                isVisible = lazyGridState.isScrollingUp(),
+                onEvent = onEvent
+            )
         },
     ){paddings->
-        LazyColumn(
-            modifier = Modifier.padding(paddings)
+
+        Box(
+            modifier = Modifier
+                .padding(paddings)
                 .fillMaxSize()
                 .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-            state = lazyListState
-        ){
-            item {
-                if(state.items.isEmpty()){
-                    Text(
-                        stringResource(R.string.list_empty_text),
-                        style = MaterialTheme.typography.bodyLarge,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(top = 100.dp)
-                    )
-                }
-            }
-            items(
-                state.items,
-                key = {item->item.id?:0}
-            ){item->
-                ListViewItem(
-                    listView = item,
-                    onClick = {
-                        onNavigateToDetailList(item.id?:0)
-                    },
-                    onMenuClick = {
-                        onEvent(
-                            ShowListEvent.ShowModal(true,
-                            ShowListModelEvent.ShowSelectBottomMenu(item),
-                        ))
-                    }
+        ) {
+            if(state.items.isEmpty()){
+                Text(
+                    stringResource(R.string.list_empty_text),
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.Center)
                 )
             }
+            LazyVerticalGrid(
+                modifier = Modifier.fillMaxSize(),
+                state = lazyGridState,
+                columns = GridCells.Adaptive(300.dp),
+                content = {
+                    items(
+                        state.items,
+                        key = {item->item.id?:0}
+                    ){item->
+                        ListViewItem(
+                            listView = item,
+                            onClick = {
+                                onNavigateToDetailList(item.id?:0)
+                            },
+                            trailingItem = {
+                                if(windowWidthSizeClass == WindowWidthSizeClass.Expanded){
+                                    CustomDropdownBarMenu(
+                                        items = ShowListBottomMenuEnum.from(item.isRemovable),
+                                        onItemChange = {menuItem->
+                                            handleSelectMenuItem(menuItem,onEvent,item)
+                                        }
+                                    )
+                                }else{
+                                    IconButton(onClick = {
+                                        onEvent(ShowListEvent.ShowModal(true,
+                                            ShowListModelEvent.ShowSelectBottomMenu(item)))
+                                    }){
+                                        Icon(painter = painterResource(R.drawable.ic_baseline_more_vert_24),contentDescription = null)
+                                    }
+                                }
+                            },
+                        )
+                    }
+                }
+            )
         }
     }
 
@@ -152,6 +185,31 @@ fun ShowListPage(
 }
 
 
+@Composable
+private fun GetFab(
+    isVisible: Boolean,
+    onEvent: (ShowListEvent)->Unit
+) {
+    AnimatedVisibility(
+        visible = isVisible,
+        enter = fadeIn(),
+        exit = fadeOut()
+    ) {
+        FloatingActionButton(
+            containerColor = MaterialTheme.colorScheme.primary,
+            onClick = {
+                onEvent(
+                    ShowListEvent.ShowDialog(true,
+                        ShowListDialogEvent.TitleToAddList
+                    ))
+            },
+        ){
+            Icon(Icons.Default.Add,contentDescription = stringResource(R.string.add_list))
+        }
+    }
+}
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ShowModal(
@@ -166,47 +224,10 @@ private fun ShowModal(
             is ShowListModelEvent.ShowSelectBottomMenu -> {
                 SelectMenuItemBottomContent(
                     title = stringResource(R.string.n_for_list_item,event.listView.name),
-                    items = ShowListBottomMenuEnum.values()
-                        .filter {
-                            if(!event.listView.isRemovable){
-                                return@filter listOf(
-                                    ShowListBottomMenuEnum.Rename,
-                                    ShowListBottomMenuEnum.Copy).contains(it)
-                            }
-                            true
-                        }
-                        .toList(),
+                    items = ShowListBottomMenuEnum.from(event.listView.isRemovable),
                     onClickItem = {selected->
                         onEvent(ShowListEvent.ShowModal(false))
-                        when(selected){
-                            ShowListBottomMenuEnum.Delete->{
-                                onEvent(
-                                    ShowListEvent.ShowDialog(true,
-                                    ShowListDialogEvent.AskDelete(event.listView),
-                                ))
-                            }
-                            ShowListBottomMenuEnum.Rename -> {
-                                onEvent(
-                                    ShowListEvent.ShowDialog(true,
-                                    ShowListDialogEvent.Rename(event.listView),
-                                ))
-                            }
-                            ShowListBottomMenuEnum.Archive -> {
-                                onEvent(
-                                    ShowListEvent.ShowDialog(true,
-                                    ShowListDialogEvent.AskArchive(event.listView),
-                                ))
-                            }
-                            ShowListBottomMenuEnum.Copy -> {
-                                onEvent(
-                                    ShowListEvent.ShowDialog(true,
-                                    ShowListDialogEvent.AskCopy(event.listView),
-                                ))
-                            }
-                            null -> {
-
-                            }
-                        }
+                        handleSelectMenuItem(selected,onEvent,event.listView)
                     }
                 )
             }
@@ -216,6 +237,41 @@ private fun ShowModal(
         }
     }
 }
+
+private fun handleSelectMenuItem(
+    menuEnum: ShowListBottomMenuEnum?,
+    onEvent: (ShowListEvent)->Unit,
+    listView: ListView
+){
+    when(menuEnum){
+        ShowListBottomMenuEnum.Delete->{
+            onEvent(
+                ShowListEvent.ShowDialog(true,
+                    ShowListDialogEvent.AskDelete(listView),
+                ))
+        }
+        ShowListBottomMenuEnum.Rename -> {
+            onEvent(
+                ShowListEvent.ShowDialog(true,
+                    ShowListDialogEvent.Rename(listView),
+                ))
+        }
+        ShowListBottomMenuEnum.Archive -> {
+            onEvent(
+                ShowListEvent.ShowDialog(true,
+                    ShowListDialogEvent.AskArchive(listView),
+                ))
+        }
+        ShowListBottomMenuEnum.Copy -> {
+            onEvent(
+                ShowListEvent.ShowDialog(true,
+                    ShowListDialogEvent.AskCopy(listView),
+                ))
+        }
+        null -> {}
+    }
+}
+
 
 @ExperimentalComposeUiApi
 @ExperimentalFoundationApi

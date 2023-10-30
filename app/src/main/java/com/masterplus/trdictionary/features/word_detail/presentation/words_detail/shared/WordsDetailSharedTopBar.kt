@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.masterplus.trdictionary.R
-import com.masterplus.trdictionary.core.presentation.components.CustomDropdownBarMenu
+import com.masterplus.trdictionary.core.presentation.selectors.CustomDropdownBarMenu
 import com.masterplus.trdictionary.core.presentation.components.navigation.CustomTopAppBar
 
 @ExperimentalMaterial3Api

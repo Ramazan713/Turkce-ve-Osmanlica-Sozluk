@@ -1,4 +1,4 @@
-package com.masterplus.trdictionary.core.presentation.components.selections
+package com.masterplus.trdictionary.core.presentation.selectors
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn

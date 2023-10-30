@@ -9,7 +9,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.enums.IMenuItemEnum
 import com.masterplus.trdictionary.core.presentation.components.CustomModalBottomSheet
-import com.masterplus.trdictionary.core.presentation.dialog_body.SelectMenuItemBottomContent
+import com.masterplus.trdictionary.core.presentation.selectors.SelectMenuItemBottomContent
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDialog
 import com.masterplus.trdictionary.core.presentation.features.select_list.select_list_dia.SelectListBottomContent
 import com.masterplus.trdictionary.core.presentation.features.select_list.constants.SelectListMenuEnum
