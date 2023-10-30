@@ -35,7 +35,6 @@ fun CategoryPage(
                 }
             }
         },
-        containerColor = MaterialTheme.colorScheme.surfaceVariant
     ) { paddings->
         LazyColumn(
             modifier = Modifier

@@ -1,4 +1,4 @@
-package com.masterplus.trdictionary.core.presentation.dialog_body
+package com.masterplus.trdictionary.core.presentation.components.selections
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.core.domain.enums.IMenuItemEnum
+import com.masterplus.trdictionary.core.presentation.dialog_body.CustomDialog
 
 @Composable
 fun <T: IMenuItemEnum> SelectMenuItemDialog(

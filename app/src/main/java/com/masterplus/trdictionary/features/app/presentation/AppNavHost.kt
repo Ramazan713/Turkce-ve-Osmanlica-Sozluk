@@ -1,16 +1,20 @@
-package com.masterplus.trdictionary.features.app.presentation.navigation
+package com.masterplus.trdictionary.features.app.presentation
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import androidx.window.layout.DisplayFeature
 import com.masterplus.trdictionary.core.domain.constants.K
 import com.masterplus.trdictionary.core.domain.enums.CategoryEnum
-import com.masterplus.trdictionary.features.app.domain.model.BottomNavRoute
+import com.masterplus.trdictionary.core.domain.enums.DevicePosture
+import com.masterplus.trdictionary.core.domain.enums.ListDetailContentType
+import com.masterplus.trdictionary.features.app.domain.model.AppNavRoute
 import com.masterplus.trdictionary.core.domain.enums.SubCategoryEnum
 import com.masterplus.trdictionary.core.presentation.features.premium.PremiumViewModel
 import com.masterplus.trdictionary.features.category.presentation.alphabetic.navigation.alphabeticCategoryPage
@@ -49,8 +53,15 @@ fun AppNavHost(
     modifier: Modifier = Modifier,
     premiumViewModel: PremiumViewModel,
     navController: NavHostController = rememberNavController(),
+    windowWidthSizeClass: WindowWidthSizeClass,
+    devicePosture: DevicePosture,
+    displayFeatures: List<DisplayFeature>,
 ){
-    NavHost(navController, startDestination = BottomNavRoute.Home.route, modifier) {
+
+    val listDetailContentType = ListDetailContentType.from(windowWidthSizeClass,devicePosture)
+
+
+    NavHost(navController, startDestination = AppNavRoute.Home.route, modifier) {
 
         homePage(
             premiumViewModel = premiumViewModel,

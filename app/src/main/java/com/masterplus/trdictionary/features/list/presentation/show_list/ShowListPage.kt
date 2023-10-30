@@ -99,7 +99,6 @@ fun ShowListPage(
                 Icon(Icons.Default.Add,contentDescription = stringResource(R.string.add_list))
             }
         },
-        containerColor = MaterialTheme.colorScheme.surfaceVariant,
     ){paddings->
         LazyColumn(
             modifier = Modifier.padding(paddings)

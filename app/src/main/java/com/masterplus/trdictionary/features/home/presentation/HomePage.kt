@@ -67,7 +67,7 @@ fun HomePage(
                 scrollBehavior = scrollBehavior
             )
         },
-        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+//        containerColor = MaterialTheme.colorScheme.surfaceVariant,
     ){paddings->
 
         LazyColumn(

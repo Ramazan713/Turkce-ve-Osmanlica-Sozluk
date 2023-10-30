@@ -15,12 +15,6 @@ fun CustomTopAppBar(
 ){
     TopAppBar(
         title = titleBody ?: { Text(title) },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            titleContentColor = MaterialTheme.colorScheme.onPrimary,
-            actionIconContentColor = MaterialTheme.colorScheme.onPrimary,
-            navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
-        ),
         scrollBehavior = scrollBehavior,
         navigationIcon = {if(onNavigateBack!=null) NavigationBackItem(onNavigateBack) },
         actions = actions
