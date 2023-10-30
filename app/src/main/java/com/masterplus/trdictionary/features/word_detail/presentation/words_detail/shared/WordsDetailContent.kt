@@ -62,9 +62,11 @@ fun WordsDetailContent(
                 CircularProgressIndicator(modifier = Modifier
                     .align(Alignment.Center).zIndex(1f))
             }
+
             HorizontalPager(
-                pageCount = pagingWords.itemCount,
+                modifier = Modifier,
                 state = pagerState,
+                contentPadding = PaddingValues(),
                 key = {index->index}
             ){index->
                 val completedWord = pagingWords[index]

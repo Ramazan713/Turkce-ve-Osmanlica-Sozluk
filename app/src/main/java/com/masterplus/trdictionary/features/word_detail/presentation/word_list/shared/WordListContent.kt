@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -18,7 +19,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.itemsIndexed
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.model.SimpleWordResult
 import com.masterplus.trdictionary.core.presentation.components.SimpleWordItem
@@ -62,10 +62,11 @@ fun WordListContent(
                     state = lazyListState,
                     modifier = Modifier.weight(1f)
                 ){
-                    itemsIndexed(
-                        pagingWords,
-                        key = {_,w-> w.wordId}
-                    ){i,word->
+                    items(
+                        pagingWords.itemCount,
+                        key = {i -> pagingWords[i]?.wordId ?: i}
+                    ){i->
+                        val word = pagingWords[i]
                         if (word!=null){
                             SimpleWordItem(
                                 order = i + 1,

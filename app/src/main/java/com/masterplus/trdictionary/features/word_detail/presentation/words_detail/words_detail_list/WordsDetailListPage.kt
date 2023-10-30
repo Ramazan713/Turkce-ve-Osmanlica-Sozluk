@@ -39,7 +39,7 @@ fun WordsDetailListPage(
     pagingWords: LazyPagingItems<WordWithSimilar>
 ){
 
-    val pagerState = rememberPagerState(initialPage = pos)
+    val pagerState = rememberPagerState(initialPage = pos, pageCount = { pagingWords.itemCount })
     val scope = rememberCoroutineScope()
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())

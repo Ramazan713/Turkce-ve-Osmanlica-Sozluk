@@ -16,29 +16,13 @@ fun CustomModalBottomSheet(
     modifier: Modifier = Modifier,
     sheetStateParam: SheetState? = null,
     skipHalfExpanded: Boolean = false,
-    enabledBackHandler: Boolean = true,
     content: @Composable (ColumnScope.() -> Unit)
 ){
 
-    val func = remember {
-        mutableStateOf(object: (SheetValue)->Boolean{
-            override fun invoke(it: SheetValue): Boolean {
-                if(it == SheetValue.Hidden){
-                    onDismissRequest()
-                }
-                return true
-            }
-        })
-    }
-
-    BackHandler(enabledBackHandler){
-        onDismissRequest()
-    }
-
-    val sheetState = sheetStateParam ?: rememberSheetState(
-        skipHalfExpanded = skipHalfExpanded,
-        confirmValueChange = func.value
+    val sheetState = sheetStateParam ?: rememberModalBottomSheetState(
+        skipPartiallyExpanded = skipHalfExpanded
     )
+
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,

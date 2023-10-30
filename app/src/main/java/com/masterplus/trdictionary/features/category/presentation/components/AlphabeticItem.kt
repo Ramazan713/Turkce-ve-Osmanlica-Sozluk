@@ -23,7 +23,7 @@ fun AlphabeticItem(
     val shape = MaterialTheme.shapes.medium
 
     ListItem(
-        headlineText = {
+        headlineContent = {
             Text(
                 c,
                 style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.W500),
