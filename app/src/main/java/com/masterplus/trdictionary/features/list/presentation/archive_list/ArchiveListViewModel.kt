@@ -36,12 +36,6 @@ class ArchiveListViewModel @Inject constructor(
                     dialogEvent = event.dialogEvent
                 )
             }
-            is ArchiveListEvent.ShowModal -> {
-                state = state.copy(
-                    showModal = event.showModal,
-                    modalEvent = event.modalEvent
-                )
-            }
             is ArchiveListEvent.UnArchive -> {
                 viewModelScope.launch {
                     listUseCases.updateList.invoke(event.listView, newIsArchive = false)

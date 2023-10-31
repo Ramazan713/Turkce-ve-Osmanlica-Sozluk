@@ -2,6 +2,7 @@ package com.masterplus.trdictionary.features.list.presentation.archive_list.navi
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -23,6 +24,7 @@ fun NavController.navigateToArchiveList(){
 fun NavGraphBuilder.archiveListPage(
     onNavigateBack: ()->Unit,
     onNavigateToDetailList: (listId: Int)->Unit,
+    windowWidthSizeClass: WindowWidthSizeClass
 ){
     composable(routeName){
 
@@ -32,7 +34,8 @@ fun NavGraphBuilder.archiveListPage(
             onNavigateBack = onNavigateBack,
             onNavigateToDetailList = onNavigateToDetailList,
             state = listViewModel.state,
-            onEvent = listViewModel::onEvent
+            onEvent = listViewModel::onEvent,
+            windowWidthSizeClass = windowWidthSizeClass
         )
     }
 }

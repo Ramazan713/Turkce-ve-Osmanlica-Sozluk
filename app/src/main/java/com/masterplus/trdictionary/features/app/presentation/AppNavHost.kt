@@ -98,10 +98,11 @@ fun AppNavHost(
             onNavigateToDetailList = {listId->
                 navController.navigateToWordListForList(listId)
             },
+            windowWidthSizeClass = windowWidthSizeClass
         )
 
         singleWordDetail(
-            onNavigateBack = {navController.popBackStack()},
+            onNavigateBack = { navController.popBackStack() },
             onRelatedWordClicked = {wordId->
                 navController.navigateToSingleWordDetail(wordId)
             }

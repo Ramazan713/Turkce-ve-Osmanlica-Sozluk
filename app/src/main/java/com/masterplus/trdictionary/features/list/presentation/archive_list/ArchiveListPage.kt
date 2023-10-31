@@ -1,14 +1,20 @@
 package com.masterplus.trdictionary.features.list.presentation.archive_list
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -25,6 +31,10 @@ import com.masterplus.trdictionary.core.presentation.selectors.SelectMenuItemBot
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowGetTextDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDialog
 import com.masterplus.trdictionary.R
+import com.masterplus.trdictionary.core.domain.model.ListView
+import com.masterplus.trdictionary.core.presentation.components.AdaptiveSelectSheetMenu
+import com.masterplus.trdictionary.core.presentation.components.ListenLifecycleMessage
+import com.masterplus.trdictionary.core.presentation.components.rememberAdaptiveSelectMenuState
 
 @ExperimentalMaterial3Api
 @ExperimentalFoundationApi
@@ -34,18 +44,20 @@ fun ArchiveListPage(
     onNavigateBack: ()->Unit,
     onNavigateToDetailList: (listId: Int)->Unit,
     state: ArchiveListState,
-    onEvent: (ArchiveListEvent) -> Unit
+    onEvent: (ArchiveListEvent) -> Unit,
+    windowWidthSizeClass: WindowWidthSizeClass
 ){
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
-    val context = LocalContext.current
+    val selectSheetState = rememberAdaptiveSelectMenuState<ArchiveListBottomMenuEnum>(
+        windowWidthSizeClass = windowWidthSizeClass
+    )
 
-    state.message?.let { message->
-        LaunchedEffect(message){
-            ToastHelper.showMessage(message,context)
-            onEvent(ArchiveListEvent.ClearMessage)
-        }
-    }
+
+    ListenLifecycleMessage(
+        message = state.message,
+        onDismiss = { onEvent(ArchiveListEvent.ClearMessage) }
+    )
 
     Scaffold(
         topBar = {
@@ -55,47 +67,56 @@ fun ArchiveListPage(
                 scrollBehavior = topAppBarScrollBehavior
             )
         },
-        containerColor = MaterialTheme.colorScheme.surfaceVariant
     ){paddings->
-        LazyColumn(
-            modifier = Modifier.padding(paddings)
-                .fillMaxSize()
-                .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
-        ) {
-            item {
-                if(state.items.isEmpty()){
-                    Text(
-                        stringResource(R.string.archive_empty_text),
-                        style = MaterialTheme.typography.bodyLarge,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(top = 100.dp)
-                    )
-                }
-            }
-            items(
-                state.items,
-                key = {item->item.id?:0}
-            ){item->
-                ListViewItem(
-                    listView = item,
-                    onClick = {
-                        onNavigateToDetailList(item.id?:0)
-                    },
-                    trailingItem = {
 
-                    },
+        Box(
+            modifier = Modifier
+                .padding(paddings)
+                .fillMaxSize()
+                .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+        ) {
+            if(state.items.isEmpty()){
+                Text(
+                    stringResource(R.string.archive_empty_text),
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.Center)
                 )
             }
+
+            LazyVerticalGrid(
+                modifier = Modifier.fillMaxSize(),
+                columns = GridCells.Adaptive(300.dp),
+                content = {
+                    items(
+                        state.items,
+                        key = {item->item.id?:0}
+                    ){item->
+                        ListViewItem(
+                            listView = item,
+                            onClick = {
+                                onNavigateToDetailList(item.id?:0)
+                            },
+                            trailingItem = {
+                                AdaptiveSelectSheetMenu(
+                                    state = selectSheetState,
+                                    items = ArchiveListBottomMenuEnum.values().toList(),
+                                    sheetTitle = stringResource(R.string.n_for_list_item,item.name),
+                                    onItemChange = { handleMenu(it,onEvent,item) }
+                                )
+                            },
+                        )
+                    }
+                }
+            )
         }
     }
 
-    if(state.showModal){
-        ShowModal(
-            state.modalEvent,
-            onEvent = {onEvent(it)}
-        )
-    }else if(state.showDialog){
+    selectSheetState.showSheet()
+
+    if(state.showDialog){
         ShowDialog(
             event = state.dialogEvent,
             onEvent = {onEvent(it)}
@@ -105,53 +126,33 @@ fun ArchiveListPage(
 }
 
 
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun ShowModal(
-    event: ArchiveListModalEvent?,
-    onEvent: (ArchiveListEvent)->Unit
+private fun handleMenu(
+    menuItem: ArchiveListBottomMenuEnum,
+    onEvent: (ArchiveListEvent) -> Unit,
+    listView: ListView
 ){
-    CustomModalBottomSheet(
-        onDismissRequest = {onEvent(ArchiveListEvent.ShowModal(false))}
-    ){
-        when(event){
-            is ArchiveListModalEvent.ShowSelectBottomMenu -> {
-                SelectMenuItemBottomContent(
-                    title = stringResource(R.string.n_for_list_item,event.listView.name),
-                    items = ArchiveListBottomMenuEnum.values().toList(),
-                    onClickItem = {selected->
-                        onEvent(ArchiveListEvent.ShowModal(false))
-                        when(selected){
-                            ArchiveListBottomMenuEnum.Delete->{
-                                onEvent(
-                                    ArchiveListEvent.ShowDialog(true,
-                                    ArchiveListDialogEvent.AskDelete(event.listView),
-                                ))
-                            }
-                            ArchiveListBottomMenuEnum.Rename -> {
-                                onEvent(
-                                    ArchiveListEvent.ShowDialog(true,
-                                    ArchiveListDialogEvent.Rename(event.listView),
-                                ))
-                            }
-                            ArchiveListBottomMenuEnum.UnArchive -> {
-                                onEvent(
-                                    ArchiveListEvent.ShowDialog(true,
-                                    ArchiveListDialogEvent.AskUnArchive(event.listView),
-                                ))
-                            }
-                            null -> {}
-                        }
-                    }
-                )
-            }
-            null -> {
-
-            }
+    when(menuItem){
+        ArchiveListBottomMenuEnum.Delete->{
+            onEvent(
+                ArchiveListEvent.ShowDialog(true,
+                    ArchiveListDialogEvent.AskDelete(listView),
+                ))
+        }
+        ArchiveListBottomMenuEnum.Rename -> {
+            onEvent(
+                ArchiveListEvent.ShowDialog(true,
+                    ArchiveListDialogEvent.Rename(listView),
+                ))
+        }
+        ArchiveListBottomMenuEnum.UnArchive -> {
+            onEvent(
+                ArchiveListEvent.ShowDialog(true,
+                    ArchiveListDialogEvent.AskUnArchive(listView),
+                ))
         }
     }
 }
+
 
 @ExperimentalComposeUiApi
 @ExperimentalFoundationApi

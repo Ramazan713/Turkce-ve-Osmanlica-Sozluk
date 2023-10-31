@@ -9,5 +9,4 @@ data class ArchiveListState(
     val showDialog: Boolean = false,
     val dialogEvent: ArchiveListDialogEvent? = null,
     val showModal: Boolean = false,
-    val modalEvent: ArchiveListModalEvent? = null
 )

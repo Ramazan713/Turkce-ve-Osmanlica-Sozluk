@@ -1,25 +1,20 @@
 package com.masterplus.trdictionary.features.list.presentation.show_list
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandIn
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -33,11 +28,14 @@ import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.enums.SavePointDestination
 import com.masterplus.trdictionary.core.domain.enums.SavePointType
 import com.masterplus.trdictionary.core.domain.model.ListView
-import com.masterplus.trdictionary.core.domain.util.ToastHelper
 import com.masterplus.trdictionary.core.extensions.isScrollingUp
+import com.masterplus.trdictionary.core.presentation.components.AdaptiveSelectSheetMenu
 import com.masterplus.trdictionary.core.presentation.selectors.CustomDropdownBarMenu
 import com.masterplus.trdictionary.core.presentation.components.CustomModalBottomSheet
+import com.masterplus.trdictionary.core.presentation.components.DefaultToolTip
+import com.masterplus.trdictionary.core.presentation.components.ListenLifecycleMessage
 import com.masterplus.trdictionary.core.presentation.components.navigation.CustomTopAppBar
+import com.masterplus.trdictionary.core.presentation.components.rememberAdaptiveSelectMenuState
 import com.masterplus.trdictionary.core.presentation.selectors.SelectMenuItemBottomContent
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowGetTextDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDialog
@@ -59,59 +57,36 @@ fun ShowListPage(
     onEvent: (ShowListEvent) -> Unit,
     windowWidthSizeClass: WindowWidthSizeClass
 ){
-    val context = LocalContext.current
 
     val lazyGridState = rememberLazyGridState()
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
-
     val isScrollingUp = lazyGridState.isScrollingUp()
 
-    state.message?.let { message->
-        LaunchedEffect(message){
-            ToastHelper.showMessage(message,context)
-            onEvent(ShowListEvent.ClearMessage)
-        }
-    }
+    val selectSheetState = rememberAdaptiveSelectMenuState<ShowListBottomMenuEnum>(
+        windowWidthSizeClass = windowWidthSizeClass,
+        hideSheetAfterMenuClick = true
+    )
 
-    LaunchedEffect(key1 = isScrollingUp){
-        println("isScrollingUp: $isScrollingUp")
-    }
+    ListenLifecycleMessage(
+        message = state.message,
+        onDismiss = { onEvent(ShowListEvent.ClearMessage) }
+    )
 
 
     Scaffold(
         topBar = {
-            CustomTopAppBar(
-                title = stringResource(R.string.list),
-                scrollBehavior = topAppBarScrollBehavior,
-                actions = {
-
-                    IconButton(onClick = {
-                        onNavigateToArchive()
-                    }){
-                        Icon(painterResource(R.drawable.ic_baseline_archive_24),contentDescription = null)
-                    }
-                    CustomDropdownBarMenu(
-                        items = ShowListBarMenuEnum.values().toList(),
-                        onItemChange = {menuItem->
-                            when(menuItem){
-                                ShowListBarMenuEnum.ShowSelectSavePoint -> {
-                                    onNavigateToSelectSavePoint(
-                                        context.getString(R.string.list),
-                                        listOf(SavePointDestination.List.destinationId),
-                                        SavePointType.List.typeId
-                                    )
-                                }
-                                ShowListBarMenuEnum.Settings -> {onNavigateToSettings()}
-                            }
-                        },
-                    )
-                }
+            GetTopBar(
+                topAppBarScrollBehavior = topAppBarScrollBehavior,
+                onNavigateToArchive = onNavigateToArchive,
+                onNavigateToSettings = onNavigateToSettings,
+                onNavigateToSelectSavePoint = onNavigateToSelectSavePoint
             )
         },
         floatingActionButton = {
             GetFab(
-                isVisible = lazyGridState.isScrollingUp(),
-                onEvent = onEvent
+                isScrollingUp = isScrollingUp,
+                onEvent = onEvent,
+                windowWidthSizeClass = windowWidthSizeClass
             )
         },
     ){paddings->
@@ -147,21 +122,14 @@ fun ShowListPage(
                                 onNavigateToDetailList(item.id?:0)
                             },
                             trailingItem = {
-                                if(windowWidthSizeClass == WindowWidthSizeClass.Expanded){
-                                    CustomDropdownBarMenu(
-                                        items = ShowListBottomMenuEnum.from(item.isRemovable),
-                                        onItemChange = {menuItem->
-                                            handleSelectMenuItem(menuItem,onEvent,item)
-                                        }
-                                    )
-                                }else{
-                                    IconButton(onClick = {
-                                        onEvent(ShowListEvent.ShowModal(true,
-                                            ShowListModelEvent.ShowSelectBottomMenu(item)))
-                                    }){
-                                        Icon(painter = painterResource(R.drawable.ic_baseline_more_vert_24),contentDescription = null)
+                                AdaptiveSelectSheetMenu(
+                                    state = selectSheetState,
+                                    items = ShowListBottomMenuEnum.from(item.isRemovable),
+                                    sheetTitle = stringResource(R.string.n_for_list_item, item.name),
+                                    onItemChange = {
+                                        handleSelectMenuItem(it,onEvent,item)
                                     }
-                                }
+                                )
                             },
                         )
                     }
@@ -169,6 +137,8 @@ fun ShowListPage(
             )
         }
     }
+
+    selectSheetState.showSheet()
 
     if(state.showModal){
         ShowModal(
@@ -187,26 +157,77 @@ fun ShowListPage(
 
 @Composable
 private fun GetFab(
-    isVisible: Boolean,
-    onEvent: (ShowListEvent)->Unit
+    isScrollingUp: Boolean,
+    onEvent: (ShowListEvent) -> Unit,
+    windowWidthSizeClass: WindowWidthSizeClass
 ) {
+    val expandedSizeClass = WindowWidthSizeClass.Expanded == windowWidthSizeClass
+    val expanded = expandedSizeClass && isScrollingUp
+
     AnimatedVisibility(
-        visible = isVisible,
+        visible = isScrollingUp || expandedSizeClass,
         enter = fadeIn(),
         exit = fadeOut()
     ) {
-        FloatingActionButton(
-            containerColor = MaterialTheme.colorScheme.primary,
-            onClick = {
-                onEvent(
-                    ShowListEvent.ShowDialog(true,
-                        ShowListDialogEvent.TitleToAddList
-                    ))
-            },
-        ){
-            Icon(Icons.Default.Add,contentDescription = stringResource(R.string.add_list))
+        DefaultToolTip(
+            tooltip = stringResource(R.string.add_list),
+            enabled = !expanded
+        ) {
+            ExtendedFloatingActionButton(
+                containerColor = MaterialTheme.colorScheme.primary,
+                icon = { Icon(Icons.Default.Add,contentDescription = stringResource(R.string.add_list)) },
+                text = { Text(text = stringResource(id = R.string.add))},
+                expanded = expanded,
+                onClick = { onEvent(ShowListEvent.ShowDialog(true, ShowListDialogEvent.TitleToAddList)) }
+            )
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun GetTopBar(
+    topAppBarScrollBehavior: TopAppBarScrollBehavior,
+    onNavigateToArchive: () -> Unit,
+    onNavigateToSettings: () -> Unit,
+    onNavigateToSelectSavePoint: (String,List<Int>,Int)->Unit,
+) {
+    val context = LocalContext.current
+
+    CustomTopAppBar(
+        title = stringResource(R.string.list),
+        scrollBehavior = topAppBarScrollBehavior,
+        actions = {
+
+            DefaultToolTip(
+                tooltip = stringResource(id = R.string.archive_n),
+                spacingBetweenTooltipAndAnchor = 8.dp,
+            ) {
+                IconButton(onClick = onNavigateToArchive){
+                    Icon(
+                        painterResource(R.drawable.ic_baseline_archive_24),
+                        contentDescription = stringResource(id = R.string.archive_n)
+                    )
+                }
+            }
+
+            CustomDropdownBarMenu(
+                items = ShowListBarMenuEnum.values().toList(),
+                onItemChange = {menuItem->
+                    when(menuItem){
+                        ShowListBarMenuEnum.ShowSelectSavePoint -> {
+                            onNavigateToSelectSavePoint(
+                                context.getString(R.string.list),
+                                listOf(SavePointDestination.List.destinationId),
+                                SavePointType.List.typeId
+                            )
+                        }
+                        ShowListBarMenuEnum.Settings -> {onNavigateToSettings()}
+                    }
+                },
+            )
+        }
+    )
 }
 
 
@@ -220,21 +241,7 @@ private fun ShowModal(
         onDismissRequest = {onEvent(ShowListEvent.ShowModal(false))},
         skipHalfExpanded = true
     ){
-        when(event){
-            is ShowListModelEvent.ShowSelectBottomMenu -> {
-                SelectMenuItemBottomContent(
-                    title = stringResource(R.string.n_for_list_item,event.listView.name),
-                    items = ShowListBottomMenuEnum.from(event.listView.isRemovable),
-                    onClickItem = {selected->
-                        onEvent(ShowListEvent.ShowModal(false))
-                        handleSelectMenuItem(selected,onEvent,event.listView)
-                    }
-                )
-            }
-            null -> {
 
-            }
-        }
     }
 }
 
