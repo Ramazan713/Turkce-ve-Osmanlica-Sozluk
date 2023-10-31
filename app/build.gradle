@@ -6,6 +6,8 @@ plugins {
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
     id 'com.google.firebase.firebase-perf'
+    id 'kotlin-parcelize'
+
 }
 
 def keystorePropertiesFile = rootProject.file("keystore.properties")
