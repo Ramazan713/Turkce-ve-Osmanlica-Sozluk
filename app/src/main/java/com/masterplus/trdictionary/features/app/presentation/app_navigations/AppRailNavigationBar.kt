@@ -22,19 +22,12 @@ fun AppRailNavigationBar(
     currentDestination: AppNavRoute?,
     onDestinationChange: (AppNavRoute) -> Unit,
     modifier: Modifier = Modifier,
-    onDrawerMenuClick: () -> Unit
 ) {
     val context = LocalContext.current
 
     NavigationRail(
         modifier = modifier,
     ) {
-        NavigationRailItem(
-            selected = false,
-            onClick = onDrawerMenuClick,
-            icon = { Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu") },
-        )
-
         Spacer(modifier = Modifier.weight(1f))
 
         LazyColumn(

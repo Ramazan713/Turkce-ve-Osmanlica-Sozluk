@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -52,6 +53,7 @@ import com.masterplus.trdictionary.features.app.presentation.components.InAppFea
 import com.masterplus.trdictionary.features.app.presentation.components.NavigationAnimatedVisibility
 import com.masterplus.trdictionary.features.app.presentation.in_app.InAppEvent
 import com.masterplus.trdictionary.features.app.presentation.in_app.InAppFeaturesViewModel
+import com.masterplus.trdictionary.features.list.presentation.show_list.ShowListViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.launch
@@ -123,7 +125,6 @@ fun MyApp(
     premiumViewModel: PremiumViewModel,
 ) {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
 
     val windowSizeClass = calculateWindowSizeClass(activity = context as Activity).widthSizeClass
     val displayFeatures = calculateDisplayFeatures(activity = context)
@@ -133,68 +134,28 @@ fun MyApp(
     val navigationType = AppNavigationType.from(windowSizeClass, devicePosture)
 
 
-    val modalDrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-
-    LaunchedEffect(navigationType){
-        if(modalDrawerState.isOpen && navigationType != AppNavigationType.RAIL){
-            modalDrawerState.close()
-        }
-    }
-
-    if(navigationType == AppNavigationType.DRAWER){
-        PermanentNavigationDrawer(
-            drawerContent = {
-                NavigationAnimatedVisibility(
-                    visible = navigationVisible,
-                ) {
-                    AppPersistentDrawerNavigationBar(
-                        currentDestination = currentNavRoute,
-                        onDestinationChange = { navHostController.navigateToNavRoute(it)}
-                    )
-                }
+    PermanentNavigationDrawer(
+        drawerContent = {
+            NavigationAnimatedVisibility(
+                visible = navigationVisible && windowSizeClass == WindowWidthSizeClass.Expanded,
+            ) {
+                AppPersistentDrawerNavigationBar(
+                    currentDestination = currentNavRoute,
+                    onDestinationChange = { navHostController.navigateToNavRoute(it)},
+                )
             }
-        ) {
-            AppContent(
-                navigationVisible = navigationVisible,
-                navigationType = navigationType,
-                devicePosture = devicePosture,
-                windowSizeClass = windowSizeClass,
-                navHostController = navHostController,
-                currentNavRoute = currentNavRoute,
-                premiumViewModel = premiumViewModel,
-                displayFeatures = displayFeatures,
-                onDrawerClick = { scope.launch { modalDrawerState.open() } }
-            )
         }
-    }else{
-        ModalNavigationDrawer(
-            drawerState = modalDrawerState,
-            gesturesEnabled = navigationVisible && navigationType == AppNavigationType.RAIL,
-            drawerContent = {
-                NavigationAnimatedVisibility(
-                    visible = navigationVisible,
-                ) {
-                    AppModalDrawerNavigationBar(
-                        currentDestination = currentNavRoute,
-                        onDestinationChange = { navHostController.navigateToNavRoute(it) },
-                        onDrawerMenuClick = { scope.launch { modalDrawerState.close() } }
-                    )
-                }
-            }
-        ) {
-            AppContent(
-                navigationVisible = navigationVisible,
-                navigationType = navigationType,
-                devicePosture = devicePosture,
-                windowSizeClass = windowSizeClass,
-                navHostController = navHostController,
-                currentNavRoute = currentNavRoute,
-                premiumViewModel = premiumViewModel,
-                displayFeatures = displayFeatures,
-                onDrawerClick = { scope.launch { modalDrawerState.open() } }
-            )
-        }
-
+    ) {
+        AppContent(
+            navigationVisible = navigationVisible,
+            navigationType = navigationType,
+            devicePosture = devicePosture,
+            windowSizeClass = windowSizeClass,
+            navHostController = navHostController,
+            currentNavRoute = currentNavRoute,
+            premiumViewModel = premiumViewModel,
+            displayFeatures = displayFeatures,
+        )
     }
 }
 
@@ -211,9 +172,7 @@ fun AppContent(
     navHostController: NavHostController,
     currentNavRoute: AppNavRoute?,
     premiumViewModel: PremiumViewModel,
-    onDrawerClick: () -> Unit
 ) {
-
     Scaffold(
         bottomBar = {
             NavigationAnimatedVisibility(
@@ -228,7 +187,6 @@ fun AppContent(
             }
         },
     ) { innerPadding ->
-
         Row(
             modifier = Modifier
                 .fillMaxSize()
@@ -242,7 +200,6 @@ fun AppContent(
                     onDestinationChange = {
                         navHostController.navigateToNavRoute(it)
                     },
-                    onDrawerMenuClick = { onDrawerClick() }
                 )
             }
 
