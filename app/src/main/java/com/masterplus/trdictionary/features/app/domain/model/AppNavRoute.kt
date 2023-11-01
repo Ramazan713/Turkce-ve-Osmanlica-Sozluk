@@ -9,7 +9,7 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.ViewList
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.masterplus.trdictionary.R
-import com.masterplus.trdictionary.core.domain.util.UiText
+import com.masterplus.trdictionary.core.util.UiText
 import com.masterplus.trdictionary.features.category.presentation.category.navigation.RouteCategory
 import com.masterplus.trdictionary.features.home.presentation.navigation.RouteHome
 import com.masterplus.trdictionary.features.list.presentation.show_list.navigation.RouteList

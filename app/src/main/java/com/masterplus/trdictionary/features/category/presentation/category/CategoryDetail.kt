@@ -41,7 +41,7 @@ import com.masterplus.trdictionary.core.domain.enums.CategoryEnum
 import com.masterplus.trdictionary.core.domain.enums.SavePointDestination
 import com.masterplus.trdictionary.core.domain.enums.SavePointType
 import com.masterplus.trdictionary.core.domain.enums.SubCategoryEnum
-import com.masterplus.trdictionary.core.domain.util.UiText
+import com.masterplus.trdictionary.core.util.UiText
 import com.masterplus.trdictionary.core.extensions.isScrollingUp
 import com.masterplus.trdictionary.core.presentation.components.EmptySearchField
 import com.masterplus.trdictionary.core.presentation.components.navigation.CustomTopAppBar
@@ -179,7 +179,7 @@ private fun ShowText(
 @Composable
 fun CategoryDetailPreview() {
     CategoryDetail(
-        category = Category(CategoryEnum.OsmDict,UiText.Text("asd"),2),
+        category = Category(CategoryEnum.OsmDict, UiText.Text("asd"),2),
         lazyListState = LazyListState(),
         onNavigateToAlphabeticCat = {},
         onNavigateToWordList = {categoryEnum, subCategoryEnum ->  },

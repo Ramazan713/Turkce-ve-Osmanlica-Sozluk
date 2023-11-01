@@ -1,7 +1,7 @@
 package com.masterplus.trdictionary.features.settings.domain.manager
 
 import com.masterplus.trdictionary.features.settings.domain.model.User
-import com.masterplus.trdictionary.core.domain.util.Resource
+import com.masterplus.trdictionary.core.util.Resource
 
 interface BackupManager {
 

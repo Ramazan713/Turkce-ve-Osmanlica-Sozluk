@@ -2,7 +2,7 @@ package com.masterplus.trdictionary.features.settings.data.mapper
 
 import com.google.firebase.storage.StorageMetadata
 import com.masterplus.trdictionary.core.domain.enums.DateFormatEnum
-import com.masterplus.trdictionary.core.domain.util.DateFormatHelper
+import com.masterplus.trdictionary.core.util.DateFormatHelper
 import com.masterplus.trdictionary.core.data.local.entities.BackupMetaEntity
 import com.masterplus.trdictionary.features.settings.domain.model.BackupMeta
 

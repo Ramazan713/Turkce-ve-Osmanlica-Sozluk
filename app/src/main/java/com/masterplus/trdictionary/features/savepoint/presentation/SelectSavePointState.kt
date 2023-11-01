@@ -1,7 +1,7 @@
 package com.masterplus.trdictionary.features.savepoint.presentation
 
 import com.masterplus.trdictionary.core.domain.model.SavePoint
-import com.masterplus.trdictionary.core.domain.util.UiText
+import com.masterplus.trdictionary.core.util.UiText
 import com.masterplus.trdictionary.features.savepoint.presentation.constants.SelectSavePointMenuItem
 
 data class SelectSavePointState(

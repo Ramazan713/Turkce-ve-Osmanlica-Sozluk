@@ -11,7 +11,7 @@ import com.google.android.play.core.review.ReviewManagerFactory
 import com.masterplus.trdictionary.core.domain.constants.K
 import com.masterplus.trdictionary.core.domain.constants.KPref
 import com.masterplus.trdictionary.core.domain.preferences.AppPreferences
-import com.masterplus.trdictionary.core.domain.util.DateFormatHelper
+import com.masterplus.trdictionary.core.util.DateFormatHelper
 import com.masterplus.trdictionary.features.word_detail.presentation.single_word_detail.navigation.RouteSingleWordDetail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -74,7 +74,7 @@ class InAppFeaturesViewModel @Inject constructor(
                 reviewInfoFlow.value = task.result
             }
         }
-        appPreferences.setItem(KPref.inAppReviewDay,DateFormatHelper.toDateMillis(Date().time))
+        appPreferences.setItem(KPref.inAppReviewDay, DateFormatHelper.toDateMillis(Date().time))
     }
 
     private fun showReviewApi(){

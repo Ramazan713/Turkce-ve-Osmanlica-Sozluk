@@ -199,4 +199,5 @@
     <string name="category_not_found">Kategori bulunamadı</string>
     <string name="back">Geri</string>
     <string name="refresh">Yenile</string>
+    <string name="close">Kapat</string>
 </resources>

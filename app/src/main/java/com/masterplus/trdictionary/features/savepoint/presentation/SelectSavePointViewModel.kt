@@ -10,7 +10,7 @@ import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.enums.CategoryEnum
 import com.masterplus.trdictionary.core.domain.enums.SavePointDestination
 import com.masterplus.trdictionary.core.domain.use_cases.savepoint.SavePointsUseCases
-import com.masterplus.trdictionary.core.domain.util.UiText
+import com.masterplus.trdictionary.core.util.UiText
 import com.masterplus.trdictionary.features.savepoint.presentation.constants.SelectSavePointMenuItem
 import com.masterplus.trdictionary.features.savepoint.presentation.navigation.SelectSavePointArgs
 import dagger.hilt.android.lifecycle.HiltViewModel

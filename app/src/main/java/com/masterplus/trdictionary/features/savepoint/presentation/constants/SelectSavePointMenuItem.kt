@@ -2,7 +2,7 @@ package com.masterplus.trdictionary.features.savepoint.presentation.constants
 
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.enums.*
-import com.masterplus.trdictionary.core.domain.util.UiText
+import com.masterplus.trdictionary.core.util.UiText
 
 enum class SelectSavePointMenuItem(val destinationId: Int): IMenuItemEnum {
     All(destinationId = 0) {

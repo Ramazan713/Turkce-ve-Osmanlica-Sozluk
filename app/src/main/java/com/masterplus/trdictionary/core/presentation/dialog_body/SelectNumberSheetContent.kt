@@ -1,5 +1,6 @@
 package com.masterplus.trdictionary.core.presentation.dialog_body
 
+import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardActions
@@ -17,26 +18,27 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.R
-import com.masterplus.trdictionary.core.presentation.components.RotatableLaunchEffect
-import com.masterplus.trdictionary.core.presentation.components.buttons.NegativeFilledButton
-import com.masterplus.trdictionary.core.presentation.components.buttons.PrimaryButton
+import com.masterplus.trdictionary.core.util.PreviewDesktop
 
 
 @Composable
 fun ShowSelectNumberDialog(
-    minValueParam: Int, maxValueParam: Int, onApprove: (Int)->Unit,
-    onClose:()->Unit,
-    currentValue: Int = minValueParam,
+    minValue: Int,
+    maxValue: Int,
+    onApprove: (Int) -> Unit,
+    onClose:() -> Unit,
+    currentValue: Int = minValue,
 ){
-
-    val minValue by rememberUpdatedState(minValueParam)
-    val maxValue by rememberUpdatedState(maxValueParam)
-
-    var textState by rememberSaveable(stateSaver = TextFieldValue.Saver) {
-        mutableStateOf(TextFieldValue(currentValue.toString(),
-            TextRange(currentValue.toString().length)))
+    var textState by rememberSaveable(
+        stateSaver = TextFieldValue.Saver
+    ) {
+        mutableStateOf(
+            TextFieldValue(currentValue.toString(),
+            TextRange(currentValue.toString().length))
+        )
     }
     var errorState by rememberSaveable{
         mutableStateOf<String?>(null)
@@ -44,24 +46,8 @@ fun ShowSelectNumberDialog(
     val context = LocalContext.current
     val focusRequester = remember { FocusRequester() }
 
-    RotatableLaunchEffect {
+    LaunchedEffect(Unit) {
         focusRequester.requestFocus()
-    }
-
-    fun checkNumberAndApprove(){
-        val num=textState.text.toIntOrNull()
-
-        if(num==null){
-            errorState = context.getString(R.string.error_only_enter_number)
-            return
-        }
-        if(num<minValue || num > maxValue){
-            errorState = context.getString(R.string.error_mismatch_range)
-            return
-        }
-        errorState = null
-        onApprove(num)
-        onClose()
     }
 
     CustomDialog(
@@ -70,13 +56,13 @@ fun ShowSelectNumberDialog(
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 7.dp, horizontal = 3.dp)
-
+                .padding(horizontal = 6.dp)
+                .padding(top = 16.dp, bottom = 2.dp)
         ) {
             item {
                 Text(
                     stringResource(R.string.error_mismatch_range_with_values,minValue,maxValue),
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
                 )
@@ -88,7 +74,17 @@ fun ShowSelectNumberDialog(
                     onValueChange = {textState = it},
                     keyboardActions = KeyboardActions(
                         onDone = {
-                            checkNumberAndApprove()
+                            checkNumberAndApprove(
+                                context,
+                                onSetError = { errorState = it },
+                                minValue = minValue,
+                                maxValue = maxValue,
+                                text = textState.text,
+                                onApprove = {
+                                    onApprove(it)
+                                    onClose()
+                                }
+                            )
                         },
                     ),
                     keyboardOptions = KeyboardOptions(
@@ -96,33 +92,86 @@ fun ShowSelectNumberDialog(
                         imeAction = ImeAction.Done,
                         autoCorrect = false,
                     ),
-                    isError = errorState!=null,
+                    isError = errorState != null,
                     label = { errorState?.let { Text(it) } },
                     singleLine = true,
                     shape = MaterialTheme.shapes.medium,
-                    modifier = Modifier.focusRequester(focusRequester).fillMaxWidth()
+                    modifier = Modifier
+                        .focusRequester(focusRequester)
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
                 )
                 Spacer(Modifier.height(16.dp))
             }
             item {
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 7.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 7.dp),
                     horizontalArrangement = Arrangement.spacedBy(7.dp)
                 ) {
 
-                    NegativeFilledButton(
-                        title = stringResource(R.string.cancel),
+                    TextButton(
                         onClick = onClose,
                         modifier = Modifier.weight(1f)
-                    )
+                    ){
+                        Text(stringResource(R.string.cancel),)
+                    }
 
-                    PrimaryButton(
-                        title = stringResource(R.string.approve),
-                        onClick = ::checkNumberAndApprove,
+                    FilledTonalButton(
+                        onClick = {
+                            checkNumberAndApprove(
+                                context,
+                                onSetError = { errorState = it },
+                                minValue = minValue,
+                                maxValue = maxValue,
+                                text = textState.text,
+                                onApprove = {
+                                    onApprove(it)
+                                    onClose()
+                                }
+                            )
+                        },
                         modifier = Modifier.weight(1f)
-                    )
+                    ){
+                        Text(stringResource(R.string.approve),)
+                    }
                 }
             }
         }
     }
+}
+
+private fun checkNumberAndApprove(
+    context: Context,
+    onSetError: (String?) -> Unit,
+    minValue: Int,
+    maxValue: Int,
+    text: String,
+    onApprove: (Int) -> Unit
+){
+    val num = text.toIntOrNull()
+
+    if(num == null){
+        onSetError(context.getString(R.string.error_only_enter_number))
+        return
+    }
+    if(num < minValue || num > maxValue){
+        onSetError(context.getString(R.string.error_mismatch_range))
+        return
+    }
+    onSetError(null)
+    onApprove(num)
+}
+
+@PreviewDesktop
+@Preview(showBackground = true)
+@Composable
+fun ShowSelectNumberDialogPreview() {
+    ShowSelectNumberDialog(
+        minValue = 10,
+        maxValue = 100,
+        onApprove = {},
+        onClose = {}
+    )
 }

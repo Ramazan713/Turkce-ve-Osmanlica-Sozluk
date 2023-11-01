@@ -2,6 +2,7 @@ package com.masterplus.trdictionary.core.presentation.dialog_body
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -16,22 +17,21 @@ fun CustomDialog(
     onClosed: ()->Unit,
     modifier: Modifier = Modifier,
     allowDismiss: Boolean = true,
+    usePlatformDefaultWidth: Boolean = true,
     content: @Composable () -> Unit,
 ){
     Dialog(
         onDismissRequest = onClosed,
         properties = DialogProperties(
-            usePlatformDefaultWidth = false,
+            usePlatformDefaultWidth = usePlatformDefaultWidth,
             dismissOnBackPress = allowDismiss,
             dismissOnClickOutside = allowDismiss
         )
     ){
         Surface(
-            modifier = modifier.padding(horizontal = 5.dp)
+            modifier = modifier
                 .fillMaxWidth()
                 .clip(MaterialTheme.shapes.medium),
-            color = MaterialTheme.colorScheme.surfaceVariant,
-            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
         ){
             content()
         }

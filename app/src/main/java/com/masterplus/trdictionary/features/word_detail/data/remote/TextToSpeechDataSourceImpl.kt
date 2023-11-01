@@ -3,8 +3,8 @@ package com.masterplus.trdictionary.features.word_detail.data.remote
 import android.util.Base64
 import com.masterplus.trdictionary.BuildConfig
 import com.masterplus.trdictionary.R
-import com.masterplus.trdictionary.core.domain.util.Resource
-import com.masterplus.trdictionary.core.domain.util.UiText
+import com.masterplus.trdictionary.core.util.Resource
+import com.masterplus.trdictionary.core.util.UiText
 import javax.inject.Inject
 
 

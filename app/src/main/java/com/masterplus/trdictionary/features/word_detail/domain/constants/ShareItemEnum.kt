@@ -3,7 +3,7 @@ package com.masterplus.trdictionary.features.word_detail.domain.constants
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.enums.IMenuItemEnum
 import com.masterplus.trdictionary.core.domain.enums.IconInfo
-import com.masterplus.trdictionary.core.domain.util.UiText
+import com.masterplus.trdictionary.core.util.UiText
 
 enum class ShareItemEnum: IMenuItemEnum {
     ShareWord {

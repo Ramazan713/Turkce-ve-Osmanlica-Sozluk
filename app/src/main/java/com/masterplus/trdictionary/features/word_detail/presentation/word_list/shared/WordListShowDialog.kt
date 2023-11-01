@@ -37,8 +37,8 @@ fun WordListSharedShowDialog(
     when(event){
         is WordListSharedDialogEvent.ShowSelectNumber -> {
             ShowSelectNumberDialog(
-                minValueParam = 1,
-                maxValueParam = maxPos,
+                minValue = 1,
+                maxValue = maxPos,
                 onApprove = {onScrollTo(it - 1)},
                 currentValue = visibleMiddlePos + 1,
                 onClose = { close() }

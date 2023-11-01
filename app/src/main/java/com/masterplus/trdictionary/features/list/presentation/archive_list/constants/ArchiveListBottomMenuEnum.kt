@@ -3,7 +3,7 @@ package com.masterplus.trdictionary.features.list.presentation.archive_list.cons
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.enums.IMenuItemEnum
 import com.masterplus.trdictionary.core.domain.enums.IconInfo
-import com.masterplus.trdictionary.core.domain.util.UiText
+import com.masterplus.trdictionary.core.util.UiText
 
 enum class ArchiveListBottomMenuEnum: IMenuItemEnum {
 

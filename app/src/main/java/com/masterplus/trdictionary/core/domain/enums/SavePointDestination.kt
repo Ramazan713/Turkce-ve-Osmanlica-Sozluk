@@ -1,7 +1,7 @@
 package com.masterplus.trdictionary.core.domain.enums
 
 import com.masterplus.trdictionary.R
-import com.masterplus.trdictionary.core.domain.util.UiText
+import com.masterplus.trdictionary.core.util.UiText
 
 sealed class SavePointDestination(val destinationId: Int, val description: UiText, open val type: SavePointType) {
 

@@ -1,6 +1,6 @@
 package com.masterplus.trdictionary.core.presentation.features.premium
 
-import com.masterplus.trdictionary.core.domain.util.UiText
+import com.masterplus.trdictionary.core.util.UiText
 
 data class PremiumState(
     val isPremium: Boolean = false,

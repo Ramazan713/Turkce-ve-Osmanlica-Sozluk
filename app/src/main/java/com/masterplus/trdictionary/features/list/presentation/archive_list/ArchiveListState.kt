@@ -1,7 +1,7 @@
 package com.masterplus.trdictionary.features.list.presentation.archive_list
 
 import com.masterplus.trdictionary.core.domain.model.ListView
-import com.masterplus.trdictionary.core.domain.util.UiText
+import com.masterplus.trdictionary.core.util.UiText
 
 data class ArchiveListState(
     val items: List<ListView> = emptyList(),

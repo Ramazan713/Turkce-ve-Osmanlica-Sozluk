@@ -27,8 +27,8 @@ fun WordsDetailShowSharedDialog(
     when(event){
         WordsDetailSharedDialogEvent.ShowSelectNumber -> {
             ShowSelectNumberDialog(
-                minValueParam = 1,
-                maxValueParam = maxPages,
+                minValue = 1,
+                maxValue = maxPages,
                 onApprove = {onScrollTo(it - 1)},
                 currentValue = currentPage + 1,
                 onClose = { close() }

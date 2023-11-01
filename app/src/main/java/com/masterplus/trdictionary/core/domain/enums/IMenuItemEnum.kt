@@ -1,7 +1,7 @@
 package com.masterplus.trdictionary.core.domain.enums
 
 import androidx.compose.ui.graphics.Color
-import com.masterplus.trdictionary.core.domain.util.UiText
+import com.masterplus.trdictionary.core.util.UiText
 
 interface IMenuItemEnum {
     val title: UiText

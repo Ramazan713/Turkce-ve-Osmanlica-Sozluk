@@ -1,7 +1,7 @@
 package com.masterplus.trdictionary.core.domain.enums
 
 import com.masterplus.trdictionary.core.domain.preferences.model.IEnumPrefValue
-import com.masterplus.trdictionary.core.domain.util.UiText
+import com.masterplus.trdictionary.core.util.UiText
 
 enum class SearchResultEnum (
     override val title: UiText,

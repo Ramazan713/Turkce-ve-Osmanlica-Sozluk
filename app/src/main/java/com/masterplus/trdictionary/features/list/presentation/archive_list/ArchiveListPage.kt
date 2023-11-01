@@ -24,7 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.features.list.presentation.archive_list.constants.ArchiveListBottomMenuEnum
 import com.masterplus.trdictionary.features.list.presentation.components.ListViewItem
-import com.masterplus.trdictionary.core.domain.util.ToastHelper
+import com.masterplus.trdictionary.core.util.ToastHelper
 import com.masterplus.trdictionary.core.presentation.components.CustomModalBottomSheet
 import com.masterplus.trdictionary.core.presentation.components.navigation.CustomTopAppBar
 import com.masterplus.trdictionary.core.presentation.selectors.SelectMenuItemBottomContent

@@ -1,6 +1,6 @@
 package com.masterplus.trdictionary.features.settings.domain.repo
 
-import com.masterplus.trdictionary.core.domain.util.Resource
+import com.masterplus.trdictionary.core.util.Resource
 import com.masterplus.trdictionary.features.settings.domain.model.User
 import com.masterplus.trdictionary.features.settings.domain.model.BackupMeta
 

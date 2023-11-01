@@ -3,8 +3,8 @@ package com.masterplus.trdictionary.features.settings.data.manager
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.constants.K
 import com.masterplus.trdictionary.core.domain.ConnectivityProvider
-import com.masterplus.trdictionary.core.domain.util.Resource
-import com.masterplus.trdictionary.core.domain.util.UiText
+import com.masterplus.trdictionary.core.util.Resource
+import com.masterplus.trdictionary.core.util.UiText
 import com.masterplus.trdictionary.features.settings.domain.model.User
 import com.masterplus.trdictionary.features.settings.domain.manager.BackupManager
 import com.masterplus.trdictionary.features.settings.domain.repo.StorageService
@@ -22,7 +22,7 @@ class BackupManagerImpl @Inject constructor(
     private val connectivityProvider: ConnectivityProvider
 ): BackupManager {
 
-    override suspend fun uploadBackup(user: User): Resource<Unit>{
+    override suspend fun uploadBackup(user: User): Resource<Unit> {
         hasInternetConnectionError<Unit>()?.let { return it }
         cutExtraBackupFiles(user)
         val fileName = UUID.randomUUID().toString()
@@ -46,7 +46,7 @@ class BackupManagerImpl @Inject constructor(
         backupMetaRepo.deleteBackupMetas(backupMetas)
     }
 
-    override suspend fun downloadBackup(user: User, fileName: String, removeAllData: Boolean, addOnLocalData: Boolean): Resource<Unit>{
+    override suspend fun downloadBackup(user: User, fileName: String, removeAllData: Boolean, addOnLocalData: Boolean): Resource<Unit> {
         hasInternetConnectionError<Unit>()?.let { return it }
         return storageService.getFileData(user, fileName).let {
             if(it is Resource.Success){

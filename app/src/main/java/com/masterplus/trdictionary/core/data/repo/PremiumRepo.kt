@@ -3,7 +3,7 @@ package com.masterplus.trdictionary.core.data.repo
 import android.content.Context
 import com.android.billingclient.api.*
 import com.masterplus.trdictionary.R
-import com.masterplus.trdictionary.core.domain.util.UiText
+import com.masterplus.trdictionary.core.util.UiText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow

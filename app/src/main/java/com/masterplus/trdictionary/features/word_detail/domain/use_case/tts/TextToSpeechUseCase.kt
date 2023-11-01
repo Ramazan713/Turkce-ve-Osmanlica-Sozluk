@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
-import com.masterplus.trdictionary.core.domain.util.Resource
+import com.masterplus.trdictionary.core.util.Resource
 import com.masterplus.trdictionary.features.word_detail.data.remote.TextToSpeechDataSource
 import java.io.File
 import javax.inject.Inject

@@ -1,8 +1,10 @@
 package com.masterplus.trdictionary.core.presentation.dialog_body
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,10 +19,9 @@ import com.masterplus.trdictionary.R
 fun ShowQuestionDialog(
     title: String? = null,
     content: String? = null,
-    onApproved: ()->Unit,
-    onDisApproved: (()->Unit)? = null,
+    onApproved: () -> Unit,
     allowDismiss: Boolean = true,
-    onClosed: ()->Unit,
+    onClosed: () -> Unit,
     negativeTitle: String = stringResource(R.string.cancel),
     positiveTitle: String = stringResource(R.string.approve)
 ){
@@ -30,10 +31,12 @@ fun ShowQuestionDialog(
         allowDismiss = allowDismiss
     ){
         Column(
-            modifier = Modifier.fillMaxWidth()
-                .padding(horizontal = 3.dp, vertical = 5.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 6.dp)
+                .padding(top = 16.dp, bottom = 2.dp)
         ) {
-            if(title!=null){
+            if(title != null){
                 Text(
                     title,
                     modifier = Modifier.fillMaxWidth()
@@ -42,7 +45,7 @@ fun ShowQuestionDialog(
                     style = MaterialTheme.typography.titleLarge
                 )
             }
-            if(content!=null){
+            if(content != null){
                 Text(
                     content,
                     modifier = Modifier.fillMaxWidth()
@@ -57,24 +60,22 @@ fun ShowQuestionDialog(
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(7.dp)
             ) {
-
-                NegativeFilledButton(
-                    title = negativeTitle,
-                    onClick = {
-                        onClosed()
-                        onDisApproved?.invoke()
-                    },
+                TextButton(
+                    onClick = { onClosed() },
                     modifier = Modifier.weight(1f)
-                )
+                ){
+                    Text(negativeTitle)
+                }
 
-                PrimaryButton(
-                    title = positiveTitle,
+                FilledTonalButton(
                     onClick = {
-                        onClosed()
                         onApproved()
+                        onClosed()
                     },
                     modifier = Modifier.weight(1f)
-                )
+                ){
+                    Text(positiveTitle)
+                }
             }
         }
     }

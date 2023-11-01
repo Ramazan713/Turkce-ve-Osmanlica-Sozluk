@@ -10,8 +10,8 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import com.masterplus.trdictionary.R
-import com.masterplus.trdictionary.core.domain.util.ToastHelper
-import com.masterplus.trdictionary.core.domain.util.UiText
+import com.masterplus.trdictionary.core.util.ToastHelper
+import com.masterplus.trdictionary.core.util.UiText
 import com.masterplus.trdictionary.features.word_detail.domain.model.WordDetailMeanings
 
 

@@ -11,8 +11,8 @@ import com.google.firebase.auth.FirebaseAuth.AuthStateListener
 import com.google.firebase.auth.GoogleAuthProvider
 import com.masterplus.trdictionary.features.settings.domain.model.User
 import com.masterplus.trdictionary.R
-import com.masterplus.trdictionary.core.domain.util.Resource
-import com.masterplus.trdictionary.core.domain.util.UiText
+import com.masterplus.trdictionary.core.util.Resource
+import com.masterplus.trdictionary.core.util.UiText
 import com.masterplus.trdictionary.features.settings.data.mapper.toUser
 import com.masterplus.trdictionary.features.settings.domain.repo.AuthRepo
 import kotlinx.coroutines.channels.awaitClose
@@ -72,7 +72,7 @@ class FirebaseAuthRepo @Inject constructor(
             firebaseAuth.signOut()
             Resource.Success(UiText.Resource(R.string.successfully_log_out))
         }catch (e: Exception){
-            Resource.Error(e.localizedMessage?.let { UiText.Text(it) }?:UiText.Resource(R.string.error))
+            Resource.Error(e.localizedMessage?.let { UiText.Text(it) }?: UiText.Resource(R.string.error))
         }
     }
 
@@ -84,7 +84,7 @@ class FirebaseAuthRepo @Inject constructor(
                 Resource.Error(UiText.Resource(R.string.something_went_wrong))
             }
         }catch (e: Exception){
-            Resource.Error(e.localizedMessage?.let { UiText.Text(it) }?:UiText.Resource(R.string.something_went_wrong))
+            Resource.Error(e.localizedMessage?.let { UiText.Text(it) }?: UiText.Resource(R.string.something_went_wrong))
         }
     }
 

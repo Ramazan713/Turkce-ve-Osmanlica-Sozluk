@@ -1,6 +1,6 @@
 package com.masterplus.trdictionary.features.settings.presentation.backup_select
 
-import com.masterplus.trdictionary.core.domain.util.UiText
+import com.masterplus.trdictionary.core.util.UiText
 import com.masterplus.trdictionary.features.settings.domain.model.BackupMeta
 
 data class SelectBackupState(

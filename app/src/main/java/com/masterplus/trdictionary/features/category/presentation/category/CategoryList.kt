@@ -25,7 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.enums.CategoryEnum
-import com.masterplus.trdictionary.core.domain.util.UiText
+import com.masterplus.trdictionary.core.util.UiText
 import com.masterplus.trdictionary.core.presentation.components.DefaultToolTip
 import com.masterplus.trdictionary.features.category.domain.models.Category
 import com.masterplus.trdictionary.features.category.presentation.components.CategoryItem

@@ -3,8 +3,8 @@ package com.masterplus.trdictionary.features.settings.data.repo
 import com.google.firebase.storage.FirebaseStorage
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.constants.K
-import com.masterplus.trdictionary.core.domain.util.Resource
-import com.masterplus.trdictionary.core.domain.util.UiText
+import com.masterplus.trdictionary.core.util.Resource
+import com.masterplus.trdictionary.core.util.UiText
 import com.masterplus.trdictionary.features.settings.domain.model.User
 import com.masterplus.trdictionary.features.settings.data.mapper.toBackupMeta
 import com.masterplus.trdictionary.features.settings.domain.repo.StorageService
@@ -18,7 +18,7 @@ class StorageServiceImpl @Inject constructor(
 
     private val rootRef = storage.getReference("Backups/")
 
-    override suspend fun getFiles(user: User): Resource<List<BackupMeta>>{
+    override suspend fun getFiles(user: User): Resource<List<BackupMeta>> {
         val ref = rootRef.child(user.uid)
         val backupMetas = mutableListOf<BackupMeta>()
         try {
@@ -33,7 +33,7 @@ class StorageServiceImpl @Inject constructor(
         return Resource.Success(backupMetas)
     }
 
-    override suspend fun getFileData(user: User, fileName: String): Resource<ByteArray>{
+    override suspend fun getFileData(user: User, fileName: String): Resource<ByteArray> {
         return try {
             val ref = rootRef.child(user.uid).child(fileName)
             val result = ref.getBytes(K.maxDownloadSizeBytes).await()
@@ -43,7 +43,7 @@ class StorageServiceImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteFile(user: User, fileName: String): Resource<Unit>{
+    override suspend fun deleteFile(user: User, fileName: String): Resource<Unit> {
         val ref = rootRef.child(user.uid).child(fileName)
         return try {
             ref.delete().await()
@@ -53,7 +53,7 @@ class StorageServiceImpl @Inject constructor(
         }
     }
 
-    override suspend fun uploadData(user: User, fileName: String, data: ByteArray): Resource<Unit>{
+    override suspend fun uploadData(user: User, fileName: String, data: ByteArray): Resource<Unit> {
        return try {
            val ref = rootRef.child(user.uid).child(fileName)
            ref.putBytes(data).await()
@@ -63,7 +63,7 @@ class StorageServiceImpl @Inject constructor(
        }
     }
 
-    private fun getExceptionText(e: Exception): UiText{
+    private fun getExceptionText(e: Exception): UiText {
         return e.localizedMessage?.let { UiText.Text(it) } ?: UiText.Resource(R.string.error)
     }
 }

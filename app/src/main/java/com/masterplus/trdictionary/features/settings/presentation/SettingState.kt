@@ -2,7 +2,7 @@ package com.masterplus.trdictionary.features.settings.presentation
 
 import com.masterplus.trdictionary.core.domain.enums.SearchResultEnum
 import com.masterplus.trdictionary.core.domain.model.ThemeModel
-import com.masterplus.trdictionary.core.domain.util.UiText
+import com.masterplus.trdictionary.core.util.UiText
 import com.masterplus.trdictionary.features.settings.domain.model.User
 
 

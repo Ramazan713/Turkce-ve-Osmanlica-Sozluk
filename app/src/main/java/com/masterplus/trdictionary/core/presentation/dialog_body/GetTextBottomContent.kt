@@ -1,5 +1,6 @@
 package com.masterplus.trdictionary.core.presentation.dialog_body
 
+import android.content.Context
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,11 +20,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.R
-import com.masterplus.trdictionary.core.presentation.components.RotatableLaunchEffect
-import com.masterplus.trdictionary.core.presentation.components.buttons.NegativeFilledButton
-import com.masterplus.trdictionary.core.presentation.components.buttons.PrimaryButton
+import com.masterplus.trdictionary.core.util.PreviewDesktop
 
 @ExperimentalFoundationApi
 @ExperimentalComposeUiApi
@@ -31,32 +31,21 @@ import com.masterplus.trdictionary.core.presentation.components.buttons.PrimaryB
 fun ShowGetTextDialog(
     title: String,
     content: String = "",
-    onApproved: (String)->Unit,
-    onClosed: ()->Unit,
+    onApproved: (String) -> Unit,
+    onClosed: () -> Unit,
 ){
-
-    val textField = rememberSaveable(stateSaver = TextFieldValue.Saver){
+    var textField by rememberSaveable(stateSaver = TextFieldValue.Saver){
         mutableStateOf( TextFieldValue(text = content, selection = TextRange(content.length)))
     }
-    val error = rememberSaveable{
+    var error by rememberSaveable{
         mutableStateOf<String?>(null)
     }
     val focusRequester = remember { FocusRequester() }
     val context = LocalContext.current
     val shape = MaterialTheme.shapes.medium
 
-    RotatableLaunchEffect{
+    LaunchedEffect(Unit){
         focusRequester.requestFocus()
-    }
-
-    fun checkText(){
-        val text = textField.value.text
-        if(text.isBlank()){
-            error.value = context.getString(R.string.error_not_empty_field)
-            return
-        }
-        onApproved(text)
-        onClosed()
     }
 
     CustomDialog(
@@ -70,18 +59,20 @@ fun ShowGetTextDialog(
             item {
                 Text(
                     title,
-                    modifier = Modifier.fillMaxWidth().padding(top = 7.dp, bottom = 5.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 7.dp, bottom = 5.dp),
                     textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.titleMedium
                 )
             }
             item {
                 OutlinedTextField(
-                    value = textField.value,
-                    onValueChange = {textField.value = it},
-                    isError = error.value!=null,
+                    value = textField,
+                    onValueChange = {textField = it},
+                    isError = error != null,
                     singleLine = true,
-                    label = { error.value?.let { Text(it) } },
+                    label = { error?.let { Text(it) } },
                     keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.None,
                         autoCorrect = false,
@@ -89,7 +80,15 @@ fun ShowGetTextDialog(
                     ),
                     keyboardActions = KeyboardActions(
                         onDone = {
-                            checkText()
+                            checkText(
+                                context,
+                                text = textField.text,
+                                onSetError = { error = it },
+                                onApprove = {
+                                    onApproved(it)
+                                    onClosed()
+                                }
+                            )
                         }
                     ),
                     shape = shape,
@@ -103,24 +102,64 @@ fun ShowGetTextDialog(
             }
             item {
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 7.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 7.dp),
                     horizontalArrangement = Arrangement.spacedBy(7.dp)
                 ){
 
-                    NegativeFilledButton(
-                        title = stringResource(R.string.cancel),
+                    TextButton(
                         onClick = onClosed,
                         modifier = Modifier.weight(1f)
-                    )
+                    ) {
+                        Text(text = stringResource(R.string.cancel))
+                    }
 
-                    PrimaryButton(
-                        title = stringResource(R.string.approve),
-                        onClick = ::checkText,
+                    FilledTonalButton(
+                        onClick = {
+                            checkText(
+                                context,
+                                text = textField.text,
+                                onSetError = { error = it },
+                                onApprove = {
+                                    onApproved(it)
+                                    onClosed()
+                                }
+                            )
+                        },
                         modifier = Modifier.weight(1f)
-                    )
+                    ) {
+                        Text(text = stringResource(R.string.approve))
+                    }
                 }
             }
         }
     }
-
 }
+
+private fun checkText(
+    context: Context,
+    text: String,
+    onSetError: (String?) -> Unit,
+    onApprove: (String) -> Unit
+){
+    if(text.isBlank()){
+        return onSetError(context.getString(R.string.error_not_empty_field))
+    }
+    onApprove(text)
+}
+
+@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
+@PreviewDesktop
+@Preview(showBackground = true)
+@Composable
+fun ShowGetTextDialogPreview() {
+    ShowGetTextDialog(
+        title = "Enter a name",
+        content = "Please enter a name",
+        onApproved = {},
+        onClosed = {}
+    )
+}
+
+

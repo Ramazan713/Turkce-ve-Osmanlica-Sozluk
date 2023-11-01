@@ -9,8 +9,8 @@ import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.constants.KPref
 import com.masterplus.trdictionary.core.domain.preferences.AppPreferences
 import com.masterplus.trdictionary.core.domain.repo.ThemeRepo
-import com.masterplus.trdictionary.core.domain.util.Resource
-import com.masterplus.trdictionary.core.domain.util.UiText
+import com.masterplus.trdictionary.core.util.Resource
+import com.masterplus.trdictionary.core.util.UiText
 import com.masterplus.trdictionary.features.settings.domain.manager.AuthManager
 import com.masterplus.trdictionary.features.settings.domain.manager.BackupManager
 import dagger.hilt.android.lifecycle.HiltViewModel

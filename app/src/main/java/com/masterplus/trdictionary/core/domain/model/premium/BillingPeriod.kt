@@ -1,7 +1,7 @@
 package com.masterplus.trdictionary.core.domain.model.premium
 
 import com.masterplus.trdictionary.R
-import com.masterplus.trdictionary.core.domain.util.UiText
+import com.masterplus.trdictionary.core.util.UiText
 
 
 sealed class BillingPeriod(open val period: Int, val title: UiText, val shortName: UiText){

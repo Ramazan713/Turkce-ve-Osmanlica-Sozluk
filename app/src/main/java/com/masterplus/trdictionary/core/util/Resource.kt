@@ -1,4 +1,4 @@
-package com.masterplus.trdictionary.core.domain.util
+package com.masterplus.trdictionary.core.util
 
 sealed class Resource<T>{
 
