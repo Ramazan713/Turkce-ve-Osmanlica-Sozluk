@@ -7,6 +7,7 @@ import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -14,11 +15,13 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun DefaultToolTip(
     tooltip: String?,
+    modifier: Modifier = Modifier,
     enabled: Boolean = true,
     spacingBetweenTooltipAndAnchor: Dp = 4.dp,
     content: @Composable() () -> Unit
 ) {
     TooltipBox(
+        modifier = modifier,
         positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(
             spacingBetweenTooltipAndAnchor = spacingBetweenTooltipAndAnchor
         ),
