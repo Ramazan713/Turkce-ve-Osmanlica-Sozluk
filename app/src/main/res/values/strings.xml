@@ -196,4 +196,6 @@
     <string name="annually_subs_c">Yıllık Abone</string>
     <string name="success_purchase">Satın alımı başarılı</string>
     <string name="add">Ekle</string>
+    <string name="category_not_found">Kategori bulunamadı</string>
+    <string name="back">Geri</string>
 </resources>

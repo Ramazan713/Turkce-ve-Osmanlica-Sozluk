@@ -20,8 +20,6 @@ import com.masterplus.trdictionary.core.presentation.features.premium.PremiumVie
 import com.masterplus.trdictionary.features.category.presentation.alphabetic.navigation.alphabeticCategoryPage
 import com.masterplus.trdictionary.features.category.presentation.alphabetic.navigation.navigateToAlphabeticCategory
 import com.masterplus.trdictionary.features.category.presentation.category.navigation.categoryPage
-import com.masterplus.trdictionary.features.category.presentation.sub_category.navigation.navigateToSubCategory
-import com.masterplus.trdictionary.features.category.presentation.sub_category.navigation.subCategoryPage
 import com.masterplus.trdictionary.features.home.presentation.navigation.homePage
 import com.masterplus.trdictionary.features.list.presentation.archive_list.navigation.archiveListPage
 import com.masterplus.trdictionary.features.list.presentation.archive_list.navigation.navigateToArchiveList
@@ -75,10 +73,21 @@ fun AppNavHost(
         )
 
         categoryPage(
-            onNavigateToSubCategory = {categoryEnum->
-                navController.navigateToSubCategory(categoryEnum.catId)
+            onNavigateToSetting = {navController.navigateToSettings()},
+            contentType = listDetailContentType,
+            displayFeatures = displayFeatures,
+            onNavigateToAlphabeticCat = {catEnum->
+                navController.navigateToAlphabeticCategory(catEnum.catId)
             },
-            onNavigateToSetting = {navController.navigateToSettings()}
+            onNavigateToWordList = {categoryEnum, subCategoryEnum ->
+                navController.navigateToWordListCategory(categoryEnum.catId,subCategoryEnum.subCatId)
+            },
+            onNavigateToSearch = {
+                navController.navigateToSearch(it.catId)
+            },
+            onNavigateToSavePoints = {args->
+                navController.navigateToSelectSavePoint(args.savePointTypeId,args.destinationIds,args.title)
+            }
         )
 
         showListPage(
@@ -105,22 +114,6 @@ fun AppNavHost(
             onNavigateBack = { navController.popBackStack() },
             onRelatedWordClicked = {wordId->
                 navController.navigateToSingleWordDetail(wordId)
-            }
-        )
-
-        subCategoryPage(
-            onNavigateBack = {navController.popBackStack()},
-            onNavigateToAlphabeticCat = {catEnum->
-                navController.navigateToAlphabeticCategory(catEnum.catId)
-            },
-            onNavigateToWordList = {categoryEnum, subCategoryEnum ->
-                navController.navigateToWordListCategory(categoryEnum.catId,subCategoryEnum.subCatId)
-            },
-            onNavigateToSearch = {
-                navController.navigateToSearch(it.catId)
-            },
-            onNavigateToSavePoints = {title,destinationIds,typeId->
-                navController.navigateToSelectSavePoint(typeId,destinationIds,title)
             }
         )
 

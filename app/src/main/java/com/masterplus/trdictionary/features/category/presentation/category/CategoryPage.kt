@@ -1,100 +1,123 @@
 package com.masterplus.trdictionary.features.category.presentation.category
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.unit.dp
-import com.masterplus.trdictionary.R
+import androidx.window.layout.DisplayFeature
+import com.google.accompanist.adaptive.HorizontalTwoPaneStrategy
+import com.google.accompanist.adaptive.TwoPane
 import com.masterplus.trdictionary.core.domain.enums.CategoryEnum
-import com.masterplus.trdictionary.core.presentation.components.navigation.CustomTopAppBar
-import com.masterplus.trdictionary.features.category.presentation.components.CategoryItem
+import com.masterplus.trdictionary.core.domain.enums.ListDetailContentType
+import com.masterplus.trdictionary.core.domain.enums.SubCategoryEnum
 
 @ExperimentalMaterial3Api
 @Composable
 fun CategoryPage(
     onNavigateToSetting: ()->Unit,
-    onNavigateToSubCategory: (CategoryEnum)->Unit,
+    onNavigateToAlphabeticCat: (CategoryEnum)-> Unit,
+    onNavigateToWordList: (CategoryEnum, SubCategoryEnum)->Unit,
+    onNavigateToSearch: (CategoryEnum)->Unit,
+    onNavigateToSavePoints: (SavePointNavigationArgs)->Unit,
+    state: CategoryState,
+    onEvent: (CategoryEvent) -> Unit,
+    contentType: ListDetailContentType,
+    displayFeatures: List<DisplayFeature>
 ){
 
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+    val listScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    val detailListState = rememberLazyListState()
 
-    Scaffold(
-        topBar = {
-            CustomTopAppBar(
-                title = stringResource(R.string.categories),
-                scrollBehavior = scrollBehavior
-            ){
-                IconButton(onClick = onNavigateToSetting){
-                    Icon(painterResource(R.drawable.ic_baseline_settings_24),contentDescription = null)
-                }
-            }
-        },
-    ) { paddings->
-        LazyColumn(
-            modifier = Modifier
-                .padding(paddings)
-                .nestedScroll(scrollBehavior.nestedScrollConnection)
-                .fillMaxSize()
-        ){
-            item {
-                Text(
-                    text = stringResource(R.string.dict_category_c),
-                    style = MaterialTheme.typography.headlineMedium,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 13.dp)
-                )
-            }
-
-            item {
-                CategoryItem(
-                    title = stringResource(R.string.all_dict_c),
-                    onClicked = {onNavigateToSubCategory(CategoryEnum.AllDict)},
-                    resourceId = R.drawable.all_dict,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-
-            item {
-                CategoryItem(
-                    title = stringResource(R.string.tr_dict_c),
-                    resourceId = R.drawable.tr_dict,
-                    onClicked = { onNavigateToSubCategory(CategoryEnum.TrDict) },
-                )
-            }
-
-            item {
-                CategoryItem(
-                    title = stringResource(R.string.osm_dict_c),
-                    resourceId = R.drawable.osm_dict,
-                    onClicked = {onNavigateToSubCategory(CategoryEnum.OsmDict)},
-                )
-            }
-
-            item {
-                CategoryItem(
-                    title = stringResource(R.string.proverbs),
-                    resourceId = R.drawable.proverb_dict,
-                    onClicked = {onNavigateToSubCategory(CategoryEnum.ProverbDict)},
-                )
-            }
-
-            item {
-                CategoryItem(
-                    title = stringResource(R.string.idioms),
-                    resourceId = R.drawable.idiom_dict,
-                    onClicked = {onNavigateToSubCategory(CategoryEnum.IdiomDict)},
-                )
-            }
-
+    LaunchedEffect(contentType){
+        if(contentType == ListDetailContentType.SINGLE_PANE && !state.isDetailOpen){
+            onEvent(CategoryEvent.CloseDetail)
         }
     }
+
+    if(contentType == ListDetailContentType.DUAL_PANE){
+        TwoPane(
+            first = {
+                 CategoryList(
+                     state = state,
+                     scrollBehavior = listScrollBehavior,
+                     onNavigateToSetting = onNavigateToSetting,
+                     onNavigateToDetail = { onEvent(CategoryEvent.OpenDetail(it)) }
+                 )
+            },
+            second = {
+                CategoryDetail(
+                    category = state.selectedCategory,
+                    onNavigateToAlphabeticCat = onNavigateToAlphabeticCat,
+                    onNavigateToWordList = onNavigateToWordList,
+                    onNavigateToSearch = onNavigateToSearch,
+                    onNavigateToSavePoints = onNavigateToSavePoints,
+                    lazyListState = detailListState,
+                    isFullScreen = false,
+                    onNavigateToBack = { onEvent(CategoryEvent.CloseDetail) }
+                )
+            },
+            strategy = HorizontalTwoPaneStrategy(0.5f,12.dp),
+            displayFeatures = displayFeatures
+        )
+    }else{
+        SinglePane(
+            state = state,
+            onEvent = onEvent,
+            listScrollBehavior = listScrollBehavior,
+            onNavigateToAlphabeticCat = onNavigateToAlphabeticCat,
+            onNavigateToWordList = onNavigateToWordList,
+            onNavigateToSearch = onNavigateToSearch,
+            onNavigateToSavePoints = onNavigateToSavePoints,
+            onNavigateToSetting = onNavigateToSetting,
+            detailListState = detailListState
+        )
+    }
+
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SinglePane(
+    onNavigateToAlphabeticCat: (CategoryEnum)-> Unit,
+    onNavigateToWordList: (CategoryEnum, SubCategoryEnum)->Unit,
+    onNavigateToSearch: (CategoryEnum)->Unit,
+    onNavigateToSavePoints: (SavePointNavigationArgs)->Unit,
+    onNavigateToSetting: ()->Unit,
+    state: CategoryState,
+    onEvent: (CategoryEvent) -> Unit,
+    listScrollBehavior: TopAppBarScrollBehavior,
+    detailListState: LazyListState
+) {
+    val selectedCategory = state.selectedCategory
+    if(state.isDetailOpen && selectedCategory != null){
+
+        BackHandler {
+            onEvent(CategoryEvent.CloseDetail)
+        }
+
+        CategoryDetail(
+            category = selectedCategory,
+            onNavigateToAlphabeticCat = onNavigateToAlphabeticCat,
+            onNavigateToWordList = onNavigateToWordList,
+            onNavigateToSearch = onNavigateToSearch,
+            onNavigateToSavePoints = onNavigateToSavePoints,
+            lazyListState = detailListState,
+            isFullScreen = true,
+            onNavigateToBack = { onEvent(CategoryEvent.CloseDetail) }
+        )
+    }else{
+        CategoryList(
+            state = state,
+            scrollBehavior = listScrollBehavior,
+            onNavigateToSetting = onNavigateToSetting,
+            onNavigateToDetail = { onEvent(CategoryEvent.OpenDetail(it)) }
+        )
+    }
 
 
+}
