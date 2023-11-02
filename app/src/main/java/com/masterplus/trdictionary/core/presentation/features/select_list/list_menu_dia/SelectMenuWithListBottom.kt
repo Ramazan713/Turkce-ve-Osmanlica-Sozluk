@@ -5,6 +5,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.enums.IMenuItemEnum
@@ -13,6 +14,9 @@ import com.masterplus.trdictionary.core.presentation.selectors.SelectMenuItemBot
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDialog
 import com.masterplus.trdictionary.core.presentation.features.select_list.select_list_dia.SelectListBottomContent
 import com.masterplus.trdictionary.core.presentation.features.select_list.constants.SelectListMenuEnum
+import com.masterplus.trdictionary.core.presentation.features.select_list.select_list_dia.SelectListEvent
+import com.masterplus.trdictionary.core.presentation.features.select_list.select_list_dia.SelectListState
+
 
 @ExperimentalFoundationApi
 @ExperimentalMaterial3Api
@@ -21,14 +25,41 @@ fun SelectMenuWithListBottom(
     items: List<IMenuItemEnum>,
     wordId: Int,
     listIdControl: Int? = null,
-    onClickItem:(IMenuItemEnum?)->Unit,
+    onClickItem: (IMenuItemEnum) -> Unit,
+    onClose: () -> Unit,
     title: String? = null,
+    selectListTitle: String = stringResource(id = R.string.add_to_list),
     listViewModel: SelectListMenuViewModel = hiltViewModel()
 ){
 
-    val state = listViewModel.state
+    SelectMenuWithListBottom(
+        items = items,
+        wordId = wordId,
+        listIdControl = listIdControl,
+        onClickItem = onClickItem,
+        title = title,
+        selectListTitle = selectListTitle,
+        onClose = onClose,
+        state = listViewModel.state,
+        onEvent = listViewModel::onEvent
+    )
+}
 
-    val showSelectListDia = rememberSaveable{
+@ExperimentalFoundationApi
+@ExperimentalMaterial3Api
+@Composable
+fun SelectMenuWithListBottom(
+    items: List<IMenuItemEnum>,
+    wordId: Int,
+    listIdControl: Int? = null,
+    onClickItem: (IMenuItemEnum) -> Unit,
+    onClose: () -> Unit,
+    title: String? = null,
+    selectListTitle: String = stringResource(id = R.string.add_to_list),
+    state: SelectListMenuState,
+    onEvent: (SelectListMenuEvent) -> Unit,
+){
+    var showSelectListDia by rememberSaveable{
         mutableStateOf(false)
     }
 
@@ -37,7 +68,7 @@ fun SelectMenuWithListBottom(
     }
 
     LaunchedEffect(wordId,listIdControl){
-        listViewModel.onEvent(SelectListMenuEvent.LoadData(wordId, listIdControl))
+        onEvent(SelectListMenuEvent.LoadData(wordId, listIdControl))
     }
 
     LaunchedEffect(items,state.listMenuItems){
@@ -50,19 +81,20 @@ fun SelectMenuWithListBottom(
     SelectMenuItemBottomContent(
         items = newItems.value,
         title = title,
+        onClose = onClose,
         onClickItem = {menuItem->
             when(menuItem){
                 SelectListMenuEnum.AddList->{
-                    showSelectListDia.value = true
+                    showSelectListDia = true
                 }
                 SelectListMenuEnum.AddedList->{
-                    showSelectListDia.value = true
+                    showSelectListDia = true
                 }
                 SelectListMenuEnum.AddFavorite->{
-                    listViewModel.onEvent(SelectListMenuEvent.AddToFavorite(wordId))
+                    onEvent(SelectListMenuEvent.AddToFavorite(wordId))
                 }
                 SelectListMenuEnum.AddedFavorite->{
-                    listViewModel.onEvent(SelectListMenuEvent.AddOrAskFavorite(wordId))
+                    onEvent(SelectListMenuEvent.AddOrAskFavorite(wordId))
                 }
                 else->{
                     onClickItem(menuItem)
@@ -71,16 +103,17 @@ fun SelectMenuWithListBottom(
         }
     )
 
-    if(showSelectListDia.value){
+    if(showSelectListDia){
         CustomModalBottomSheet(
             onDismissRequest = {
-                showSelectListDia.value = false
+                showSelectListDia = false
             },
         ){
             SelectListBottomContent(
                 wordId = wordId,
                 listIdControl = listIdControl,
-                onClosed = {showSelectListDia.value = false}
+                title = selectListTitle,
+                onClosed = {showSelectListDia = false}
             )
         }
     }
@@ -91,15 +124,30 @@ fun SelectMenuWithListBottom(
                 ShowQuestionDialog(
                     title = stringResource(R.string.question_remove_list_from_favorite),
                     content = stringResource(R.string.affect_current_list),
-                    onClosed = {listViewModel.onEvent(SelectListMenuEvent.ShowDialog(false))},
+                    onClosed = {onEvent(SelectListMenuEvent.ShowDialog(false))},
                     onApproved = {
-                        listViewModel.onEvent(SelectListMenuEvent.AddToFavorite(event.wordId))
+                        onEvent(SelectListMenuEvent.AddToFavorite(event.wordId))
                     }
                 )
             }
             null -> {}
         }
     }
-
-
 }
+
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@Preview(showBackground = true)
+@Composable
+fun SelectMenuWithListBottomPreview() {
+    SelectMenuWithListBottom(
+        items = listOf(),
+        wordId = 1,
+        onClickItem = {},
+        state = SelectListMenuState(),
+        onEvent = {},
+        onClose = {}
+    )
+}
+
+
+

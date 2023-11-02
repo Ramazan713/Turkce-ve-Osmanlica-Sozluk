@@ -1,20 +1,14 @@
 package com.masterplus.trdictionary.core.presentation.features.select_list.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.masterplus.trdictionary.core.presentation.components.DefaultCheckBoxRow
+import com.masterplus.trdictionary.core.util.SampleDatas
 import com.masterplus.trdictionary.features.list.domain.model.SelectableListView
+
 
 
 @Composable
@@ -22,42 +16,38 @@ fun SelectListItem(
     selectableListView: SelectableListView,
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
-    onChecked: (Boolean)->Unit,
+    onChecked: (Boolean) -> Unit,
 ){
-    val shape = MaterialTheme.shapes.medium
-    val backgroundColor = if(isSelected) MaterialTheme.colorScheme.primaryContainer else
-        MaterialTheme.colorScheme.secondaryContainer
+    DefaultCheckBoxRow(
+        modifier = modifier,
+        value = selectableListView.isSelected,
+        selectedRow = isSelected,
+        onValueChange = onChecked,
+        title = selectableListView.listView.name,
+        subTitle = selectableListView.listView.itemCounts.toString(),
+        shape = MaterialTheme.shapes.medium,
+        borderWidth = 1.dp,
+        selectedColor = MaterialTheme.colorScheme.primaryContainer,
+        defaultColor = MaterialTheme.colorScheme.secondaryContainer
+    )
+}
 
-    Row(
-        modifier = modifier.padding(
-            vertical = 3.dp, horizontal = 5.dp
-        )
-            .clip(shape)
-            .background(backgroundColor,shape)
-            .border(1.dp, MaterialTheme.colorScheme.outline,shape)
-            .clickable { onChecked(!selectableListView.isSelected) },
-        verticalAlignment = Alignment.CenterVertically
+@Preview(showBackground = true)
+@Composable
+fun SelectListItemPreview() {
+    SelectListItem(
+        selectableListView = SampleDatas.selectableListView,
+        isSelected = true,
+        onChecked = {}
+    )
+}
 
-    ){
-        Checkbox(
-            checked = selectableListView.isSelected,
-            onCheckedChange = onChecked,
-            modifier = Modifier.padding(horizontal = 7.dp)
-        )
-        Column(
-            modifier = Modifier.weight(1f)
-                .padding(vertical = 5.dp)
-        ) {
-            Text(
-                selectableListView.listView.name,
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                selectableListView.listView.itemCounts.toString(),
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
-    }
-
-
+@Preview(showBackground = true)
+@Composable
+fun SelectListItemPreview2() {
+    SelectListItem(
+        selectableListView = SampleDatas.selectableListView,
+        isSelected = false,
+        onChecked = {}
+    )
 }

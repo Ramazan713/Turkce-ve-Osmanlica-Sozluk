@@ -95,13 +95,12 @@ data class AdaptiveSelectMenuState<T>(
                         SelectMenuItemBottomContent<T>(
                             title = data.sheetTitle,
                             items = data.items,
+                            onClose = { onVisibleSheet(false) },
                             onClickItem = {selected->
-                                data.onItemChange?.let {
-                                    if (selected != null) {
-                                        it(selected)
-                                        if(hideSheetAfterMenuClick){
-                                            onVisibleSheet(false)
-                                        }
+                                data.onItemChange?.let {onItemChange->
+                                    onItemChange(selected)
+                                    if(hideSheetAfterMenuClick){
+                                        onVisibleSheet(false)
                                     }
                                 }
                             }

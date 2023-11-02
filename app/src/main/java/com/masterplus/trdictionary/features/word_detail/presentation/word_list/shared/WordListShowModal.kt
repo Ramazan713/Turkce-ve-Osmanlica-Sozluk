@@ -40,6 +40,7 @@ fun WordListShowModal(
                     title = stringResource(R.string.n_for_number_word,event.pos + 1, event.simpleWord.word.word),
                     listIdControl = listIdControl,
                     items = WordListBottomMenu.values().toList(),
+                    onClose = { close() },
                     onClickItem = {menuItem->
                         when(menuItem){
                             WordListBottomMenu.EditBookBottom->{
