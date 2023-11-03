@@ -1,11 +1,15 @@
 package com.masterplus.trdictionary.core.presentation.selections
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -16,31 +20,38 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.enums.IMenuItemEnum
+import com.masterplus.trdictionary.core.domain.enums.ThemeEnum
 import com.masterplus.trdictionary.core.extensions.noRippleClickable
+import com.masterplus.trdictionary.core.extensions.useBackground
+import com.masterplus.trdictionary.core.extensions.useBorder
 
 
 @Composable
-fun <T: IMenuItemEnum>CustomDropdownMenu(
+fun <T: IMenuItemEnum> CustomDropdownMenu(
     modifier: Modifier = Modifier,
     items: List<T>,
     onItemChange: ((T)->Unit)? = null,
     currentItem: T? = null,
     showIcons: Boolean = false,
-    useBorder: Boolean = true,
-    useDefaultBackgroundColor: Boolean = true,
+    borderWidth: Dp? = 1.dp,
+    backgroundColor: Color? = MaterialTheme.colorScheme.surfaceVariant,
     enabled: Boolean = true
 ){
 
     val context = LocalContext.current
     val shape = MaterialTheme.shapes.small
 
-    val backgroundColor = MaterialTheme.colorScheme.surfaceVariant
-
     var expanded by rememberSaveable {
         mutableStateOf(false)
+    }
+
+    val imageVector = remember(expanded) {
+        if(expanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown
     }
 
     var currentText by rememberSaveable {
@@ -54,15 +65,16 @@ fun <T: IMenuItemEnum>CustomDropdownMenu(
 
 
     Column(
-        modifier = modifier.padding(5.dp)
-            .then(if(useDefaultBackgroundColor)Modifier.background(backgroundColor) else Modifier),
+        modifier = modifier
+            .padding(5.dp)
+            .clip(shape = shape)
+            .useBorder(borderWidth, shape = shape)
+            .useBackground(backgroundColor),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ){
         Row(
             modifier = modifier
-                .clip(shape = shape)
-                .then(if(useBorder)Modifier.border(2.dp, MaterialTheme.colorScheme.outline,shape) else Modifier)
                 .background(Color.Transparent)
                 .noRippleClickable(enabled = enabled) {
                     expanded = true
@@ -77,14 +89,16 @@ fun <T: IMenuItemEnum>CustomDropdownMenu(
                 modifier = Modifier.padding(horizontal = 10.dp),
                 style = MaterialTheme.typography.bodyLarge
             )
-            Icon(painter = painterResource(R.drawable.ic_baseline_arrow_drop_down_24),
-                contentDescription = stringResource(R.string.dropdown_menu_text), )
+            Icon(
+                imageVector = imageVector,
+                contentDescription = stringResource(R.string.dropdown_menu_text),
+            )
         }
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = {expanded = false},
             modifier = modifier
-                .then(if(useDefaultBackgroundColor)Modifier.background(backgroundColor) else Modifier)
+                .useBackground(backgroundColor)
                 .padding(horizontal = 3.dp),
         ){
             items.forEach { item->
@@ -102,14 +116,42 @@ fun <T: IMenuItemEnum>CustomDropdownMenu(
                     },
                     modifier = Modifier.clip(shape),
                     leadingIcon = if(!showIcons) null else {
-                        {item.iconInfo?.let { iconInfo->
-                            Icon(painterResource(iconInfo.drawableId),
-                                contentDescription = stringResource(R.string.n_menu_item,title),
-                                tint = iconInfo.tintColor ?: LocalContentColor.current,
-                            ) }}
+                        {
+                            item.iconInfo?.let { iconInfo->
+                                Icon(
+                                    painterResource(iconInfo.drawableId),
+                                    contentDescription = stringResource(R.string.n_menu_item,title),
+                                    tint = iconInfo.tintColor ?: LocalContentColor.current,
+                                    )
+                            }
+                        }
                     }
                 )
             }
         }
     }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun CustomDropdownMenuPreview() {
+   Column(
+       modifier = Modifier
+           .height(200.dp)
+           .fillMaxWidth()
+   ) {
+       CustomDropdownMenu(
+           items = ThemeEnum.values().toList()
+       )
+   }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CustomDropdownMenuPreview2() {
+    CustomDropdownMenu(
+        items = ThemeEnum.values().toList(),
+        backgroundColor = null
+    )
 }

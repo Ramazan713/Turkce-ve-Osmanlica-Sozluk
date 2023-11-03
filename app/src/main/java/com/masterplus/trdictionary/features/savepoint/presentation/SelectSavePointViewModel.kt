@@ -45,7 +45,13 @@ class SelectSavePointViewModel @Inject constructor(
             is SelectSavePointEvent.Delete -> {
                 viewModelScope.launch {
                     savePointsUseCases.deleteSavePoint(event.savePoint)
-                    state = state.copy(message = UiText.Resource(R.string.successfully_deleted))
+
+                    val updatedSelectedSavePoint = if(event.savePoint == state.currentSelectedSavePoint) null else
+                        state.currentSelectedSavePoint
+                    state = state.copy(
+                        message = UiText.Resource(R.string.successfully_deleted),
+                        selectedSavePoint = updatedSelectedSavePoint
+                    )
                 }
             }
             is SelectSavePointEvent.EditTitle -> {
@@ -120,7 +126,7 @@ class SelectSavePointViewModel @Inject constructor(
 
     private fun loadSavePoint(){
         viewModelScope.launch {
-            state.selectedSavePoint?.let { savePoint ->
+            state.currentSelectedSavePoint?.let { savePoint ->
                 val catEnum = savePoint.savePointDestination.type.toCategoryEnum() ?: CategoryEnum.AllDict
                 val uiEvent = when(val destination = savePoint.savePointDestination){
                     is SavePointDestination.CategoryAll->{

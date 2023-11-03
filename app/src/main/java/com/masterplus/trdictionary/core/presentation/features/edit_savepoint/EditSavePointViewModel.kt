@@ -30,7 +30,13 @@ class EditSavePointViewModel @Inject constructor(
             is EditSavePointEvent.Delete -> {
                 viewModelScope.launch {
                     savePointsUseCases.deleteSavePoint(event.savePoint)
-                    state = state.copy(message = UiText.Resource(R.string.successfully_deleted))
+
+                    val updatedSelectedSavePoint = if(event.savePoint == state.selectedSavePoint) null else
+                        state.selectedSavePoint
+                    state = state.copy(
+                        message = UiText.Resource(R.string.successfully_deleted),
+                        selectedSavePoint = updatedSelectedSavePoint
+                    )
                 }
             }
             is EditSavePointEvent.EditTitle -> {

@@ -178,13 +178,15 @@ fun EditSavePointPage(
                             onClosed()
                         }
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    enabled = state.selectedSavePoint != null,
                 ) {
                     Text(text = stringResource(R.string.load))
                 }
                 Button(
                     onClick = {onEvent(EditSavePointEvent.OverrideSavePoint(pos))  },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    enabled = state.selectedSavePoint != null,
                 ) {
                     Text(text = stringResource(R.string.override),)
                 }

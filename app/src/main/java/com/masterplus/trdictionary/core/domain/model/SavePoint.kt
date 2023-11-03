@@ -37,4 +37,10 @@ data class SavePoint(
         }
     }
 
+    override fun equals(other: Any?): Boolean {
+        if(other is SavePoint){
+            return id == other.id
+        }
+        return super.equals(other)
+    }
 }

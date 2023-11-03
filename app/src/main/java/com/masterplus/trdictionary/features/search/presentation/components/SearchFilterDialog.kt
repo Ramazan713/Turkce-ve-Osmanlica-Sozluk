@@ -66,8 +66,8 @@ fun SearchFilterDialog(
                             items = CategoryEnum.values().toList(),
                             onItemChange = { currentCatItem = it },
                             currentItem = currentCatItem,
-                            useBorder = false,
-                            useDefaultBackgroundColor = false,
+                            borderWidth = null,
+                            backgroundColor = null,
                         )
                     }
                 }
@@ -89,8 +89,8 @@ fun SearchFilterDialog(
                             items = SearchKind.values().toList(),
                             onItemChange = { currentSearchType = it },
                             currentItem = currentSearchType,
-                            useBorder = false,
-                            useDefaultBackgroundColor = false
+                            borderWidth = null,
+                            backgroundColor = null,
                         )
                     }
                 }

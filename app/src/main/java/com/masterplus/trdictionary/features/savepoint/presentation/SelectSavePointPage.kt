@@ -1,30 +1,32 @@
 package com.masterplus.trdictionary.features.savepoint.presentation
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.flowWithLifecycle
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.enums.CategoryEnum
 import com.masterplus.trdictionary.core.domain.model.SavePoint
-import com.masterplus.trdictionary.core.util.ToastHelper
+import com.masterplus.trdictionary.core.presentation.components.ListenLifecycleMessage
 import com.masterplus.trdictionary.core.presentation.selections.CustomDropdownMenu
 import com.masterplus.trdictionary.core.presentation.components.SavePointItem
-import com.masterplus.trdictionary.core.presentation.components.buttons.PrimaryButton
 import com.masterplus.trdictionary.core.presentation.components.navigation.CustomTopAppBar
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowGetTextDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDialog
+import com.masterplus.trdictionary.core.util.PreviewDesktop
+import com.masterplus.trdictionary.core.util.SampleDatas
 import kotlinx.coroutines.flow.collectLatest
 
 @ExperimentalFoundationApi
@@ -41,7 +43,6 @@ fun SelectSavePointPage(
     onEvent: (SelectSavePointEvent) -> Unit
 ){
 
-    val context = LocalContext.current
     val lifecycle = LocalLifecycleOwner.current.lifecycle
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
@@ -75,17 +76,10 @@ fun SelectSavePointPage(
         }
     }
 
-    state.message?.let { message->
-        LaunchedEffect(message,lifecycle){
-            snapshotFlow { message }
-                .flowWithLifecycle(lifecycle)
-                .collectLatest {
-                    ToastHelper.showMessage(it,context)
-                    onEvent(SelectSavePointEvent.ClearMessage)
-                }
-        }
-    }
-
+    ListenLifecycleMessage(
+        message = state.message,
+        onDismiss = { onEvent(SelectSavePointEvent.ClearMessage) }
+    )
 
     Scaffold(
         topBar = {
@@ -95,69 +89,77 @@ fun SelectSavePointPage(
                 scrollBehavior = scrollBehavior
             )
         },
-        containerColor = MaterialTheme.colorScheme.surfaceVariant,
     ) {paddings->
-        Column(
-            modifier = Modifier.padding(paddings)
-                .nestedScroll(scrollBehavior.nestedScrollConnection)
-                .fillMaxSize()
-        ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth().weight(1f)
-            ) {
 
-                if(state.showDropdownMenu){
-                    item {
+        Box(
+            modifier = Modifier
+                .padding(paddings)
+                .fillMaxSize()
+                .nestedScroll(scrollBehavior.nestedScrollConnection)
+            ,
+        ) {
+
+            if(state.savePoints.isEmpty()){
+                Text(
+                    stringResource(R.string.empty_savepoint),
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.Center),
+                    textAlign = TextAlign.Center
+                )
+            }
+
+            Column(
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 4.dp, vertical = 4.dp)
+                ) {
+                    if(state.showDropdownMenu){
                         CustomDropdownMenu(
                             items = state.dropdownItems,
                             currentItem = state.selectedDropdownItem,
-                            onItemChange = {onEvent(SelectSavePointEvent.SelectDropdownMenuItem(it))}
+                            onItemChange = { onEvent(SelectSavePointEvent.SelectDropdownMenuItem(it)) }
                         )
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+                    Button(
+                        onClick = { onEvent(SelectSavePointEvent.LoadSavePoint) },
+                        enabled = state.currentSelectedSavePoint != null
+                    ) {
+                        Text(text = stringResource(R.string.load_and_go))
                     }
                 }
 
-                if(state.savePoints.isEmpty()){
-                    item {
-                        Column(
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.fillParentMaxSize()
-                        ) {
-                            Text(
-                                stringResource(R.string.empty_savepoint),
-                                style = MaterialTheme.typography.bodyLarge,
-                                modifier = Modifier.fillMaxWidth(),
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                    }
-                }else{
+                LazyVerticalGrid(
+                    modifier = Modifier.fillMaxWidth(),
+                    columns = GridCells.Adaptive(350.dp)
+                ) {
                     items(
                         state.savePoints,
-                        key = {item->item.id?:0},
+                        key = {item -> item.id ?: 0},
                     ){item: SavePoint ->
                         SavePointItem(
                             savePoint = item,
                             onClick = {onEvent(SelectSavePointEvent.Select(item))},
-                            isSelected = state.selectedSavePoint == item,
+                            isSelected = state.currentSelectedSavePoint == item,
                             onTitleEditClick = {
                                 onEvent(SelectSavePointEvent.ShowDialog(true,
                                     SelectSavePointDialogEvent.EditTitle(item)))
                             },
                             onDeleteClick = {
-                                onEvent(SelectSavePointEvent.ShowDialog(
-                                        true, SelectSavePointDialogEvent.AskDelete(item)))
+                                onEvent(
+                                    SelectSavePointEvent.ShowDialog(true, SelectSavePointDialogEvent.AskDelete(item))
+                                )
                             }
                         )
                     }
                 }
             }
-            PrimaryButton(
-                title = stringResource(R.string.load_and_go),
-                onClick = {onEvent(SelectSavePointEvent.LoadSavePoint)},
-                modifier = Modifier.padding(vertical = 3.dp, horizontal = 5.dp)
-                    .fillMaxWidth()
-            )
         }
     }
 
@@ -197,4 +199,27 @@ private fun ShowDialog(
         }
         else -> {}
     }
+}
+
+
+
+@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class,
+    ExperimentalMaterial3Api::class
+)
+@PreviewDesktop
+@Preview(showBackground = true)
+@Composable
+fun SelectSavePointPagePreview() {
+    SelectSavePointPage(
+        onNavigateBack = {},
+        onEvent = {},
+        onNavigateToCatAll = {x,y->},
+        onNavigateToCatAlphabetic = {x,y,z->},
+        onNavigateToCatRandom = {x,y->},
+        onNavigateToList = {x,y->},
+        state = SelectSavePointState(
+            savePoints = SampleDatas.savePoints,
+            showDropdownMenu = true
+        )
+    )
 }
