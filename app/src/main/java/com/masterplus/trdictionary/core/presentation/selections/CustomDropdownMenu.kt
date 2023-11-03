@@ -1,4 +1,4 @@
-package com.masterplus.trdictionary.core.presentation.selectors
+package com.masterplus.trdictionary.core.presentation.selections
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

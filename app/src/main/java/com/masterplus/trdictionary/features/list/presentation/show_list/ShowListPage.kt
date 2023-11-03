@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
@@ -29,14 +28,13 @@ import com.masterplus.trdictionary.core.domain.enums.SavePointDestination
 import com.masterplus.trdictionary.core.domain.enums.SavePointType
 import com.masterplus.trdictionary.core.domain.model.ListView
 import com.masterplus.trdictionary.core.extensions.isScrollingUp
-import com.masterplus.trdictionary.core.presentation.components.AdaptiveSelectSheetMenu
-import com.masterplus.trdictionary.core.presentation.selectors.CustomDropdownBarMenu
+import com.masterplus.trdictionary.core.presentation.selections.AdaptiveSelectSheetMenu
+import com.masterplus.trdictionary.core.presentation.selections.CustomDropdownBarMenu
 import com.masterplus.trdictionary.core.presentation.components.CustomModalBottomSheet
 import com.masterplus.trdictionary.core.presentation.components.DefaultToolTip
 import com.masterplus.trdictionary.core.presentation.components.ListenLifecycleMessage
 import com.masterplus.trdictionary.core.presentation.components.navigation.CustomTopAppBar
-import com.masterplus.trdictionary.core.presentation.components.rememberAdaptiveSelectMenuState
-import com.masterplus.trdictionary.core.presentation.selectors.SelectMenuItemBottomContent
+import com.masterplus.trdictionary.core.presentation.selections.rememberAdaptiveSelectMenuState
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowGetTextDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDialog
 

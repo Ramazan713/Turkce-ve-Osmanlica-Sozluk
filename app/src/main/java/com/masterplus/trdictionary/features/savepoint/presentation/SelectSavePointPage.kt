@@ -19,7 +19,7 @@ import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.enums.CategoryEnum
 import com.masterplus.trdictionary.core.domain.model.SavePoint
 import com.masterplus.trdictionary.core.util.ToastHelper
-import com.masterplus.trdictionary.core.presentation.selectors.CustomDropdownMenu
+import com.masterplus.trdictionary.core.presentation.selections.CustomDropdownMenu
 import com.masterplus.trdictionary.core.presentation.components.SavePointItem
 import com.masterplus.trdictionary.core.presentation.components.buttons.PrimaryButton
 import com.masterplus.trdictionary.core.presentation.components.navigation.CustomTopAppBar

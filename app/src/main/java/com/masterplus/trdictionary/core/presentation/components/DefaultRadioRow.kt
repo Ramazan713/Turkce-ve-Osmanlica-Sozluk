@@ -9,8 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun DefaultCheckBoxRow(
+fun DefaultRadioRow(
     modifier: Modifier = Modifier,
     value: Boolean,
     selectedRow: Boolean = value,
@@ -53,7 +53,7 @@ fun DefaultCheckBoxRow(
             .clip(shape)
             .toggleable(
                 value,
-                role = Role.Checkbox,
+                role = Role.RadioButton,
                 onValueChange = onValueChange
             )
     ) {
@@ -64,9 +64,9 @@ fun DefaultCheckBoxRow(
             verticalAlignment = Alignment.CenterVertically
 
         ){
-            Checkbox(
-                checked = value,
-                onCheckedChange = null,
+            RadioButton(
+                selected = value,
+                onClick = null,
                 modifier = Modifier.padding(horizontal = 8.dp)
             )
             Column(
@@ -89,5 +89,4 @@ fun DefaultCheckBoxRow(
             }
         }
     }
-
 }

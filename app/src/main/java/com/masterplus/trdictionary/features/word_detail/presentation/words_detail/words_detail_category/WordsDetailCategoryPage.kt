@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -35,7 +36,8 @@ fun WordsDetailCategoryPage(
     state: WordsDetailCategoryState,
     sharedState: WordsDetailSharedState,
     onSharedEvent: (WordsDetailSharedEvent)->Unit,
-    pagingWords: LazyPagingItems<WordWithSimilar>
+    pagingWords: LazyPagingItems<WordWithSimilar>,
+    windowWidthSizeClass: WindowWidthSizeClass,
 ){
 
     val pagerState = rememberPagerState(initialPage = pos, pageCount = {pagingWords.itemCount})
@@ -99,7 +101,8 @@ fun WordsDetailCategoryPage(
             onNavigateToDetailWord = onRelatedWordClicked,
             onScrollTo = { scope.launch { pagerState.animateScrollToPage(it) } },
             currentPage = pagerState.currentPage,
-            maxPages = pagingWords.itemCount
+            maxPages = pagingWords.itemCount,
+            windowWidthSizeClass = windowWidthSizeClass
         )
     }
 
@@ -121,7 +124,8 @@ private fun ShowDialog(
     onNavigateToDetailWord: (Int)->Unit,
     currentPage: Int,
     maxPages: Int,
-    onScrollTo: (Int)->Unit
+    onScrollTo: (Int)->Unit,
+    windowWidthSizeClass: WindowWidthSizeClass,
 ){
     WordsDetailShowSharedDialog(
         event = event,
@@ -129,7 +133,8 @@ private fun ShowDialog(
         onNavigateToDetailWord = onNavigateToDetailWord,
         currentPage = currentPage,
         maxPages = maxPages,
-        onScrollTo = onScrollTo
+        onScrollTo = onScrollTo,
+        windowWidthSizeClass = windowWidthSizeClass
     )
 }
 

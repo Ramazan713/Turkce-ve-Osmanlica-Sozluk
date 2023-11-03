@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,7 +34,8 @@ fun SingleWordDetailPage(
     onNavigateBack: ()->Unit,
     onRelatedWordClicked: (Int)->Unit,
     state: SingleWordDetailState,
-    onEvent: (SingleWordDetailEvent) -> Unit
+    onEvent: (SingleWordDetailEvent) -> Unit,
+    windowWidthSizeClass: WindowWidthSizeClass
 ){
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
@@ -118,7 +120,8 @@ fun SingleWordDetailPage(
         ShowDialog(
             state = state,
             onEvent = onEvent,
-            onNavigateToDetailWord = onRelatedWordClicked
+            onNavigateToDetailWord = onRelatedWordClicked,
+            windowWidthSizeClass = windowWidthSizeClass
         )
     }
 
@@ -168,6 +171,7 @@ private fun ShowDialog(
     state: SingleWordDetailState,
     onEvent: (SingleWordDetailEvent)->Unit,
     onNavigateToDetailWord: (Int)->Unit,
+    windowWidthSizeClass: WindowWidthSizeClass
 ){
     fun close(){
         onEvent(SingleWordDetailEvent.ShowDialog(false))
@@ -179,7 +183,8 @@ private fun ShowDialog(
                 title = stringResource(R.string.compound_words_c),
                 words = event.words,
                 onClosed = {close()},
-                onClickedWord = {onNavigateToDetailWord(it.wordId)}
+                onClickedWord = {onNavigateToDetailWord(it.wordId)},
+                windowWidthSizeClass = windowWidthSizeClass
             )
         }
         is SingleWordDetailDialogEvent.ShowProverbIdiomsWords -> {
@@ -187,7 +192,8 @@ private fun ShowDialog(
                 title = stringResource(R.string.proverb_idiom_text_c),
                 words = event.words,
                 onClosed = {close()},
-                onClickedWord = {onNavigateToDetailWord(it.wordId)}
+                onClickedWord = {onNavigateToDetailWord(it.wordId)},
+                windowWidthSizeClass = windowWidthSizeClass
             )
         }
         null -> {}

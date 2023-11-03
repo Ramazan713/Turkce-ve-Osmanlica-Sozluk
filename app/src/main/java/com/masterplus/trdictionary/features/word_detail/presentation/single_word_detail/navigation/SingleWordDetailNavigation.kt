@@ -2,6 +2,7 @@ package com.masterplus.trdictionary.features.word_detail.presentation.single_wor
 
 import android.content.Intent
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.*
@@ -29,6 +30,7 @@ fun NavController.navigateToSingleWordDetail(wordId: Int,navOptions: NavOptions?
 fun NavGraphBuilder.singleWordDetail(
     onNavigateBack: ()->Unit,
     onRelatedWordClicked: (Int)->Unit,
+    windowWidthSizeClass: WindowWidthSizeClass
 ){
     composable(
         RouteSingleWordDetail,
@@ -49,7 +51,8 @@ fun NavGraphBuilder.singleWordDetail(
             onNavigateBack = onNavigateBack,
             onRelatedWordClicked = onRelatedWordClicked,
             state = wordDetailViewModel.state,
-            onEvent = wordDetailViewModel::onEvent
+            onEvent = wordDetailViewModel::onEvent,
+            windowWidthSizeClass = windowWidthSizeClass
         )
     }
 }

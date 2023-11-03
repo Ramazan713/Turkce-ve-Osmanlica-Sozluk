@@ -113,7 +113,7 @@
     <string name="sign_in">Giriş yap</string>
     <string name="question_add_backup">Yedekleme yapmak ister misiniz?</string>
     <string name="unsaved_data_may_lose">Kaydedilmeyen verileriniz kaybolabilir</string>
-    <string name="question_download_cloud_backup">Buluttaki yedeğinizi yüklemek ister misiniz?</string>
+    <string name="operations_download_cloud_backup">Buluttaki yedeklerle alakalı işlemler</string>
     <string name="load_last_Backup">En son yedeği yükle</string>
     <string name="show_backup_files">Yedek dosyalarını göster</string>
     <string name="not_show_warning_again">Bir daha bu uyarıyı gösterme</string>

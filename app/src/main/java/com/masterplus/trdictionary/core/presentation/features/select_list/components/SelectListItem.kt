@@ -36,7 +36,7 @@ fun SelectListItem(
 @Composable
 fun SelectListItemPreview() {
     SelectListItem(
-        selectableListView = SampleDatas.selectableListView,
+        selectableListView = SampleDatas.generateSelectableListView(),
         isSelected = true,
         onChecked = {}
     )
@@ -46,7 +46,7 @@ fun SelectListItemPreview() {
 @Composable
 fun SelectListItemPreview2() {
     SelectListItem(
-        selectableListView = SampleDatas.selectableListView,
+        selectableListView = SampleDatas.generateSelectableListView(),
         isSelected = false,
         onChecked = {}
     )

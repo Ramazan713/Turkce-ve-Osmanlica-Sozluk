@@ -1,5 +1,8 @@
 package com.masterplus.trdictionary.features.settings.presentation.sections
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.masterplus.trdictionary.R
@@ -7,7 +10,7 @@ import com.masterplus.trdictionary.core.domain.enums.SearchResultEnum
 import com.masterplus.trdictionary.core.domain.enums.ThemeEnum
 import com.masterplus.trdictionary.core.domain.model.premium.PremiumProduct
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDialog
-import com.masterplus.trdictionary.core.presentation.selectors.ShowSelectRadioItemAlertDialog
+import com.masterplus.trdictionary.core.presentation.selections.ShowSelectRadioItemAlertDialog
 import com.masterplus.trdictionary.core.presentation.features.premium.ShowPremiumProductDialog
 import com.masterplus.trdictionary.features.settings.presentation.SettingDialogEvent
 import com.masterplus.trdictionary.features.settings.presentation.SettingEvent
@@ -20,7 +23,8 @@ import com.masterplus.trdictionary.features.settings.presentation.cloud_backup_s
 fun ShowSettingDialog(
     state: SettingState,
     onEvent: (SettingEvent)->Unit,
-    onPremiumProductClicked: (PremiumProduct, String) -> Unit
+    onPremiumProductClicked: (PremiumProduct, String) -> Unit,
+    windowWidthSizeClass: WindowWidthSizeClass,
 ){
     fun close(){
         onEvent(SettingEvent.ShowDialog(false))
@@ -33,7 +37,8 @@ fun ShowSettingDialog(
                 selectedItem = state.themeModel.themeEnum,
                 title = stringResource(R.string.choice_theme),
                 onClose = {close()},
-                onApprove = {onEvent(SettingEvent.SetThemeEnum(it))}
+                onApprove = {onEvent(SettingEvent.SetThemeEnum(it))},
+                imageVector = Icons.Default.Palette
             )
         }
         null -> {}
@@ -52,10 +57,16 @@ fun ShowSettingDialog(
             )
         }
         is SettingDialogEvent.ShowCloudBackup -> {
-            ShowCloudSetting(onClosed = {close()})
+            ShowCloudSetting(
+                onClosed = { close() },
+                windowWidthSizeClass = windowWidthSizeClass
+            )
         }
         is SettingDialogEvent.ShowSelectBackup -> {
-            ShowCloudSelectBackup(onClosed = {close()})
+            ShowCloudSelectBackup(
+                onClosed = { close() },
+                windowWidthSizeClass = windowWidthSizeClass
+            )
         }
         is SettingDialogEvent.AskMakeBackupBeforeSignOut -> {
             ShowQuestionDialog(
@@ -92,7 +103,8 @@ fun ShowSettingDialog(
             ShowPremiumProductDialog(
                 premiumProduct = event.premiumProduct,
                 onClosed = {close()},
-                onProductClicked = onPremiumProductClicked
+                onProductClicked = onPremiumProductClicked,
+                windowWidthSizeClass = windowWidthSizeClass
             )
         }
     }

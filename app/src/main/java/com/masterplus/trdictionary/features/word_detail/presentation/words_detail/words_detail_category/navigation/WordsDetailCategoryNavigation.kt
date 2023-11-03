@@ -3,6 +3,7 @@ package com.masterplus.trdictionary.features.word_detail.presentation.words_deta
 import android.content.Intent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
@@ -49,6 +50,7 @@ fun NavController.navigateToWordsDetailCategory(catId: Int, subCatId: Int, c: St
 fun NavGraphBuilder.wordsDetailCategory(
     onNavigateBack: (Int)->Unit,
     onRelatedWordClicked: (Int)->Unit,
+    windowWidthSizeClass: WindowWidthSizeClass,
 ){
     composable(
         RouteWordsDetailCategory,
@@ -77,7 +79,8 @@ fun NavGraphBuilder.wordsDetailCategory(
             onSharedEvent = wordDetailsViewModel::onSharedEvent,
             pagingWords = pagingWords,
             onNavigateBack = onNavigateBack,
-            onRelatedWordClicked = onRelatedWordClicked
+            onRelatedWordClicked = onRelatedWordClicked,
+            windowWidthSizeClass = windowWidthSizeClass
         )
     }
 }

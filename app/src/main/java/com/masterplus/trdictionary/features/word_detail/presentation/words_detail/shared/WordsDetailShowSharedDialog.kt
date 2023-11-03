@@ -1,6 +1,7 @@
 package com.masterplus.trdictionary.features.word_detail.presentation.words_detail.shared
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.res.stringResource
@@ -18,7 +19,8 @@ fun WordsDetailShowSharedDialog(
     onNavigateToDetailWord: (Int)->Unit,
     currentPage: Int,
     maxPages: Int,
-    onScrollTo: (Int)->Unit
+    onScrollTo: (Int)->Unit,
+    windowWidthSizeClass: WindowWidthSizeClass,
 ){
     fun close(){
         onEvent(WordsDetailSharedEvent.ShowDialog(false))
@@ -40,7 +42,8 @@ fun WordsDetailShowSharedDialog(
                 title = stringResource(R.string.compound_words_c),
                 words = event.words,
                 onClosed = {close()},
-                onClickedWord = {onNavigateToDetailWord(it.wordId)}
+                onClickedWord = { onNavigateToDetailWord(it.wordId) },
+                windowWidthSizeClass = windowWidthSizeClass
             )
         }
         is WordsDetailSharedDialogEvent.ShowProverbIdiomsWords -> {
@@ -48,7 +51,8 @@ fun WordsDetailShowSharedDialog(
                 title = stringResource(R.string.proverb_idiom_text_c),
                 words = event.words,
                 onClosed = {close()},
-                onClickedWord = {onNavigateToDetailWord(it.wordId)}
+                onClickedWord = {onNavigateToDetailWord(it.wordId)},
+                windowWidthSizeClass = windowWidthSizeClass
             )
         }
         is WordsDetailSharedDialogEvent.EditSavePoint -> {
@@ -61,6 +65,7 @@ fun WordsDetailShowSharedDialog(
                 onNavigateLoad = {savePoint ->
                     onScrollTo(savePoint.itemPosIndex)
                 },
+                windowWidthSizeClass = windowWidthSizeClass
             )
         }
         else -> {}

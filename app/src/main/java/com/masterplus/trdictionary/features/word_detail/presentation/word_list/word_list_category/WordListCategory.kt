@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
@@ -39,7 +40,8 @@ fun WordListCategoryPage(
     state: WordListCategoryState,
     sharedState: WordListSharedState,
     onSharedEvent: (WordListSharedEvent)->Unit,
-    pagingWords: LazyPagingItems<SimpleWordResult>
+    pagingWords: LazyPagingItems<SimpleWordResult>,
+    windowWidthSizeClass: WindowWidthSizeClass,
 ){
 
     val lazyListState = rememberLazyListState(initialFirstVisibleItemIndex = pos)
@@ -105,7 +107,8 @@ fun WordListCategoryPage(
             dialogEvent = sharedState.dialogEvent,
             onEvent = onSharedEvent,
             lazyListState = lazyListState,
-            onScrollTo = {scope.launch { lazyListState.animateScrollToItem(it) }}
+            onScrollTo = {scope.launch { lazyListState.animateScrollToItem(it) }},
+            windowWidthSizeClass = windowWidthSizeClass
         )
     }
 
@@ -127,10 +130,11 @@ private fun ShowDialog(
     dialogEvent: WordListSharedDialogEvent?,
     onEvent: (WordListSharedEvent)->Unit,
     lazyListState: LazyListState,
-    onScrollTo: (Int)->Unit
+    onScrollTo: (Int)->Unit,
+    windowWidthSizeClass: WindowWidthSizeClass,
 ){
     WordListSharedShowDialog(
-        dialogEvent, onEvent, lazyListState, onScrollTo
+        dialogEvent, onEvent, lazyListState, onScrollTo,windowWidthSizeClass
     )
 }
 

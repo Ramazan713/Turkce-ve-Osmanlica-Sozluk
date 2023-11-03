@@ -1,6 +1,7 @@
 package com.masterplus.trdictionary.features.settings.presentation.navigation
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -22,7 +23,8 @@ fun NavController.navigateToSettings(){
 @ExperimentalFoundationApi
 fun NavGraphBuilder.settingsPage(
     onNavigateBack: ()->Unit,
-    premiumViewModel: PremiumViewModel
+    premiumViewModel: PremiumViewModel,
+    windowWidthSizeClass: WindowWidthSizeClass,
 ){
     composable(
         routeName
@@ -37,7 +39,8 @@ fun NavGraphBuilder.settingsPage(
             onEvent = settingViewModel::onEvent,
             premiumState = premiumViewModel.state,
             onPremiumEvent = premiumViewModel::onEvent,
-            premiumProduct = premiumProduct
+            premiumProduct = premiumProduct,
+            windowWidthSizeClass = windowWidthSizeClass
         )
     }
 }

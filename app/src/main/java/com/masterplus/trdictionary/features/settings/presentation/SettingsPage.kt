@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -27,7 +28,8 @@ fun SettingsPage(
     onPremiumEvent: (PremiumEvent)->Unit,
     premiumProduct: PremiumProduct?,
     state: SettingState,
-    onEvent: (SettingEvent)->Unit
+    onEvent: (SettingEvent)->Unit,
+    windowWidthSizeClass: WindowWidthSizeClass,
 ){
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
@@ -114,7 +116,8 @@ fun SettingsPage(
             onEvent = onEvent,
             onPremiumProductClicked = { product,offerToken->
                 onPremiumEvent(PremiumEvent.Purchase(product, offerToken))
-            }
+            },
+            windowWidthSizeClass = windowWidthSizeClass
         )
     }else if(state.showModal){
         ShowSettingModal(

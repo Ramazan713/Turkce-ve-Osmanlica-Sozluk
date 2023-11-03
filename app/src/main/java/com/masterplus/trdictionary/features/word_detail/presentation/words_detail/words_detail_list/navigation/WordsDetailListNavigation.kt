@@ -1,5 +1,6 @@
 package com.masterplus.trdictionary.features.word_detail.presentation.words_detail.words_detail_list.navigation
 
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
@@ -35,6 +36,7 @@ fun NavController.navigateToWordsDetailList(listId: Int, pos: Int = 0){
 fun NavGraphBuilder.wordsDetailList(
     onNavigateBack: (Int)->Unit,
     onRelatedWordClicked: (Int)->Unit,
+    windowWidthSizeClass: WindowWidthSizeClass,
 ){
     composable(
         RouteWordsDetailList,
@@ -55,7 +57,8 @@ fun NavGraphBuilder.wordsDetailList(
             onSharedEvent = wordsDetailListViewModel::onSharedEvent,
             pagingWords = pagingWords,
             onNavigateBack = onNavigateBack,
-            onRelatedWordClicked = onRelatedWordClicked
+            onRelatedWordClicked = onRelatedWordClicked,
+            windowWidthSizeClass = windowWidthSizeClass
         )
     }
 }

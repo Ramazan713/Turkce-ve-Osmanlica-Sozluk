@@ -13,14 +13,18 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.core.domain.model.SimpleWordResult
+import com.masterplus.trdictionary.core.presentation.components.DialogHeader
 import com.masterplus.trdictionary.core.presentation.components.SimpleWordItem
 import com.masterplus.trdictionary.core.presentation.dialog_body.CustomDialog
+import com.masterplus.trdictionary.core.util.SampleDatas
 
 
 @ExperimentalFoundationApi
@@ -30,36 +34,28 @@ fun ShowSimpleWordsDialog(
     words: List<SimpleWordResult>,
     onClosed: ()->Unit,
     onClickedWord: (SimpleWordResult)->Unit,
+    windowWidthSizeClass: WindowWidthSizeClass
 ){
-    CustomDialog(onClosed = {onClosed()}){
+    CustomDialog(
+        onClosed = {onClosed()},
+        adaptiveWidthSizeClass = windowWidthSizeClass
+    ){
 
         Column(
             modifier = Modifier
-                .padding(vertical = 7.dp, horizontal = 3.dp)
+                .padding(vertical = 4.dp, horizontal = 3.dp)
                 .padding(bottom = 7.dp)
         ) {
-            Box(
+
+            DialogHeader(
+                title = title,
+                onIconClick = onClosed,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 10.dp),
-            ){
-                IconButton(onClick = onClosed, modifier = Modifier.align(Alignment.CenterEnd)){
-                    Icon(Icons.Default.Close,contentDescription = null)
-                }
-                Text(
-                    title,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 50.dp)
-                        .align(Alignment.Center)
-                    ,
-                    style = MaterialTheme.typography.titleLarge
-                )
-            }
+            )
 
-            LazyColumn{
-
+            LazyColumn {
                 itemsIndexed(
                     words,
                     key = {_,w->w.wordId}
@@ -77,3 +73,23 @@ fun ShowSimpleWordsDialog(
         }
     }
 }
+
+@OptIn(ExperimentalFoundationApi::class)
+@Preview(showBackground = true)
+@Composable
+fun ShowSimpleWordsDialogPreview() {
+
+    val words = listOf(
+        SampleDatas.generateSimpleWordResult(wordId = 1),
+        SampleDatas.generateSimpleWordResult(wordId = 3)
+    )
+
+    ShowSimpleWordsDialog(
+        title = "Test title",
+        words = words,
+        onClosed = {},
+        onClickedWord = {},
+        windowWidthSizeClass = WindowWidthSizeClass.Compact
+    )
+}
+

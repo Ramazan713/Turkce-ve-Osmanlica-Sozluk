@@ -1,5 +1,6 @@
 package com.masterplus.trdictionary.core.presentation.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -21,6 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.core.domain.enums.IconInfo
 
@@ -30,6 +32,7 @@ fun IconLabelRow(
     title: String,
     iconInfo: IconInfo?,
     containerColor: Color? = null,
+    borderWidth: Dp? = null,
     shape: Shape = MaterialTheme.shapes.small,
     margins: PaddingValues = PaddingValues(vertical = 3.dp, horizontal = 3.dp),
     paddings: PaddingValues = PaddingValues(horizontal = 5.dp, vertical = 11.dp),
@@ -41,6 +44,7 @@ fun IconLabelRow(
             .fillMaxWidth()
             .clip(shape)
             .clickable { onClick() },
+        border = if(borderWidth == null) null else BorderStroke(borderWidth, MaterialTheme.colorScheme.outlineVariant),
         colors = CardDefaults.cardColors(
             containerColor = containerColor ?: CardDefaults.cardColors().containerColor
         ),

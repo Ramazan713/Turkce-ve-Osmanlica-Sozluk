@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -13,6 +15,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
@@ -22,6 +25,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.util.PreviewDesktop
 
@@ -31,11 +35,12 @@ import com.masterplus.trdictionary.core.util.PreviewDesktop
 fun ShowGetTextDialog(
     title: String,
     content: String = "",
+    imageVector: ImageVector? = null,
     onApproved: (String) -> Unit,
     onClosed: () -> Unit,
 ){
     var textField by rememberSaveable(stateSaver = TextFieldValue.Saver){
-        mutableStateOf( TextFieldValue(text = content, selection = TextRange(content.length)))
+        mutableStateOf(TextFieldValue(text = content, selection = TextRange(content.length)))
     }
     var error by rememberSaveable{
         mutableStateOf<String?>(null)
@@ -48,93 +53,76 @@ fun ShowGetTextDialog(
         focusRequester.requestFocus()
     }
 
-    CustomDialog(
-        onClosed = onClosed
-    ){
-        LazyColumn(
-            modifier = Modifier
-                .padding(vertical = 5.dp, horizontal = 3.dp)
-                .fillMaxWidth()
-        ) {
-            item {
-                Text(
-                    title,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 7.dp, bottom = 5.dp),
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.titleMedium
-                )
+    AlertDialog(
+        onDismissRequest = onClosed,
+        title = {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleLarge
+            )
+        },
+        text =  {
+            OutlinedTextField(
+                value = textField,
+                onValueChange = {textField = it},
+                isError = error != null,
+                singleLine = true,
+                label = { error?.let { Text(it) } },
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.None,
+                    autoCorrect = false,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        checkText(
+                            context,
+                            text = textField.text,
+                            onSetError = { error = it },
+                            onApprove = {
+                                onApproved(it)
+                                onClosed()
+                            }
+                        )
+                    }
+                ),
+                shape = shape,
+                placeholder = { Text(stringResource(R.string.text_field)) },
+                modifier = Modifier
+                    .focusRequester(focusRequester)
+                    .padding(horizontal = 1.dp, vertical = 13.dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = 3.dp)
+            )
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onClosed,
+            ) {
+                Text(text = stringResource(R.string.cancel))
             }
-            item {
-                OutlinedTextField(
-                    value = textField,
-                    onValueChange = {textField = it},
-                    isError = error != null,
-                    singleLine = true,
-                    label = { error?.let { Text(it) } },
-                    keyboardOptions = KeyboardOptions(
-                        capitalization = KeyboardCapitalization.None,
-                        autoCorrect = false,
-                        imeAction = ImeAction.Done
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            checkText(
-                                context,
-                                text = textField.text,
-                                onSetError = { error = it },
-                                onApprove = {
-                                    onApproved(it)
-                                    onClosed()
-                                }
-                            )
+        },
+        confirmButton = {
+            FilledTonalButton(
+                onClick = {
+                    checkText(
+                        context,
+                        text = textField.text,
+                        onSetError = { error = it },
+                        onApprove = {
+                            onApproved(it)
+                            onClosed()
                         }
-                    ),
-                    shape = shape,
-                    placeholder = { Text(stringResource(R.string.text_field)) },
-                    modifier = Modifier
-                        .focusRequester(focusRequester)
-                        .padding(horizontal = 1.dp, vertical = 13.dp)
-                        .fillMaxWidth()
-                        .padding(horizontal = 3.dp)
-                )
+                    )
+                },
+            ) {
+                Text(text = stringResource(R.string.approve))
             }
-            item {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 7.dp),
-                    horizontalArrangement = Arrangement.spacedBy(7.dp)
-                ){
-
-                    TextButton(
-                        onClick = onClosed,
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(text = stringResource(R.string.cancel))
-                    }
-
-                    FilledTonalButton(
-                        onClick = {
-                            checkText(
-                                context,
-                                text = textField.text,
-                                onSetError = { error = it },
-                                onApprove = {
-                                    onApproved(it)
-                                    onClosed()
-                                }
-                            )
-                        },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(text = stringResource(R.string.approve))
-                    }
-                }
-            }
+        },
+        icon = {
+            Icon(imageVector = imageVector ?: return@AlertDialog, contentDescription = null)
         }
-    }
+    )
 }
 
 private fun checkText(

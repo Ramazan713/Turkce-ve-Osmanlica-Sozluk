@@ -114,7 +114,8 @@ fun AppNavHost(
             onNavigateBack = { navController.popBackStack() },
             onRelatedWordClicked = {wordId->
                 navController.navigateToSingleWordDetail(wordId)
-            }
+            },
+            windowWidthSizeClass = windowWidthSizeClass
         )
 
         alphabeticCategoryPage(
@@ -128,14 +129,16 @@ fun AppNavHost(
             onNavigateBack = {navController.popBackStack()},
             onNavigateToWordsCategoryDetails = {catId,subCatId,c,newPos->
                 navController.navigateToWordsDetailCategory(catId, subCatId,c,newPos)
-            }
+            },
+            windowWidthSizeClass = windowWidthSizeClass
         )
 
         wordListForList(
             onNavigateToWordsListDetails = {listId,newPos->
                 navController.navigateToWordsDetailList(listId,newPos)
             },
-            onNavigateBack = {navController.popBackStack()}
+            onNavigateBack = { navController.popBackStack() },
+            windowWidthSizeClass = windowWidthSizeClass
         )
 
         wordsDetailCategory(
@@ -145,7 +148,8 @@ fun AppNavHost(
             },
             onRelatedWordClicked = {wordId->
                 navController.navigateToSingleWordDetail(wordId)
-            }
+            },
+            windowWidthSizeClass = windowWidthSizeClass
         )
 
 
@@ -156,7 +160,8 @@ fun AppNavHost(
             },
             onRelatedWordClicked = {wordId->
                 navController.navigateToSingleWordDetail(wordId)
-            }
+            },
+            windowWidthSizeClass = windowWidthSizeClass
         )
 
         searchPage(
@@ -189,7 +194,8 @@ fun AppNavHost(
 
         settingsPage(
             premiumViewModel = premiumViewModel,
-            onNavigateBack = {navController.popBackStack()}
+            onNavigateBack = {navController.popBackStack()},
+            windowWidthSizeClass = windowWidthSizeClass
         )
     }
 }

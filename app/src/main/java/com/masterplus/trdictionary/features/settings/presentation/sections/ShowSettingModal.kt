@@ -1,15 +1,13 @@
 package com.masterplus.trdictionary.features.settings.presentation.sections
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.presentation.components.CustomModalBottomSheet
-import com.masterplus.trdictionary.core.presentation.components.buttons.NegativeFilledButton
-import com.masterplus.trdictionary.core.presentation.components.buttons.PrimaryButton
-import com.masterplus.trdictionary.core.presentation.dialog_body.ShowColumnBottomContent
+import com.masterplus.trdictionary.core.presentation.selections.SelectMenuItemBottomContent
+import com.masterplus.trdictionary.features.settings.domain.enums.BackupLoadSectionEnum
 import com.masterplus.trdictionary.features.settings.presentation.SettingDialogEvent
 import com.masterplus.trdictionary.features.settings.presentation.SettingEvent
 import com.masterplus.trdictionary.features.settings.presentation.SettingModalEvent
@@ -28,48 +26,48 @@ fun ShowSettingModal(
     }
 
     CustomModalBottomSheet(
-        onDismissRequest = {close()},
+        onDismissRequest = { close() },
         skipHalfExpanded = true
     ){
         when(state.modalEvent){
             null -> {}
             is SettingModalEvent.BackupSectionInit -> {
-                ShowColumnBottomContent(
-                    title = stringResource(R.string.question_download_cloud_backup)
-                ){
-                    PrimaryButton(
-                        title = stringResource(R.string.load_last_Backup),
-                        onClick = {
-                            onEvent(SettingEvent.LoadLastBackup)
-                            close()
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    PrimaryButton(
-                        title = stringResource(R.string.show_backup_files),
-                        onClick = {
-                            onEvent(SettingEvent.ShowDialog(true,
-                                SettingDialogEvent.ShowSelectBackup))
-                            close()
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    NegativeFilledButton(
-                        title = stringResource(R.string.not_show_warning_again),
-                        onClick = {
-                            onEvent(SettingEvent.NotShowBackupInitDialog)
-                            close()
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    NegativeFilledButton(
-                        title = stringResource(R.string.cancel),
-                        onClick = { close() },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
+                SelectMenuItemBottomContent(
+                    title = stringResource(R.string.operations_download_cloud_backup),
+                    items = BackupLoadSectionEnum.values().toList(),
+                    onClickItem = { menuItem->
+                        close()
+                        when(menuItem){
+                            BackupLoadSectionEnum.LoadLastBackup -> {
+                                onEvent(SettingEvent.LoadLastBackup)
+                            }
+                            BackupLoadSectionEnum.ShowBackupFiles -> {
+                                onEvent(SettingEvent.ShowDialog(true,
+                                    SettingDialogEvent.ShowSelectBackup))
+                            }
+                            BackupLoadSectionEnum.NotShowAgain -> {
+                                onEvent(SettingEvent.NotShowBackupInitDialog)
+                            }
+                        }
+                    },
+                    onClose = { close() }
+                )
             }
         }
     }
 
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview(showBackground = true)
+@Composable
+fun ShowSettingModalPreview() {
+    ShowSettingModal(
+        state = SettingState(
+            modalEvent = SettingModalEvent.BackupSectionInit,
+            showModal = true
+        ),
+        onEvent = {}
+    )
+}
+

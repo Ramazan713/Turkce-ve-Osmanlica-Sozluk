@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.R
 
+
 @Composable
 fun DialogHeader(
     modifier: Modifier = Modifier,
@@ -31,18 +32,43 @@ fun DialogHeader(
     contentDescription: String? = stringResource(id = R.string.close),
     tooltip: String? = contentDescription,
 ) {
+    DialogHeader(
+        content = {
+            Text(
+                text = title,
+                textAlign = textAlign,
+                style = titleStyle,
+            )
+        },
+        onIconClick = onIconClick,
+        tooltip = tooltip,
+        iconVector = iconVector,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun DialogHeader(
+    modifier: Modifier = Modifier,
+    content: @Composable() () -> Unit,
+    onIconClick: () -> Unit,
+    iconVector: ImageVector = Icons.Default.Close,
+    contentDescription: String? = stringResource(id = R.string.close),
+    tooltip: String? = contentDescription,
+) {
     Box(
         modifier = modifier.fillMaxWidth(),
         contentAlignment = Alignment.CenterEnd
     ) {
-        Text(
-            text = title,
-            textAlign = textAlign,
-            style = titleStyle,
+
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 48.dp)
-        )
+                .padding(horizontal = 48.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            content()
+        }
 
         DefaultToolTip(
             tooltip = tooltip,

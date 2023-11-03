@@ -2,18 +2,23 @@ package com.masterplus.trdictionary.features.settings.presentation.cloud_backup_
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.masterplus.trdictionary.R
-import com.masterplus.trdictionary.core.util.ToastHelper
+import com.masterplus.trdictionary.core.presentation.components.DialogHeader
+import com.masterplus.trdictionary.core.presentation.components.ListenLifecycleMessage
 import com.masterplus.trdictionary.core.presentation.components.buttons.NegativeButton
 import com.masterplus.trdictionary.core.presentation.components.buttons.PrimaryButton
 import com.masterplus.trdictionary.core.presentation.dialog_body.CustomDialog
@@ -22,91 +27,120 @@ import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDia
 import com.masterplus.trdictionary.features.settings.presentation.backup_select.ShowCloudSelectBackup
 import com.masterplus.trdictionary.features.settings.presentation.components.TextIcon
 
+
 @Composable
 fun ShowCloudSetting(
     onClosed: ()->Unit,
+    windowWidthSizeClass: WindowWidthSizeClass,
     cloudViewModel: CloudBackupViewModel = hiltViewModel()
 ){
+    ShowCloudSetting(
+        onClosed = onClosed,
+        onMakeBackup = cloudViewModel::makeBackup,
+        onClearMessage = cloudViewModel::clearMessage,
+        state = cloudViewModel.state,
+        windowWidthSizeClass = windowWidthSizeClass
+    )
+}
 
-    val state = cloudViewModel.state
-    val context = LocalContext.current
+@Composable
+fun ShowCloudSetting(
+    onClosed: ()->Unit,
+    windowWidthSizeClass: WindowWidthSizeClass,
+    state: CloudBackupState,
+    onMakeBackup: () -> Unit,
+    onClearMessage: () -> Unit
+){
 
-    val isVisibleSelectBackupDialog = rememberSaveable{
+    var isVisibleSelectBackupDialog by rememberSaveable{
         mutableStateOf(false)
     }
-    val isVisibleAddBackupDialog = rememberSaveable{
+    var isVisibleAddBackupDialog by rememberSaveable{
         mutableStateOf(false)
     }
 
-    state.message?.let { message->
-        LaunchedEffect(message){
-            ToastHelper.showMessage(message,context)
-            cloudViewModel.clearMessage()
-        }
-    }
+    ListenLifecycleMessage(
+        message = state.message,
+        onDismiss = onClearMessage
+    )
 
     CustomDialog(
-        onClosed = onClosed
+        onClosed = onClosed,
+        adaptiveWidthSizeClass = windowWidthSizeClass
     ){
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier
-                .padding(vertical = 16.dp, horizontal = 12.dp)
+                .padding(vertical = 16.dp, horizontal = 2.dp)
         ) {
             item {
-                TextIcon(
-                    title = stringResource(R.string.cloud_backup),
-                    resourceId = R.drawable.ic_baseline_cloud_24,
-                    modifier = Modifier.padding(vertical = 5.dp, horizontal = 3.dp)
-                        .fillMaxWidth()
+                DialogHeader(
+                    content = {
+                        TextIcon(
+                            title = stringResource(R.string.cloud_backup),
+                            resourceId = R.drawable.ic_baseline_cloud_24,
+                        )
+                    },
+                    onIconClick = onClosed
                 )
             }
             item {
-                Column {
-                    PrimaryButton(
-                        title = stringResource(R.string.add_backup),
+                Column(
+                    modifier = Modifier
+                        .padding(top = 20.dp, bottom = 8.dp)
+                        .padding(horizontal = 8.dp)
+                    ,
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Button(
                         onClick = {
-                            isVisibleAddBackupDialog.value = true
+                            isVisibleAddBackupDialog = true
                         },
                         modifier = Modifier.fillMaxWidth()
-                    )
-                    Spacer(Modifier.height(8.dp))
-                    PrimaryButton(
-                        title = stringResource(R.string.download_from_cloud),
-                        onClick = {
-                            isVisibleSelectBackupDialog.value = true
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            }
+                    ) {
+                        Text(text = stringResource(R.string.add_backup))
+                    }
 
-            item {
-                NegativeButton(
-                    title = stringResource(R.string.cancel),
-                    onClick = onClosed,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                    Button(
+                        onClick = {
+                            isVisibleSelectBackupDialog = true
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(text = stringResource(R.string.download_from_cloud))
+                    }
+                }
             }
         }
     }
 
     if(state.isLoading){
         LoadingDialog()
-    }else if(isVisibleSelectBackupDialog.value){
+    }else if(isVisibleSelectBackupDialog){
         ShowCloudSelectBackup(
-            onClosed = {isVisibleSelectBackupDialog.value = false}
+            onClosed = { isVisibleSelectBackupDialog = false},
+            windowWidthSizeClass = windowWidthSizeClass
         )
-    }else if(isVisibleAddBackupDialog.value){
+    }else if(isVisibleAddBackupDialog){
         ShowQuestionDialog(
             title = stringResource(R.string.are_sure_to_continue),
             content = stringResource(R.string.some_backup_files_may_change),
-            onClosed = {isVisibleAddBackupDialog.value = false},
-            onApproved = {cloudViewModel.makeBackup()}
+            onClosed = { isVisibleAddBackupDialog = false },
+            onApproved = onMakeBackup
         )
     }
-
-
-
 }
+
+@Preview(showBackground = true)
+@Composable
+fun ShowCloudSettingPreview() {
+    ShowCloudSetting(
+        onClosed = {},
+        windowWidthSizeClass = WindowWidthSizeClass.Expanded,
+        state = CloudBackupState(),
+        onClearMessage = {},
+        onMakeBackup = {}
+    )
+}
+

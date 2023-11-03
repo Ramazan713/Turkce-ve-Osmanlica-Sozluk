@@ -21,7 +21,7 @@ fun SelectableText(
     onClick: ()->Unit
 ){
     val backgroundColor = if(isSelected) MaterialTheme.colorScheme.secondaryContainer else
-        MaterialTheme.colorScheme.outlineVariant
+        MaterialTheme.colorScheme.surfaceVariant
 
     val shape = MaterialTheme.shapes.medium
 
@@ -30,7 +30,7 @@ fun SelectableText(
             .clip(shape)
             .background(backgroundColor)
             .clickable { onClick() }
-            .border(2.dp, MaterialTheme.colorScheme.outline,shape)
+            .border(1.dp, MaterialTheme.colorScheme.outlineVariant,shape)
             .padding(vertical = 13.dp, horizontal = 13.dp)
 
     ){

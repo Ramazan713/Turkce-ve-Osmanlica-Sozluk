@@ -9,6 +9,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,90 +20,86 @@ import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.core.domain.model.premium.PremiumProduct
 import com.masterplus.trdictionary.core.presentation.dialog_body.CustomDialog
 import com.masterplus.trdictionary.R
+import com.masterplus.trdictionary.core.presentation.components.DialogHeader
 
 
 @Composable
 fun ShowPremiumProductDialog(
     premiumProduct: PremiumProduct?,
-    onClosed: ()->Unit,
+    onClosed: () -> Unit,
+    windowWidthSizeClass: WindowWidthSizeClass,
     onProductClicked: (PremiumProduct, String) -> Unit
 ){
-
-    CustomDialog(onClosed = onClosed){
-        LazyColumn(
+    CustomDialog(
+        onClosed = onClosed,
+        adaptiveWidthSizeClass = windowWidthSizeClass
+    ){
+        Column(
             modifier = Modifier
-                .padding(vertical = 5.dp, horizontal = 9.dp)
+                .padding(vertical = 5.dp)
                 .padding(bottom = 17.dp)
         ) {
-            item {
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
+            DialogHeader(
+                title = stringResource(R.string.premium),
+                onIconClick = onClosed,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
+            )
+            LazyColumn(
+                modifier = Modifier
+                    .padding(horizontal = 9.dp)
+            ) {
+
+                item {
                     Text(
-                        stringResource(R.string.premium),
-                        style = MaterialTheme.typography.headlineMedium,
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(horizontal = 30.dp)
-                            .align(Alignment.Center),
-                        textAlign = TextAlign.Center
+                        stringResource(R.string.features),
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.W600),
+                        modifier = Modifier.padding(vertical = 5.dp)
                     )
-                    IconButton(
-                        onClick = onClosed,
-                        modifier = Modifier.align(Alignment.CenterEnd)
-                    ){
-                        Icon(Icons.Default.Close,contentDescription = null)
+                    PremiumFeature(
+                        title = stringResource(R.string.ad_free)
+                    )
+                    Spacer(Modifier.height(24.dp))
+                }
+
+                if (premiumProduct != null) {
+                    items(premiumProduct.subProducts) { subsProduct ->
+                        PremiumItem(
+                            subsProduct,
+                            onClicked = { subsOffer ->
+                                onProductClicked(premiumProduct, subsOffer.offerToken)
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 3.dp),
+                        )
                     }
                 }
-                Spacer(Modifier.height(16.dp))
-            }
 
-            item {
-                Text(
-                    stringResource(R.string.features),
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.W600),
-                    modifier = Modifier.padding(vertical = 5.dp)
-                )
-                PremiumFeature(
-                    title = stringResource(R.string.ad_free)
-                )
-                Spacer(Modifier.height(24.dp))
-            }
+                item {
+                    Spacer(Modifier.height(32.dp))
 
-            if (premiumProduct != null) {
-                items(premiumProduct.subProducts) { subsProduct ->
-                    PremiumItem(
-                        subsProduct,
-                        onClicked = { subsOffer ->
-                            onProductClicked(premiumProduct, subsOffer.offerToken)
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth().padding(vertical = 3.dp),
-                    )
-                }
-            }
-
-            item {
-                Spacer(Modifier.height(32.dp))
-
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(5.dp)
-                ) {
-                    Text(
-                        stringResource(R.string.premium_warning_dia_1),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                    Text(
-                        stringResource(R.string.premium_warning_dia_2),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                    Text(
-                        stringResource(R.string.premium_warning_dia_3),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                    Text(
-                        stringResource(R.string.premium_warning_dia_4),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(5.dp)
+                    ) {
+                        Text(
+                            stringResource(R.string.premium_warning_dia_1),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Text(
+                            stringResource(R.string.premium_warning_dia_2),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Text(
+                            stringResource(R.string.premium_warning_dia_3),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Text(
+                            stringResource(R.string.premium_warning_dia_4),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
                 }
             }
         }

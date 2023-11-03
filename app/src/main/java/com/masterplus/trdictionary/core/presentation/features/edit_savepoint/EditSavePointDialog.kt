@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -16,16 +17,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.masterplus.trdictionary.core.domain.model.SavePoint
 import com.masterplus.trdictionary.core.presentation.components.SavePointItem
 import com.masterplus.trdictionary.R
-import com.masterplus.trdictionary.core.util.ToastHelper
-import com.masterplus.trdictionary.core.presentation.components.buttons.PrimaryButton
+import com.masterplus.trdictionary.core.domain.enums.AutoType
+import com.masterplus.trdictionary.core.domain.enums.SavePointDestination
+import com.masterplus.trdictionary.core.presentation.components.DialogHeader
+import com.masterplus.trdictionary.core.presentation.components.ListenLifecycleMessage
 import com.masterplus.trdictionary.core.presentation.dialog_body.CustomDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowGetTextDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDialog
+import com.masterplus.trdictionary.core.util.SampleDatas
+import java.util.Calendar
 
 
 @ExperimentalFoundationApi
@@ -36,81 +42,90 @@ fun EditSavePointPage(
     saveKey: String,
     pos: Int,
     shortTitle: String,
-    onClosed: ()->Unit,
-    onNavigateLoad: (SavePoint)->Unit,
+    onClosed: () -> Unit,
+    onNavigateLoad: (SavePoint) -> Unit,
+    windowWidthSizeClass: WindowWidthSizeClass,
     editViewModel: EditSavePointViewModel = hiltViewModel()
 ){
-    val state = editViewModel.state
-    val context = LocalContext.current
+    EditSavePointPage(
+        destinationId = destinationId,
+        saveKey = saveKey,
+        pos = pos,
+        shortTitle = shortTitle,
+        onClosed = onClosed,
+        onNavigateLoad = onNavigateLoad,
+        windowWidthSizeClass = windowWidthSizeClass,
+        state = editViewModel.state,
+        onEvent = editViewModel::onEvent
+    )
+}
 
+@ExperimentalFoundationApi
+@ExperimentalComposeUiApi
+@Composable
+fun EditSavePointPage(
+    destinationId: Int,
+    saveKey: String,
+    pos: Int,
+    shortTitle: String,
+    onClosed: () -> Unit,
+    onNavigateLoad: (SavePoint) -> Unit,
+    windowWidthSizeClass: WindowWidthSizeClass,
+    state: EditSavePointState,
+    onEvent: (EditSavePointEvent) -> Unit
+){
     LaunchedEffect(saveKey){
-        editViewModel.onEvent(EditSavePointEvent.LoadData(saveKey))
+        onEvent(EditSavePointEvent.LoadData(saveKey))
     }
 
-    state.message?.let { message->
-        LaunchedEffect(message){
-            ToastHelper.showMessage(message,context)
-            editViewModel.onEvent(EditSavePointEvent.ClearMessage)
-        }
-    }
+    ListenLifecycleMessage(
+        message = state.message,
+        onDismiss = { onEvent(EditSavePointEvent.ClearMessage) }
+    )
 
     CustomDialog(
         onClosed = onClosed,
-        modifier = Modifier.heightIn(300.dp)
+        modifier = Modifier,
+        adaptiveWidthSizeClass = windowWidthSizeClass
     ){
         Column(
             modifier = Modifier
-                .padding(horizontal = 1.dp, vertical = 3.dp)
+                .padding(horizontal = 2.dp, vertical = 2.dp)
         ){
+            DialogHeader(
+                title = stringResource(R.string.save_points_c),
+                onIconClick = onClosed,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 7.dp)
+            )
             LazyColumn(
                 modifier = Modifier.fillMaxWidth()
+                    .weight(1f,fill = false),
+                contentPadding = PaddingValues(bottom = 8.dp)
             ){
                 item {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End
-                    ){
-                        IconButton(
-                            onClick = {onClosed()},
-                        ){
-                            Icon(Icons.Default.Close,contentDescription = null)
-                        }
-                    }
-                }
-                item {
-                    Text(
-                        stringResource(R.string.save_points_c),
-                        style = MaterialTheme.typography.titleLarge,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(vertical = 7.dp, horizontal = 5.dp)
-                    )
-                }
-                item {
-                    PrimaryButton(
-                        title = stringResource(R.string.add_new_savepoint),
+                    OutlinedButton(
                         onClick = {
-                            editViewModel.onEvent(
-                                EditSavePointEvent.ShowDialog(
-                                    showDialog = true,
-                                    EditSavePointDialogEvent.AddSavePointTitle(
-                                        SavePoint.getTitle(
-                                            shortTitle
-                                        )
-                                    )
+                            onEvent(
+                                EditSavePointEvent.ShowDialog(showDialog = true,
+                                    EditSavePointDialogEvent.AddSavePointTitle(SavePoint.getTitle(shortTitle))
                                 )
                             )
                         },
-                        modifier = Modifier.padding(horizontal = 5.dp, vertical = 7.dp)
+                        modifier = Modifier
+                            .padding(horizontal = 5.dp, vertical = 7.dp)
                             .fillMaxWidth()
-                    )
+                    ) {
+                        Text(text = stringResource(R.string.add_new_savepoint))
+                    }
                 }
                 if(state.savePoints.isEmpty()){
                     item {
                         Column(
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.padding(vertical = 19.dp)
+                            modifier = Modifier.padding(vertical = 24.dp)
                         ) {
                             Text(
                                 stringResource(R.string.empty_savepoint),
@@ -123,16 +138,16 @@ fun EditSavePointPage(
                 }else{
                     items(
                         state.savePoints,
-                        key = {item->item.id?:0}
+                        key = {item -> item.id ?: 0}
                     ){item->
                         SavePointItem(
                             savePoint = item,
                             isSelected = item == state.selectedSavePoint,
                             onClick = {
-                                editViewModel.onEvent(EditSavePointEvent.Select(item))
+                                onEvent(EditSavePointEvent.Select(item))
                             },
                             onDeleteClick = {
-                                editViewModel.onEvent(
+                                onEvent(
                                     EditSavePointEvent.ShowDialog(
                                         showDialog = true,
                                         EditSavePointDialogEvent.AskDelete(item)
@@ -140,7 +155,7 @@ fun EditSavePointPage(
                                 )
                             },
                             onTitleEditClick = {
-                                editViewModel.onEvent(
+                                onEvent(
                                     EditSavePointEvent.ShowDialog(
                                         showDialog = true,
                                         EditSavePointDialogEvent.EditTitle(item)
@@ -150,42 +165,36 @@ fun EditSavePointPage(
                         )
                     }
                 }
-                item {
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(top = 7.dp),
-                        horizontalArrangement = Arrangement.spacedBy(7.dp)
-                    ){
-                        PrimaryButton(
-                            title = stringResource(R.string.load),
-                            onClick = {
-                                state.selectedSavePoint?.let { savePoint ->
-                                    onNavigateLoad(savePoint)
-                                    onClosed()
-                                }
-                            },
-                            modifier = Modifier.weight(1f)
-                        )
-                        PrimaryButton(
-                            title = stringResource(R.string.override),
-                            onClick = {editViewModel.onEvent(
-                                EditSavePointEvent.OverrideSavePoint(
-                                    pos
-                                )
-                            )},
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(7.dp)
+            ){
+                Button(
+                    onClick = {
+                        state.selectedSavePoint?.let { savePoint ->
+                            onNavigateLoad(savePoint)
+                            onClosed()
+                        }
+                    },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(text = stringResource(R.string.load))
+                }
+                Button(
+                    onClick = {onEvent(EditSavePointEvent.OverrideSavePoint(pos))  },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(text = stringResource(R.string.override),)
                 }
             }
-
-
-
         }
 
         if(state.showDialog){
             ShowDialog(
                 state.dialogEvent,
-                onEvent = {editViewModel.onEvent(it)},
+                onEvent = { onEvent(it) },
                 pos, saveKey,destinationId
             )
         }
@@ -234,5 +243,37 @@ private fun ShowDialog(
 
 
 
+@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
+@Preview(showBackground = true, heightDp = 300)
+@Composable
+fun EditSavePointPagePreview() {
+    EditSavePointPage(
+        destinationId = 1,
+        saveKey = "saveKey",
+        pos = 2,
+        shortTitle = "shortTitle",
+        onClosed = {  },
+        onNavigateLoad = {  },
+        state = EditSavePointState(savePoints = SampleDatas.savePoints),
+        windowWidthSizeClass = WindowWidthSizeClass.Expanded,
+        onEvent = {  }
+    )
+}
 
+@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
+@Preview(showBackground = true)
+@Composable
+fun EditSavePointPagePreview2() {
 
+    EditSavePointPage(
+        destinationId = 1,
+        saveKey = "saveKey",
+        pos = 2,
+        shortTitle = "shortTitle",
+        onClosed = {  },
+        onNavigateLoad = {  },
+        state = EditSavePointState(),
+        windowWidthSizeClass = WindowWidthSizeClass.Expanded,
+        onEvent = {  }
+    )
+}

@@ -5,36 +5,29 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.features.list.presentation.archive_list.constants.ArchiveListBottomMenuEnum
 import com.masterplus.trdictionary.features.list.presentation.components.ListViewItem
-import com.masterplus.trdictionary.core.util.ToastHelper
-import com.masterplus.trdictionary.core.presentation.components.CustomModalBottomSheet
 import com.masterplus.trdictionary.core.presentation.components.navigation.CustomTopAppBar
-import com.masterplus.trdictionary.core.presentation.selectors.SelectMenuItemBottomContent
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowGetTextDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDialog
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.model.ListView
-import com.masterplus.trdictionary.core.presentation.components.AdaptiveSelectSheetMenu
+import com.masterplus.trdictionary.core.presentation.selections.AdaptiveSelectSheetMenu
 import com.masterplus.trdictionary.core.presentation.components.ListenLifecycleMessage
-import com.masterplus.trdictionary.core.presentation.components.rememberAdaptiveSelectMenuState
+import com.masterplus.trdictionary.core.presentation.selections.rememberAdaptiveSelectMenuState
 
 @ExperimentalMaterial3Api
 @ExperimentalFoundationApi
