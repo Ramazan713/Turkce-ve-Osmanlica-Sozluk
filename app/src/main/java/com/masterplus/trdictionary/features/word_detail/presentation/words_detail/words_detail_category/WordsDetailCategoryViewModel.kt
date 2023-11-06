@@ -16,7 +16,7 @@ import com.masterplus.trdictionary.features.word_detail.domain.use_case.word_det
 import com.masterplus.trdictionary.features.word_detail.presentation.words_detail.shared.WordsDetailSharedEvent
 import com.masterplus.trdictionary.features.word_detail.presentation.words_detail.shared.WordsDetailSharedState
 import com.masterplus.trdictionary.features.word_detail.presentation.words_detail.shared.WordsDetailSharedUiEvent
-import com.masterplus.trdictionary.features.word_detail.presentation.words_detail.words_detail_category.navigation.WordsDetailCategoryArgs
+import com.masterplus.trdictionary.features.word_detail.presentation.word_detail_list.word_category.navigation.WordCategoryArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
@@ -34,7 +34,7 @@ class WordsDetailCategoryViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ): ViewModel(){
 
-    val args = WordsDetailCategoryArgs(savedStateHandle)
+    val args = WordCategoryArgs(savedStateHandle)
 
     val pagingWords = wordDetailUseCases.getCategoryCompletedWordsPaging(args.cat,args.subCat,args.c)
         .cachedIn(viewModelScope)

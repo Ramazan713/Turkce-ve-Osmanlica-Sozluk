@@ -7,7 +7,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.res.stringResource
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowSelectNumberDialog
-import com.masterplus.trdictionary.core.presentation.features.edit_savepoint.EditSavePointPage
+import com.masterplus.trdictionary.core.presentation.features.edit_savepoint.EditSavePointDialog
 import com.masterplus.trdictionary.features.word_detail.presentation.components.ShowSimpleWordsDialog
 
 @ExperimentalComposeUiApi
@@ -56,7 +56,7 @@ fun WordsDetailShowSharedDialog(
             )
         }
         is WordsDetailSharedDialogEvent.EditSavePoint -> {
-            EditSavePointPage(
+            EditSavePointDialog(
                 destinationId = event.savePointDestination.destinationId,
                 saveKey = event.savePointDestination.toSaveKey(),
                 pos = event.pos?:currentPage,

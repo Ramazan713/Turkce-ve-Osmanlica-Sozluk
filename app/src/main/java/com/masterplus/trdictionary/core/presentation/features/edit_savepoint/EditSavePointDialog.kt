@@ -5,8 +5,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
@@ -14,7 +12,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,21 +20,18 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.masterplus.trdictionary.core.domain.model.SavePoint
 import com.masterplus.trdictionary.core.presentation.components.SavePointItem
 import com.masterplus.trdictionary.R
-import com.masterplus.trdictionary.core.domain.enums.AutoType
-import com.masterplus.trdictionary.core.domain.enums.SavePointDestination
 import com.masterplus.trdictionary.core.presentation.components.DialogHeader
 import com.masterplus.trdictionary.core.presentation.components.ListenLifecycleMessage
 import com.masterplus.trdictionary.core.presentation.dialog_body.CustomDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowGetTextDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDialog
 import com.masterplus.trdictionary.core.util.SampleDatas
-import java.util.Calendar
 
 
 @ExperimentalFoundationApi
 @ExperimentalComposeUiApi
 @Composable
-fun EditSavePointPage(
+fun EditSavePointDialog(
     destinationId: Int,
     saveKey: String,
     pos: Int,
@@ -47,7 +41,7 @@ fun EditSavePointPage(
     windowWidthSizeClass: WindowWidthSizeClass,
     editViewModel: EditSavePointViewModel = hiltViewModel()
 ){
-    EditSavePointPage(
+    EditSavePointDialog(
         destinationId = destinationId,
         saveKey = saveKey,
         pos = pos,
@@ -63,7 +57,7 @@ fun EditSavePointPage(
 @ExperimentalFoundationApi
 @ExperimentalComposeUiApi
 @Composable
-fun EditSavePointPage(
+fun EditSavePointDialog(
     destinationId: Int,
     saveKey: String,
     pos: Int,
@@ -249,7 +243,7 @@ private fun ShowDialog(
 @Preview(showBackground = true, heightDp = 300)
 @Composable
 fun EditSavePointPagePreview() {
-    EditSavePointPage(
+    EditSavePointDialog(
         destinationId = 1,
         saveKey = "saveKey",
         pos = 2,
@@ -267,7 +261,7 @@ fun EditSavePointPagePreview() {
 @Composable
 fun EditSavePointPagePreview2() {
 
-    EditSavePointPage(
+    EditSavePointDialog(
         destinationId = 1,
         saveKey = "saveKey",
         pos = 2,

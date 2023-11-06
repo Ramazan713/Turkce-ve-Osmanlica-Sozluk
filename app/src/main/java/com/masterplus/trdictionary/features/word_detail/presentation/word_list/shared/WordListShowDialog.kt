@@ -13,7 +13,7 @@ import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.presentation.selections.SelectMenuItemDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowSelectNumberDialog
 import com.masterplus.trdictionary.core.extensions.visibleMiddlePosition
-import com.masterplus.trdictionary.core.presentation.features.edit_savepoint.EditSavePointPage
+import com.masterplus.trdictionary.core.presentation.features.edit_savepoint.EditSavePointDialog
 import com.masterplus.trdictionary.features.word_detail.domain.constants.ShareItemEnum
 
 @ExperimentalComposeUiApi
@@ -47,7 +47,7 @@ fun WordListSharedShowDialog(
             )
         }
         is WordListSharedDialogEvent.EditSavePoint->{
-            EditSavePointPage(
+            EditSavePointDialog(
                 destinationId = event.savePointDestination.destinationId,
                 saveKey = event.savePointDestination.toSaveKey(),
                 pos = event.pos?:visibleMiddlePos,

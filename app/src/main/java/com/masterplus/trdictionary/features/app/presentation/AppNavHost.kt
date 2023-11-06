@@ -36,8 +36,8 @@ import com.masterplus.trdictionary.features.word_detail.presentation.word_list.w
 import com.masterplus.trdictionary.features.word_detail.presentation.word_list.word_list_category.navigation.wordListCategory
 import com.masterplus.trdictionary.features.word_detail.presentation.word_list.word_list_for_list.navigation.navigateToWordListForList
 import com.masterplus.trdictionary.features.word_detail.presentation.word_list.word_list_for_list.navigation.wordListForList
-import com.masterplus.trdictionary.features.word_detail.presentation.words_detail.words_detail_category.navigation.navigateToWordsDetailCategory
-import com.masterplus.trdictionary.features.word_detail.presentation.words_detail.words_detail_category.navigation.wordsDetailCategory
+import com.masterplus.trdictionary.features.word_detail.presentation.word_detail_list.word_category.navigation.navigateToWordsDetailCategory
+import com.masterplus.trdictionary.features.word_detail.presentation.word_detail_list.word_category.navigation.wordsDetailCategory
 import com.masterplus.trdictionary.features.word_detail.presentation.words_detail.words_detail_list.navigation.navigateToWordsDetailList
 import com.masterplus.trdictionary.features.word_detail.presentation.words_detail.words_detail_list.navigation.wordsDetailList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -80,7 +80,7 @@ fun AppNavHost(
                 navController.navigateToAlphabeticCategory(catEnum.catId)
             },
             onNavigateToWordList = {categoryEnum, subCategoryEnum ->
-                navController.navigateToWordListCategory(categoryEnum.catId,subCategoryEnum.subCatId)
+                navController.navigateToWordsDetailCategory(categoryEnum.catId,subCategoryEnum.subCatId)
             },
             onNavigateToSearch = {
                 navController.navigateToSearch(it.catId)
@@ -128,7 +128,12 @@ fun AppNavHost(
         wordListCategory(
             onNavigateBack = {navController.popBackStack()},
             onNavigateToWordsCategoryDetails = {catId,subCatId,c,newPos->
-                navController.navigateToWordsDetailCategory(catId, subCatId,c,newPos)
+//                navigateToWordsDetailCategory(
+//                    catId,
+//                    subCatId,
+//                    c,
+//                    newPos
+//                )
             },
             windowWidthSizeClass = windowWidthSizeClass
         )
@@ -142,14 +147,19 @@ fun AppNavHost(
         )
 
         wordsDetailCategory(
-            onNavigateBack = {lastPos->
-                navController.previousBackStackEntry?.savedStateHandle?.set("wordsDetailLastPos", lastPos)
+            onNavigateBack = {
+//                navController.previousBackStackEntry?.savedStateHandle?.set(
+//                    "wordsDetailLastPos",
+//                    lastPos
+//                )
                 navController.popBackStack()
             },
-            onRelatedWordClicked = {wordId->
+            onRelatedWordClicked = { wordId ->
                 navController.navigateToSingleWordDetail(wordId)
             },
-            windowWidthSizeClass = windowWidthSizeClass
+            windowWidthSizeClass = windowWidthSizeClass,
+            listDetailContentType = listDetailContentType,
+            displayFeatures = displayFeatures
         )
 
 

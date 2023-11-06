@@ -9,7 +9,7 @@ import com.masterplus.trdictionary.core.domain.constants.K
 import com.masterplus.trdictionary.features.word_detail.presentation.single_word_detail.navigation.RouteSingleWordDetail
 import com.masterplus.trdictionary.features.word_detail.presentation.word_list.word_list_category.navigation.RouteWordListCategory
 import com.masterplus.trdictionary.features.word_detail.presentation.word_list.word_list_for_list.navigation.RouteWordListForList
-import com.masterplus.trdictionary.features.word_detail.presentation.words_detail.words_detail_category.navigation.RouteWordsDetailCategory
+import com.masterplus.trdictionary.features.word_detail.presentation.word_detail_list.word_category.navigation.RouteWordsDetailCategory
 import com.masterplus.trdictionary.features.word_detail.presentation.words_detail.words_detail_list.navigation.RouteWordsDetailList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job

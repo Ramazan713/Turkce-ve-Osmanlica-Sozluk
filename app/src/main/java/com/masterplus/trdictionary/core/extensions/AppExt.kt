@@ -27,6 +27,7 @@ fun Context.refreshApp(){
 
 
 fun CombinedLoadStates.isLoading(includeAppend: Boolean = true): Boolean{
+
     return (this.prepend is LoadState.Loading) ||
             (this.append is LoadState.Loading && includeAppend) || (this.refresh is LoadState.Loading)
 }

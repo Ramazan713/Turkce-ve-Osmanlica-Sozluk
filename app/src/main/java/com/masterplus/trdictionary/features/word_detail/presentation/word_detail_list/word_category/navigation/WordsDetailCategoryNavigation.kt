@@ -1,4 +1,4 @@
-package com.masterplus.trdictionary.features.word_detail.presentation.words_detail.words_detail_category.navigation
+package com.masterplus.trdictionary.features.word_detail.presentation.word_detail_list.word_category.navigation
 
 import android.content.Intent
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -10,17 +10,20 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.*
 import androidx.navigation.compose.composable
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.window.layout.DisplayFeature
 import com.masterplus.trdictionary.core.domain.constants.K
 import com.masterplus.trdictionary.core.domain.enums.CategoryEnum
+import com.masterplus.trdictionary.core.domain.enums.ListDetailContentType
 import com.masterplus.trdictionary.core.domain.enums.SubCategoryEnum
-import com.masterplus.trdictionary.features.word_detail.presentation.words_detail.words_detail_category.WordsDetailCategoryPage
-import com.masterplus.trdictionary.features.word_detail.presentation.words_detail.words_detail_category.WordsDetailCategoryViewModel
+import com.masterplus.trdictionary.core.presentation.features.word_list_detail.WordsListDetailViewModel
+import com.masterplus.trdictionary.features.word_detail.presentation.word_detail_list.word_category.WordCategoryPage
+import com.masterplus.trdictionary.features.word_detail.presentation.word_detail_list.word_category.WordCategoryViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 const val RouteWordsDetailCategory = "wordsDetailCategory/{catId}/{subCatId}/{c}/{pos}"
 
 
-data class WordsDetailCategoryArgs(
+data class WordCategoryArgs(
     val catId: Int,
     val subCatId: Int,
     val c: String?,
@@ -38,7 +41,7 @@ data class WordsDetailCategoryArgs(
 }
 
 
-fun NavController.navigateToWordsDetailCategoryOld(catId: Int, subCatId: Int, c: String? = K.defaultCategoryAlphaChar, pos: Int = 0){
+fun NavController.navigateToWordsDetailCategory(catId: Int, subCatId: Int, c: String? = K.defaultCategoryAlphaChar, pos: Int = 0){
     navigate("wordsDetailCategory/${catId}/${subCatId}/${c?:K.defaultCategoryAlphaChar}/${pos}")
 }
 
@@ -47,13 +50,15 @@ fun NavController.navigateToWordsDetailCategoryOld(catId: Int, subCatId: Int, c:
 @ExperimentalFoundationApi
 @ExperimentalComposeUiApi
 @ExperimentalCoroutinesApi
-fun NavGraphBuilder.wordsDetailCategoryOld(
-    onNavigateBack: (Int)->Unit,
-    onRelatedWordClicked: (Int)->Unit,
+fun NavGraphBuilder.wordsDetailCategory(
+    onNavigateBack: () -> Unit,
+    onRelatedWordClicked: (Int) -> Unit,
     windowWidthSizeClass: WindowWidthSizeClass,
+    listDetailContentType: ListDetailContentType,
+    displayFeatures: List<DisplayFeature>
 ){
     composable(
-        com.masterplus.trdictionary.features.word_detail.presentation.word_detail_list.word_category.navigation.RouteWordsDetailCategory,
+        RouteWordsDetailCategory,
         arguments = listOf(
             navArgument("catId"){type = NavType.StringType},
             navArgument("subCatId"){type = NavType.StringType},
@@ -67,20 +72,23 @@ fun NavGraphBuilder.wordsDetailCategoryOld(
             }
         )
     ){
-        val wordDetailsViewModel: WordsDetailCategoryViewModel = hiltViewModel()
-        val args = wordDetailsViewModel.args
+        val wordCategoryViewModel = hiltViewModel<WordCategoryViewModel>()
 
-        val pagingWords = wordDetailsViewModel.pagingWords.collectAsLazyPagingItems()
+        val wordListViewModel = hiltViewModel<WordsListDetailViewModel>()
 
-        WordsDetailCategoryPage(
-            pos = args.pos,
-            state = wordDetailsViewModel.state,
-            sharedState = wordDetailsViewModel.sharedState,
-            onSharedEvent = wordDetailsViewModel::onSharedEvent,
-            pagingWords = pagingWords,
+        val words = wordCategoryViewModel.words.collectAsLazyPagingItems()
+
+
+        WordCategoryPage(
+            state = wordListViewModel.state,
+            onEvent = wordListViewModel::onEvent,
+            listDetailContentType = listDetailContentType,
+            windowWidthSizeClass = windowWidthSizeClass,
+            displayFeatures = displayFeatures,
+            words = words,
+            savePointInfo = wordCategoryViewModel.savePointInfo,
             onNavigateBack = onNavigateBack,
-            onRelatedWordClicked = onRelatedWordClicked,
-            windowWidthSizeClass = windowWidthSizeClass
+            initPos = wordCategoryViewModel.args.pos
         )
     }
 }

@@ -109,7 +109,8 @@ fun SingleWordDetailPage(
                                 }
                             }
                         },
-                        audioState = state.audioState
+                        audioState = state.audioState,
+                        windowWidthSizeClass = windowWidthSizeClass
                     )
                 }
             }

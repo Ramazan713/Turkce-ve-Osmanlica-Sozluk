@@ -19,7 +19,7 @@ enum class WordListBottomMenu: IMenuItemEnum {
         override val iconInfo: IconInfo
             get() = IconInfo(R.drawable.ic_baseline_content_copy_24)
     },
-    EditBookBottom{
+    EditSavePoint{
         override val title: UiText
             get() = UiText.Resource(R.string.add_savepoint)
         override val iconInfo: IconInfo

@@ -17,9 +17,18 @@ class GetCategoryCompletedWordsPaging @Inject constructor(
     private val getCompletedInfo: GetCompletedWordInfo
 ) {
 
-    operator fun invoke(categoryEnum: CategoryEnum, subCategoryEnum: SubCategoryEnum, c: String?) : Flow<PagingData<WordWithSimilar>>{
-        val config = PagingConfig(pageSize = K.wordsDetailPagerPageSize, enablePlaceholders = true,
-            jumpThreshold = K.wordsDetailPagerJumpThreshold)
+    operator fun invoke(
+        categoryEnum: CategoryEnum,
+        subCategoryEnum: SubCategoryEnum,
+        c: String?,
+        pageSize: Int = K.wordsDetailPagerPageSize,
+        jumpThreshold: Int = K.wordsDetailPagerJumpThreshold
+    ) : Flow<PagingData<WordWithSimilar>>{
+        val config = PagingConfig(
+            pageSize = pageSize,
+            enablePlaceholders = true,
+            jumpThreshold = jumpThreshold
+        )
 
         val wordCompletedInfoData = wordListDetailRepo.getWords(categoryEnum,subCategoryEnum,c,config).map { pagingData->
             pagingData.map { word->

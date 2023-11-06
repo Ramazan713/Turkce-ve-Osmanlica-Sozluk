@@ -43,7 +43,7 @@ fun WordListShowModal(
                     onClose = { close() },
                     onClickItem = {menuItem->
                         when(menuItem){
-                            WordListBottomMenu.EditBookBottom->{
+                            WordListBottomMenu.EditSavePoint->{
                                 close()
                                 onEvent(WordListSharedEvent.ShowDialog(
                                     true,WordListSharedDialogEvent.EditSavePoint(

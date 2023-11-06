@@ -19,11 +19,11 @@ import com.masterplus.trdictionary.core.presentation.features.select_list.consta
 @ExperimentalFoundationApi
 @ExperimentalMaterial3Api
 @Composable
-fun SelectMenuWithListBottom(
-    items: List<IMenuItemEnum>,
+fun <T: IMenuItemEnum> SelectMenuWithListBottom(
+    items: List<T>,
     wordId: Int,
     listIdControl: Int? = null,
-    onClickItem: (IMenuItemEnum) -> Unit,
+    onClickItem: (T) -> Unit,
     onClose: () -> Unit,
     title: String? = null,
     selectListTitle: String = stringResource(id = R.string.add_to_list),
@@ -46,11 +46,11 @@ fun SelectMenuWithListBottom(
 @ExperimentalFoundationApi
 @ExperimentalMaterial3Api
 @Composable
-fun SelectMenuWithListBottom(
-    items: List<IMenuItemEnum>,
+fun <T: IMenuItemEnum> SelectMenuWithListBottom(
+    items: List<T>,
     wordId: Int,
     listIdControl: Int? = null,
-    onClickItem: (IMenuItemEnum) -> Unit,
+    onClickItem: (T) -> Unit,
     onClose: () -> Unit,
     title: String? = null,
     selectListTitle: String = stringResource(id = R.string.add_to_list),
@@ -95,7 +95,7 @@ fun SelectMenuWithListBottom(
                     onEvent(SelectListMenuEvent.AddOrAskFavorite(wordId))
                 }
                 else->{
-                    onClickItem(menuItem)
+                    (menuItem as? T)?.let(onClickItem)
                 }
             }
         }

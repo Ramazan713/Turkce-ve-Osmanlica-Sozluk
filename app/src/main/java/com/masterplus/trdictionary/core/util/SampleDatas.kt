@@ -10,6 +10,11 @@ import com.masterplus.trdictionary.core.domain.model.SavePoint
 import com.masterplus.trdictionary.core.domain.model.SimpleWordResult
 import com.masterplus.trdictionary.core.domain.model.Word
 import com.masterplus.trdictionary.features.list.domain.model.SelectableListView
+import com.masterplus.trdictionary.features.word_detail.domain.model.ExampleDetail
+import com.masterplus.trdictionary.features.word_detail.domain.model.MeaningExamples
+import com.masterplus.trdictionary.features.word_detail.domain.model.WordDetail
+import com.masterplus.trdictionary.features.word_detail.domain.model.WordDetailMeanings
+import com.masterplus.trdictionary.features.word_detail.domain.model.WordWithSimilar
 import java.util.Calendar
 
 object SampleDatas {
@@ -48,6 +53,76 @@ object SampleDatas {
             meanings = meanings
         )
     }
+
+    fun generateWordDetail(
+        inAnyList: Boolean = false,
+        inFavorite: Boolean = false,
+        hasCompoundWords: Boolean = false,
+        id: Int = 1,
+        prefix: String? = null,
+        word: String = "word $id",
+        suffix: String? = null,
+        dictType: DictType = DictType.TR,
+        showTTS: Boolean = true,
+        randomOrder: Int = 13,
+        wordType: WordType = WordType.Proverb
+    ): WordDetail{
+       return WordDetail(inAnyList,inFavorite,hasCompoundWords,id,prefix,word,suffix,word,1,randomOrder,dictType,wordType, showTTS)
+    }
+
+
+    fun generateExample(
+        id: Int = 1,
+        meaningId: Int = 1,
+        authorId: Int = 1,
+        orderItem: Int = 1,
+        content: String = "example content $id",
+        authorName: String = "example author $id"
+    ): ExampleDetail{
+        return ExampleDetail(id, meaningId, authorId, orderItem, content, authorName)
+    }
+
+    fun generateMeaningWithExamples(
+        meaningId: Int = 1,
+        wordId: Int = 1,
+        meaning: Meaning = generateMeaning(id = meaningId, wordId = wordId),
+        examples: List<ExampleDetail> = listOf(
+            generateExample(id = 1, meaningId = meaning.id ?: 1),
+            generateExample(id = 2, meaningId = meaning.id ?: 2),
+        )
+    ): MeaningExamples{
+        return MeaningExamples(
+            meaning = meaning,
+            examples = examples
+        )
+    }
+
+    fun generateWordDetailMeanings(
+        wordId: Int = 1,
+        wordDetail: WordDetail = generateWordDetail(id = wordId),
+        meanings: List<MeaningExamples> = listOf(
+            generateMeaningWithExamples(wordId = wordDetail.id, meaningId = 1 * wordDetail.id),
+            generateMeaningWithExamples(wordId = wordDetail.id, meaningId = 2 * wordDetail.id)
+        )
+    ): WordDetailMeanings{
+        return WordDetailMeanings(
+            wordDetail, meanings
+        )
+    }
+
+    fun generateWordWithSimilar(
+        wordId: Int = 1,
+        word: WordDetailMeanings = generateWordDetailMeanings(wordId = wordId),
+        similarWords: List<WordDetailMeanings> = listOf(
+            generateWordDetailMeanings(wordId = word.wordId + 100),
+            generateWordDetailMeanings(wordId = word.wordId + 110),
+        )
+    ): WordWithSimilar{
+        return WordWithSimilar(
+            word,similarWords
+        )
+    }
+
 
     fun generateSavePoint(
         id: Int = 1,

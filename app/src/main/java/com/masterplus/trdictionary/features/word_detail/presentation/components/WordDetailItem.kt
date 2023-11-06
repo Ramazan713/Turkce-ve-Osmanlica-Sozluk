@@ -1,11 +1,30 @@
 package com.masterplus.trdictionary.features.word_detail.presentation.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.LibraryAdd
+import androidx.compose.material.icons.filled.LibraryAddCheck
+import androidx.compose.material.icons.filled.VolumeUp
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.LibraryAdd
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FilledIconToggleButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedIconToggleButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
@@ -16,13 +35,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.enums.IconInfo
+import com.masterplus.trdictionary.core.presentation.components.DefaultIconToggleButton
 import com.masterplus.trdictionary.core.presentation.selections.CustomDropdownBarMenu
 import com.masterplus.trdictionary.core.presentation.components.buttons.PrimaryButton
+import com.masterplus.trdictionary.core.presentation.selections.AdaptiveSelectSheetMenu
+import com.masterplus.trdictionary.core.presentation.selections.rememberAdaptiveSelectMenuState
+import com.masterplus.trdictionary.core.util.SampleDatas
 import com.masterplus.trdictionary.features.word_detail.domain.constants.ShareItemEnum
 import com.masterplus.trdictionary.features.word_detail.domain.model.AudioState
+import com.masterplus.trdictionary.features.word_detail.domain.model.WordDetail
 import com.masterplus.trdictionary.features.word_detail.domain.model.WordDetailMeanings
 
 
@@ -30,132 +55,178 @@ import com.masterplus.trdictionary.features.word_detail.domain.model.WordDetailM
 fun WordDetailItem(
     wordMeanings: WordDetailMeanings,
     modifier: Modifier = Modifier,
-    onProverbIdiomWordsClicked: ()->Unit,
-    onCompoundWordsClicked: ()->Unit,
+    onProverbIdiomWordsClicked: (WordDetailMeanings) -> Unit,
+    onCompoundWordsClicked: (WordDetailMeanings) -> Unit,
     onVolumePressed: (()->Unit)? = null,
     onFavoritePressed: (()->Unit)? = null,
     onSelectListPressed: (()->Unit)? = null,
     audioState: AudioState? = null,
     onShareMenuItemClicked: (ShareItemEnum)->Unit,
     showButtons: Boolean = true,
+    windowWidthSizeClass: WindowWidthSizeClass
 ){
     val word = wordMeanings.wordDetail
     val shape = MaterialTheme.shapes.medium
 
-    val favoriteIconInfo = remember(word.inFavorite) {
-        derivedStateOf {
-            val isFavorite = word.inFavorite
-            IconInfo(if(isFavorite)R.drawable.ic_baseline_favorite_24 else R.drawable.ic_baseline_favorite_border_24,
-                tintColor = if(isFavorite) Color.Red else null)
-        }
-    }
+    val selectSheetState = rememberAdaptiveSelectMenuState<ShareItemEnum>(
+        windowWidthSizeClass = windowWidthSizeClass
+    )
 
-    val listIconInfo = remember(word.inAnyList) {
-        derivedStateOf {
-            val inList = word.inAnyList
-            IconInfo(if(inList) R.drawable.ic_baseline_library_add_check_24 else R.drawable.ic_outline_library_add_24)
-        }
-    }
-
-
-    Column(
-        modifier = modifier
-            .padding(all = 3.dp)
-            .clip(shape)
-            .border(2.dp, MaterialTheme.colorScheme.outline,shape)
-            .background(MaterialTheme.colorScheme.primaryContainer,shape)
-            .padding(vertical = 7.dp, horizontal = 9.dp)
-
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Image(
-                painter = painterResource(word.dictType.resourceId),
-                modifier = Modifier.size(40.dp),
-                contentDescription = null
-            )
-            CustomDropdownBarMenu(
-                items = ShareItemEnum.values().toList(),
-                onItemChange = {onShareMenuItemClicked(it)}
-            )
-        }
-
-        Text(
-            word.allWordContent,
-            modifier = Modifier.fillMaxWidth()
-                .padding(vertical = 1.dp, horizontal = 1.dp)
-                .padding(top = 5.dp),
-            style = MaterialTheme.typography.titleLarge,
-            textAlign = TextAlign.Center
+    Card(
+        modifier
+            .clip(shape),
+        shape = shape,
+        border = BorderStroke(1.dp,MaterialTheme.colorScheme.outlineVariant),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer
         )
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(vertical = 7.dp, horizontal = 9.dp)
 
-        if(showButtons){
+        ) {
             Row(
-                horizontalArrangement = Arrangement.spacedBy(9.dp, Alignment.CenterHorizontally),
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-                    .padding(vertical = 3.dp)
-                    .padding(bottom = 3.dp)
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                if(word.showTTS && audioState?.isVisible != false){
-                    WordActionButton(
-                        onClicked = onVolumePressed?:{},
-                        iconInfo = IconInfo(R.drawable.ic_outline_volume_up_24),
-                        enabled = audioState?.isPlaying != true
+                Image(
+                    painter = painterResource(word.dictType.resourceId),
+                    modifier = Modifier.size(40.dp),
+                    contentDescription = null
+                )
+
+                AdaptiveSelectSheetMenu(
+                    state = selectSheetState,
+                    items = ShareItemEnum.values().toList(),
+                    onItemChange = { onShareMenuItemClicked(it) }
+                )
+            }
+
+            Text(
+                word.allWordContent,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 1.dp, horizontal = 1.dp)
+                    .padding(top = 5.dp),
+                style = MaterialTheme.typography.titleLarge,
+                textAlign = TextAlign.Center
+            )
+
+            if(showButtons){
+                GetButtons(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 3.dp)
+                        .padding(bottom = 3.dp),
+                    word = word,
+                    onVolumePressed = onVolumePressed,
+                    onFavoritePressed = onFavoritePressed,
+                    onSelectListPressed = onSelectListPressed,
+                    audioState = audioState
+                )
+            }
+
+            wordMeanings.meanings.let { meanings->
+                meanings.forEach { meaning->
+                    MeaningItem(
+                        meaningExamples = meaning,
+                        modifier = Modifier
+                            .padding(vertical = 5.dp)
                     )
                 }
+            }
 
-                WordActionButton(
-                    onClicked = onFavoritePressed?:{},
-                    iconInfo = favoriteIconInfo.value
-                )
+            selectSheetState.showSheet()
 
-                WordActionButton(
-                    onClicked = onSelectListPressed?:{},
-                    iconInfo = listIconInfo.value
-                )
+            if(word.hasProverbIdioms || word.hasCompoundWords){
+                Spacer(Modifier.padding(vertical = 7.dp))
+            }
+
+            if(word.hasProverbIdioms){
+                OutlinedButton(
+                    onClick = { onProverbIdiomWordsClicked(wordMeanings) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(text = stringResource(R.string.proverb_idiom_text_c))
+                }
+            }
+
+            if(word.hasCompoundWords){
+                OutlinedButton(
+                    onClick = { onCompoundWordsClicked(wordMeanings) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(text = stringResource(R.string.compound_words_c))
+                }
             }
         }
+    }
+}
 
-        wordMeanings.meanings.let { meanings->
-            meanings.forEach { meaning->
-                MeaningItem(
-                    meaningExamples = meaning,
-                    modifier = Modifier
-                        .padding(vertical = 5.dp)
-                )
-            }
-        }
 
-        if(word.hasProverbIdioms || word.hasCompoundWords){
-            Spacer(Modifier.padding(vertical = 7.dp))
-        }
-
-        if(word.hasProverbIdioms){
-            PrimaryButton(
-                title = stringResource(R.string.proverb_idiom_text_c),
-                onClick = onProverbIdiomWordsClicked,
-                modifier = Modifier.fillMaxWidth()
+@Composable
+private fun GetButtons(
+    modifier: Modifier = Modifier,
+    word: WordDetail,
+    onVolumePressed: (()->Unit)?,
+    onFavoritePressed: (()->Unit)?,
+    onSelectListPressed: (()->Unit)?,
+    audioState: AudioState?,
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(9.dp, Alignment.CenterHorizontally),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 3.dp)
+            .padding(bottom = 3.dp)
+    ) {
+        AnimatedVisibility(visible = word.showTTS && audioState?.isVisible != false) {
+            DefaultIconToggleButton(
+                value = true,
+                onValueChange = { onVolumePressed?.invoke() },
+                imageVector = Icons.AutoMirrored.Filled.VolumeUp,
+                enabled = audioState?.isPlaying != true
             )
         }
+        DefaultIconToggleButton(
+            value = word.inFavorite,
+            onValueChange = { onFavoritePressed?.invoke() },
+            imageVector = Icons.Default.FavoriteBorder,
+            selectedImageVector = Icons.Default.Favorite,
+            selectedIconTint = MaterialTheme.colorScheme.error
+        )
 
-        if(word.hasCompoundWords){
-            PrimaryButton(
-                title = stringResource(R.string.compound_words_c),
-                onClick = onCompoundWordsClicked,
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
+        DefaultIconToggleButton(
+            value = word.inAnyList,
+            onValueChange = { onSelectListPressed?.invoke() },
+            imageVector = Icons.Outlined.LibraryAdd,
+            selectedImageVector = Icons.Filled.LibraryAddCheck,
+        )
     }
 }
 
 
 
 
-
+@Preview(showBackground = true)
+@Composable
+fun WordDetailItemPreview() {
+    WordDetailItem(
+        wordMeanings = SampleDatas.generateWordDetailMeanings(
+            wordDetail = SampleDatas.generateWordDetail(hasCompoundWords = true)
+        ),
+        onProverbIdiomWordsClicked = {},
+        onCompoundWordsClicked = {},
+        onFavoritePressed = {},
+        onSelectListPressed = {},
+        onShareMenuItemClicked = {},
+        onVolumePressed = {},
+        windowWidthSizeClass = WindowWidthSizeClass.Compact
+    )
+}
 
 
 
