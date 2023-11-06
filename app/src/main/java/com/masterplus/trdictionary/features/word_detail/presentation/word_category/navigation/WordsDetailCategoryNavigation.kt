@@ -88,7 +88,8 @@ fun NavGraphBuilder.listDetailCategoryWords(
             words = words,
             savePointInfo = wordCategoryViewModel.savePointInfo,
             onNavigateBack = onNavigateBack,
-            initPos = wordCategoryViewModel.args.pos
+            initPos = wordCategoryViewModel.args.pos,
+            onRelatedWordClicked = onRelatedWordClicked
         )
     }
 }

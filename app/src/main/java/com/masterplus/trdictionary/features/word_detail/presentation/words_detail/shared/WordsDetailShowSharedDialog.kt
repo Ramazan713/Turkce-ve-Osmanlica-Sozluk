@@ -8,7 +8,7 @@ import androidx.compose.ui.res.stringResource
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowSelectNumberDialog
 import com.masterplus.trdictionary.core.presentation.features.edit_savepoint.EditSavePointDialog
-import com.masterplus.trdictionary.features.word_detail.presentation.components.ShowSimpleWordsDialog
+import com.masterplus.trdictionary.core.presentation.features.word_list_detail.get_detail_words.ShowSimpleWordsDialog
 
 @ExperimentalComposeUiApi
 @ExperimentalFoundationApi

@@ -33,6 +33,7 @@ fun WordsPagerListDetailAdaptivePage(
     onListItemLongClick: (Int, WordDetailMeanings) -> Unit,
     onDetailFavoriteClick: (WordDetailMeanings) -> Unit,
     onSavePointClick: (Int?) -> Unit,
+    onNavigateToRelatedWord: (Int) -> Unit,
     onNavigateBack: (()->Unit)? = null,
     listDetailContentType: ListDetailContentType,
     windowWidthSizeClass: WindowWidthSizeClass,
@@ -119,7 +120,8 @@ fun WordsPagerListDetailAdaptivePage(
             dialogEvent = dialogEvent,
             onEvent = onEvent,
             currentPos = pagerState.currentPage,
-            windowWidthSizeClass = windowWidthSizeClass
+            windowWidthSizeClass = windowWidthSizeClass,
+            onNavigateToRelatedWord = onNavigateToRelatedWord
         )
     }
 

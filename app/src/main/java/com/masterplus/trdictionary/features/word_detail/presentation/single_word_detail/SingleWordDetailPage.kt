@@ -24,7 +24,7 @@ import com.masterplus.trdictionary.core.extensions.share
 import com.masterplus.trdictionary.core.extensions.shareText
 import com.masterplus.trdictionary.core.presentation.features.select_list.select_list_dia.SelectListBottomContent
 import com.masterplus.trdictionary.features.word_detail.domain.constants.ShareItemEnum
-import com.masterplus.trdictionary.features.word_detail.presentation.components.ShowSimpleWordsDialog
+import com.masterplus.trdictionary.core.presentation.features.word_list_detail.get_detail_words.ShowSimpleWordsDialog
 import com.masterplus.trdictionary.features.word_detail.presentation.components.WordDetailItem
 
 @ExperimentalFoundationApi

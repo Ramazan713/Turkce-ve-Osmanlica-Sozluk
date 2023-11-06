@@ -25,6 +25,7 @@ fun WordCategoryPage(
     displayFeatures: List<DisplayFeature>,
     savePointInfo: SavePointCategoryInfoUseCases.SavePointCategoryInfo,
     onNavigateBack: (()->Unit)?,
+    onRelatedWordClicked: (Int) -> Unit,
     initPos: Int
 ) {
     WordsPagerListDetailAdaptivePage(
@@ -50,6 +51,7 @@ fun WordCategoryPage(
                 )
             )
         },
+        onNavigateToRelatedWord = onRelatedWordClicked,
         onDetailFavoriteClick = {w->
             onEvent(WordsListDetailEvent.AddFavorite(w.wordId,false))
         },
