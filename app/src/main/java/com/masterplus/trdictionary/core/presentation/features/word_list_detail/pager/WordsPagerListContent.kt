@@ -2,6 +2,7 @@ package com.masterplus.trdictionary.core.presentation.features.word_list_detail.
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
@@ -32,7 +33,7 @@ fun WordsPagerListContent(
     modifier: Modifier = Modifier,
     onEvent: (WordsListDetailEvent) -> Unit,
     pagingWords: LazyPagingItems<WordWithSimilar>,
-    lazyListState: LazyListState,
+    lazyGridState: LazyGridState,
     title: String,
     listHeaderDescription: String? = null,
     onNavigateBack: (()->Unit)? = null,
@@ -42,7 +43,7 @@ fun WordsPagerListContent(
 ) {
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
-    val middlePos = lazyListState.visibleMiddlePosition()
+    val middlePos = lazyGridState.visibleMiddlePosition()
 
     Scaffold(
         topBar = {
@@ -69,7 +70,7 @@ fun WordsPagerListContent(
                 .padding(paddings)
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
             pagingWords = pagingWords,
-            lazyListState = lazyListState,
+            lazyGridState = lazyGridState,
             onEvent = onEvent,
             onListItemLongClick = onListItemLongClick,
             listHeaderDescription = listHeaderDescription,
@@ -94,12 +95,12 @@ fun WordsListPagePreview() {
     }.collectAsLazyPagingItems()
 
     WordsPagerListContent(
-        lazyListState = LazyListState(),
         pagingWords = words,
         onEvent = {},
         onTopBarMenuClick = {},
         onNavigateBack = {},
         onListItemLongClick = {i,w->},
-        title = "title"
+        title = "title",
+        lazyGridState = LazyGridState()
     )
 }

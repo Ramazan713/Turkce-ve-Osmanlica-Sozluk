@@ -5,8 +5,8 @@ object K {
     const val backupMetaSizeInDb = 3
     const val maxDownloadSizeBytes = 1024*1024*8L
 
-    const val wordsDetailPagerPageSize = 75//5
-    const val wordsDetailPagerJumpThreshold = 200//10
+    const val wordsDetailPagerPageSize = 150//5
+    const val wordsDetailPagerJumpThreshold = 450//10
 
     const val wordListPageSize = 50
     const val wordListJumpThreshold = 100

@@ -1,14 +1,18 @@
 package com.masterplus.trdictionary.core.presentation.features.word_list_detail.pager
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
@@ -44,13 +48,13 @@ fun WordsPagerListDetailAdaptivePage(
     initPos: Int = 0
 ) {
 
-    val lazyListState = rememberLazyListState(initialFirstVisibleItemIndex = initPos)
+    val lazyGridState = rememberLazyGridState(initialFirstVisibleItemIndex = initPos)
     val pagerState = rememberPagerState(initialPage = initPos, pageCount = { words.itemCount })
 
     WordsPagerPosHandler(
         state = state,
         pagerState = pagerState,
-        lazyListState = lazyListState,
+        lazyGridState = lazyGridState,
         listDetailContentType = listDetailContentType,
         onClearPos = { onEvent(WordsListDetailEvent.ClearNavigateToPos) },
         initPos = initPos
@@ -67,7 +71,7 @@ fun WordsPagerListDetailAdaptivePage(
                 WordsPagerListContent(
                     modifier = Modifier.fillMaxSize(),
                     pagingWords = words,
-                    lazyListState = lazyListState,
+                    lazyGridState = lazyGridState,
                     onTopBarMenuClick = {
                         handleTopBarMenu(it, onSavePointClick,pagerState.currentPage)
                     },
@@ -107,7 +111,7 @@ fun WordsPagerListDetailAdaptivePage(
             pagingWords = words,
             windowWidthSizeClass = windowWidthSizeClass,
             pagerState = pagerState,
-            lazyListState = lazyListState,
+            lazyGridState = lazyGridState,
             onNavigateBack = onNavigateBack,
             onListItemLongClick = onListItemLongClick,
             onDetailFavoriteClick = onDetailFavoriteClick,
@@ -150,7 +154,7 @@ fun SinglePage(
     pagingWords: LazyPagingItems<WordWithSimilar>,
     windowWidthSizeClass: WindowWidthSizeClass,
     pagerState: PagerState,
-    lazyListState: LazyListState,
+    lazyGridState: LazyGridState,
     onListItemLongClick: (Int,WordDetailMeanings) -> Unit,
     onDetailFavoriteClick: (WordDetailMeanings) -> Unit,
     onSavePointClick: (Int?) -> Unit,
@@ -183,7 +187,7 @@ fun SinglePage(
         WordsPagerListContent(
             modifier = Modifier.fillMaxSize(),
             pagingWords = pagingWords,
-            lazyListState = lazyListState,
+            lazyGridState = lazyGridState,
             onListItemLongClick = onListItemLongClick,
             onTopBarMenuClick = {
                 handleTopBarMenu(it, onSavePointClick,pagerState.currentPage)
