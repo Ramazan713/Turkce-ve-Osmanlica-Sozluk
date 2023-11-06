@@ -9,10 +9,11 @@ sealed interface WordsListDetailSheetEvent{
         val word: WordDetailMeanings,
         val pos: Int,
         val savePointDestination: SavePointDestination,
-        val listIdControl: Int? = null,
+        val listIdControl: Int?,
     ): WordsListDetailSheetEvent
 
     data class ShowSelectList(
         val wordId: Int,
+        val listIdControl: Int?,
     ): WordsListDetailSheetEvent
 }

@@ -43,7 +43,8 @@ sealed interface WordsListDetailEvent{
 
     data class AddFavorite(
         val wordId: Int,
-        val askForDeletion: Boolean
+        val listIdControl: Int? = null,
+        val inFavorite: Boolean? = null
     ): WordsListDetailEvent
 
     data class AddListWords(val listView: ListView, val wordId: Int): WordsListDetailEvent

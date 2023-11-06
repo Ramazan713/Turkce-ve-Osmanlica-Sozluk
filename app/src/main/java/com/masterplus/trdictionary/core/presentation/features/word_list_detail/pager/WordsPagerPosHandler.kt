@@ -1,6 +1,8 @@
 package com.masterplus.trdictionary.core.presentation.features.word_list_detail.pager
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.lazy.grid.LazyGridLayoutInfo
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
@@ -15,6 +17,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
 import com.masterplus.trdictionary.core.domain.enums.ListDetailContentType
+import com.masterplus.trdictionary.core.extensions.isNumberInRange
 import com.masterplus.trdictionary.core.presentation.features.word_list_detail.WordsListDetailState
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
@@ -22,6 +25,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
 
 @OptIn(ExperimentalFoundationApi::class, FlowPreview::class)
 @Composable
@@ -31,7 +35,7 @@ fun WordsPagerPosHandler(
     lazyGridState: LazyGridState,
     listDetailContentType: ListDetailContentType,
     onClearPos: () -> Unit,
-    initPos: Int
+    initPos: () -> Int
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
 
@@ -40,7 +44,7 @@ fun WordsPagerPosHandler(
     val currentLazyGridState by rememberUpdatedState(newValue = lazyGridState)
 
     var currentPos by rememberSaveable {
-        mutableIntStateOf(initPos)
+        mutableIntStateOf(initPos())
     }
     var posForRefresh by rememberSaveable {
         mutableStateOf(false)
@@ -117,15 +121,16 @@ fun WordsPagerPosHandler(
             }
     }
 
+
     LaunchedEffect(lazyGridState,lifecycleOwner){
-        snapshotFlow { lazyGridState.firstVisibleItemIndex }
-            .debounce(300)
+        snapshotFlow { lazyGridState.layoutInfo }
+            .debounce(500)
+            .filter { it.isNumberInRange(currentPos) == false }
+            .map { it.visibleItemsInfo.firstOrNull()?.index ?: 0 }
             .distinctUntilChanged()
             .flowWithLifecycle(lifecycleOwner.lifecycle)
             .collectLatest {pos->
                 currentPos = pos
             }
     }
-
-
 }

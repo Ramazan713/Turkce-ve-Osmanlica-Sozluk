@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.foundation.lazy.LazyListLayoutInfo
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.LazyGridLayoutInfo
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.*
 
@@ -61,4 +62,14 @@ fun LazyGridState.isScrollingUp(): Boolean {
             }
         }
     }.value
+}
+
+
+fun LazyGridLayoutInfo.isNumberInRange(number: Int): Boolean?{
+    visibleItemsInfo.let { info->
+        val first = info.firstOrNull()?.index
+        val last = info.lastOrNull()?.index
+        if(first == null || last == null) return null
+        return number in first..last
+    }
 }

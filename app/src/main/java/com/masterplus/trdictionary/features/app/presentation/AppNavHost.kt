@@ -32,12 +32,10 @@ import com.masterplus.trdictionary.features.settings.presentation.navigation.nav
 import com.masterplus.trdictionary.features.settings.presentation.navigation.settingsPage
 import com.masterplus.trdictionary.features.word_detail.presentation.single_word_detail.navigation.navigateToSingleWordDetail
 import com.masterplus.trdictionary.features.word_detail.presentation.single_word_detail.navigation.singleWordDetail
-import com.masterplus.trdictionary.features.word_detail.presentation.word_list.word_list_for_list.navigation.navigateToWordListForList
-import com.masterplus.trdictionary.features.word_detail.presentation.word_list.word_list_for_list.navigation.wordListForList
 import com.masterplus.trdictionary.features.word_detail.presentation.word_category.navigation.navigateToListDetailCategoryWords
 import com.masterplus.trdictionary.features.word_detail.presentation.word_category.navigation.listDetailCategoryWords
-import com.masterplus.trdictionary.features.word_detail.presentation.words_detail.words_detail_list.navigation.navigateToWordsDetailList
-import com.masterplus.trdictionary.features.word_detail.presentation.words_detail.words_detail_list.navigation.wordsDetailList
+import com.masterplus.trdictionary.features.word_detail.presentation.word_list_for_list_detail.navigation.navigateToWordListForListDetail
+import com.masterplus.trdictionary.features.word_detail.presentation.word_list_for_list_detail.navigation.wordListForListDetail
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
@@ -90,7 +88,7 @@ fun AppNavHost(
 
         showListPage(
             onNavigateToDetailList = {listId ->
-                navController.navigateToWordListForList(listId)
+                navController.navigateToWordListForListDetail(listId)
             },
             onNavigateToSelectSavePoint = {title,filter,typeId ->
                 navController.navigateToSelectSavePoint(typeId,filter,title)
@@ -103,7 +101,7 @@ fun AppNavHost(
         archiveListPage(
             onNavigateBack = {navController.popBackStack()},
             onNavigateToDetailList = {listId->
-                navController.navigateToWordListForList(listId)
+                navController.navigateToWordListForListDetail(listId)
             },
             windowWidthSizeClass = windowWidthSizeClass
         )
@@ -123,14 +121,6 @@ fun AppNavHost(
             }
         )
 
-        wordListForList(
-            onNavigateToWordsListDetails = {listId,newPos->
-                navController.navigateToWordsDetailList(listId,newPos)
-            },
-            onNavigateBack = { navController.popBackStack() },
-            windowWidthSizeClass = windowWidthSizeClass
-        )
-
         listDetailCategoryWords(
             onNavigateBack = { navController.popBackStack() },
             onRelatedWordClicked = { wordId ->
@@ -141,16 +131,14 @@ fun AppNavHost(
             displayFeatures = displayFeatures
         )
 
-
-        wordsDetailList(
-            onNavigateBack = {lastPos->
-                navController.previousBackStackEntry?.savedStateHandle?.set("wordsDetailLastPos", lastPos)
-                navController.popBackStack()
-            },
+        wordListForListDetail(
+            onNavigateBack = { navController.popBackStack() },
             onRelatedWordClicked = {wordId->
                 navController.navigateToSingleWordDetail(wordId)
             },
-            windowWidthSizeClass = windowWidthSizeClass
+            windowWidthSizeClass = windowWidthSizeClass,
+            listDetailContentType = listDetailContentType,
+            displayFeatures = displayFeatures
         )
 
         searchPage(
@@ -168,7 +156,7 @@ fun AppNavHost(
         selectSavePoint(
             onNavigateBack = {navController.popBackStack()},
             onNavigateToList = {listId, pos ->
-                navController.navigateToWordListForList(listId, pos)
+                navController.navigateToWordListForListDetail(listId, pos)
             },
             onNavigateToCatAll = {catEnum,pos->
                 navController.navigateToListDetailCategoryWords(catEnum.catId,SubCategoryEnum.All.subCatId,K.defaultCategoryAlphaChar,pos)

@@ -1,4 +1,4 @@
-package com.masterplus.trdictionary.features.word_detail.presentation.word_list.shared
+package com.masterplus.trdictionary.features.word_detail.domain.constants
 
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.enums.IMenuItemEnum

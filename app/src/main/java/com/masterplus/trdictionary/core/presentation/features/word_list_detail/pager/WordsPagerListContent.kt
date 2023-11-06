@@ -1,7 +1,6 @@
 package com.masterplus.trdictionary.core.presentation.features.word_list_detail.pager
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -24,7 +23,7 @@ import com.masterplus.trdictionary.features.word_detail.domain.model.WordDetailM
 import com.masterplus.trdictionary.features.word_detail.domain.model.WordWithSimilar
 import com.masterplus.trdictionary.core.presentation.features.word_list_detail.WordsListDetailDialogEvent
 import com.masterplus.trdictionary.core.presentation.features.word_list_detail.WordsListDetailEvent
-import com.masterplus.trdictionary.features.word_detail.presentation.words_detail.shared.WordsDetailTopBarMenu
+import com.masterplus.trdictionary.features.word_detail.domain.constants.WordsDetailTopBarMenu
 import kotlinx.coroutines.flow.flow
 
 @OptIn(ExperimentalMaterial3Api::class)

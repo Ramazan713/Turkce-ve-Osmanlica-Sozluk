@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.masterplus.trdictionary.core.data.local.mapper.toWord
+import com.masterplus.trdictionary.core.domain.use_cases.ListInFavoriteControlForDeletionUseCase
 import com.masterplus.trdictionary.core.domain.use_cases.list_words.ListWordsUseCases
 import com.masterplus.trdictionary.core.presentation.features.share.domain.use_cases.ShareWordUseCases
 import com.masterplus.trdictionary.features.word_detail.domain.use_case.tts.TTSNetworkAudioUseCase
@@ -19,6 +20,7 @@ class WordsListDetailViewModel @Inject constructor(
     private val listWordsUseCases: ListWordsUseCases,
     private val ttsNetworkUseCase: TTSNetworkAudioUseCase,
     private val shareWordUseCases: ShareWordUseCases,
+    private val listInFavoriteControlForDeletionUseCase: ListInFavoriteControlForDeletionUseCase
 ): ViewModel() {
 
     var state by mutableStateOf(WordsListDetailState())
@@ -57,7 +59,15 @@ class WordsListDetailViewModel @Inject constructor(
             }
             is WordsListDetailEvent.AddFavorite -> {
                 viewModelScope.launch {
-                    listWordsUseCases.addFavoriteListWords(event.wordId)
+                    listInFavoriteControlForDeletionUseCase(event.listIdControl,event.inFavorite).let { showDia->
+                        if(showDia){
+                            state = state.copy(
+                                dialogEvent = WordsListDetailDialogEvent.AskFavoriteDelete(event.wordId)
+                            )
+                        }else{
+                            listWordsUseCases.addFavoriteListWords(event.wordId)
+                        }
+                    }
                 }
             }
             is WordsListDetailEvent.AddListWords -> {

@@ -3,10 +3,15 @@ package com.masterplus.trdictionary.core.presentation.features.word_list_detail
 import com.masterplus.trdictionary.core.domain.enums.SavePointDestination
 import com.masterplus.trdictionary.core.domain.enums.SavePointType
 import com.masterplus.trdictionary.core.domain.model.Word
+import com.masterplus.trdictionary.core.presentation.features.select_list.list_menu_dia.SelectListMenuDialogEvent
 import com.masterplus.trdictionary.features.word_detail.domain.model.WordDetail
 import com.masterplus.trdictionary.features.word_detail.domain.model.WordDetailMeanings
 
 sealed interface WordsListDetailDialogEvent {
+
+    data class AskFavoriteDelete(
+        val wordId: Int
+    ): WordsListDetailDialogEvent
 
     data class ShowSelectNumber(
         val itemCount: Int,

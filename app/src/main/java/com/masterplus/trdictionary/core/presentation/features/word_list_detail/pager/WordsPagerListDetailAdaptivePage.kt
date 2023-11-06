@@ -1,18 +1,14 @@
 package com.masterplus.trdictionary.core.presentation.features.word_list_detail.pager
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
@@ -27,7 +23,7 @@ import com.masterplus.trdictionary.core.presentation.features.word_list_detail.h
 import com.masterplus.trdictionary.core.presentation.features.word_list_detail.handlers.WordsDetailHandleSheetEvents
 import com.masterplus.trdictionary.core.presentation.features.word_list_detail.WordsListDetailEvent
 import com.masterplus.trdictionary.core.presentation.features.word_list_detail.WordsListDetailState
-import com.masterplus.trdictionary.features.word_detail.presentation.words_detail.shared.WordsDetailTopBarMenu
+import com.masterplus.trdictionary.features.word_detail.domain.constants.WordsDetailTopBarMenu
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -37,6 +33,7 @@ fun WordsPagerListDetailAdaptivePage(
     words: LazyPagingItems<WordWithSimilar>,
     onListItemLongClick: (Int, WordDetailMeanings) -> Unit,
     onDetailFavoriteClick: (WordDetailMeanings) -> Unit,
+    onDetailSelectListPressed: (WordDetailMeanings) -> Unit,
     onSavePointClick: (Int?) -> Unit,
     onNavigateToRelatedWord: (Int) -> Unit,
     onNavigateBack: (()->Unit)? = null,
@@ -57,7 +54,7 @@ fun WordsPagerListDetailAdaptivePage(
         lazyGridState = lazyGridState,
         listDetailContentType = listDetailContentType,
         onClearPos = { onEvent(WordsListDetailEvent.ClearNavigateToPos) },
-        initPos = initPos
+        initPos = { initPos }
     )
 
     ShareWordEventHandler(
@@ -97,6 +94,7 @@ fun WordsPagerListDetailAdaptivePage(
                     },
                     onEvent = onEvent,
                     onDetailFavoriteClick = onDetailFavoriteClick,
+                    onDetailSelectListPressed = onDetailSelectListPressed,
                     audioState = state.audioState,
                     title = topBarTitle,
                 )
@@ -115,6 +113,7 @@ fun WordsPagerListDetailAdaptivePage(
             onNavigateBack = onNavigateBack,
             onListItemLongClick = onListItemLongClick,
             onDetailFavoriteClick = onDetailFavoriteClick,
+            onDetailSelectListPressed = onDetailSelectListPressed,
             onSavePointClick = onSavePointClick,
             topBarTitle = topBarTitle,
             listHeaderDescription = listHeaderDescription,
@@ -157,6 +156,7 @@ fun SinglePage(
     lazyGridState: LazyGridState,
     onListItemLongClick: (Int,WordDetailMeanings) -> Unit,
     onDetailFavoriteClick: (WordDetailMeanings) -> Unit,
+    onDetailSelectListPressed: (WordDetailMeanings) -> Unit,
     onSavePointClick: (Int?) -> Unit,
     onNavigateBack: (()->Unit)? = null,
     onDetailNavigateBack: () -> Unit,
@@ -181,6 +181,7 @@ fun SinglePage(
             onEvent = onEvent,
             audioState = state.audioState,
             onDetailFavoriteClick = onDetailFavoriteClick,
+            onDetailSelectListPressed = onDetailSelectListPressed,
             title = topBarTitle
         )
     }else{

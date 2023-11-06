@@ -11,7 +11,7 @@ import com.masterplus.trdictionary.core.presentation.features.select_list.select
 import com.masterplus.trdictionary.core.presentation.features.word_list_detail.WordsListDetailDialogEvent
 import com.masterplus.trdictionary.core.presentation.features.word_list_detail.WordsListDetailEvent
 import com.masterplus.trdictionary.core.presentation.features.word_list_detail.WordsListDetailSheetEvent
-import com.masterplus.trdictionary.features.word_detail.presentation.word_list.shared.WordListBottomMenu
+import com.masterplus.trdictionary.features.word_detail.domain.constants.WordListBottomMenu
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -52,7 +52,8 @@ fun WordsDetailHandleSheetEvents(
             is WordsListDetailSheetEvent.ShowSelectList -> {
                 SelectListBottomContent(
                     wordId = sheetEvent.wordId,
-                    onClosed = ::close
+                    onClosed = ::close,
+                    listIdControl = sheetEvent.listIdControl
                 )
             }
         }

@@ -7,9 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.masterplus.trdictionary.core.domain.constants.K
 import com.masterplus.trdictionary.features.word_detail.presentation.single_word_detail.navigation.RouteSingleWordDetail
-import com.masterplus.trdictionary.features.word_detail.presentation.word_list.word_list_for_list.navigation.RouteWordListForList
 import com.masterplus.trdictionary.features.word_detail.presentation.word_category.navigation.RouteListDetailCategoryWords
-import com.masterplus.trdictionary.features.word_detail.presentation.words_detail.words_detail_list.navigation.RouteWordsDetailList
+import com.masterplus.trdictionary.features.word_detail.presentation.word_list_for_list_detail.navigation.RouteWordListForListDetail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.ObsoleteCoroutinesApi
@@ -35,8 +34,7 @@ class AdViewModel @Inject constructor(
 
     private val adDestinations = listOf(
         RouteSingleWordDetail,
-        RouteWordListForList,
-        RouteWordsDetailList,
+        RouteWordListForListDetail,
         RouteListDetailCategoryWords
     )
 

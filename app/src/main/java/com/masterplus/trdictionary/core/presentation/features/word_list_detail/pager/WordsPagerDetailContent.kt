@@ -47,7 +47,7 @@ import com.masterplus.trdictionary.features.word_detail.domain.model.WordDetailM
 import com.masterplus.trdictionary.features.word_detail.domain.model.WordWithSimilar
 import com.masterplus.trdictionary.core.presentation.features.word_list_detail.WordsListDetailDialogEvent
 import com.masterplus.trdictionary.core.presentation.features.word_list_detail.WordsListDetailEvent
-import com.masterplus.trdictionary.features.word_detail.presentation.words_detail.shared.WordsDetailTopBarMenu
+import com.masterplus.trdictionary.features.word_detail.domain.constants.WordsDetailTopBarMenu
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
@@ -64,7 +64,8 @@ fun WordsPagerDetailContent(
     isFullPage: Boolean,
     onNavigateBack: () -> Unit,
     onTopBarMenuClick: (WordsDetailTopBarMenu) -> Unit,
-    onDetailFavoriteClick: (WordDetailMeanings) -> Unit
+    onDetailFavoriteClick: (WordDetailMeanings) -> Unit,
+    onDetailSelectListPressed: (WordDetailMeanings) -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val topBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -74,7 +75,6 @@ fun WordsPagerDetailContent(
             "${pagerState.currentPage + 1} / ${pagingWords.itemCount}"
         }
     }
-
 
     Scaffold(
         topBar = {
@@ -138,6 +138,9 @@ fun WordsPagerDetailContent(
                             onFavoritePressed = {
                                 onDetailFavoriteClick(wordWithSimilar.wordDetailMeanings)
                             },
+                            onDetailSelectListPressed = {
+                                onDetailSelectListPressed(wordWithSimilar.wordDetailMeanings)
+                            }
                         )
                     }
                 }
@@ -145,7 +148,8 @@ fun WordsPagerDetailContent(
             if(isFullPage){
                 GetButtons(
                     onNavigateToPos = { scope.launch { pagerState.animateScrollToPage(it) } },
-                    currentPage = { pagerState.currentPage }
+                    currentPage = { pagerState.currentPage },
+                    itemCount = { pagerState.pageCount }
                 )
             }
         }
@@ -155,7 +159,8 @@ fun WordsPagerDetailContent(
 @Composable
 private fun GetButtons(
     onNavigateToPos: (Int) -> Unit,
-    currentPage: () -> Int
+    currentPage: () -> Int,
+    itemCount: () -> Int
 ) {
     Row(verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(7.dp)) {
@@ -164,7 +169,8 @@ private fun GetButtons(
             onClick = {
                onNavigateToPos(currentPage() - 1)
             },
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            enabled = currentPage() != 0
         ) {
             Text(text = stringResource(R.string.previous))
         }
@@ -173,7 +179,8 @@ private fun GetButtons(
             onClick = {
                 onNavigateToPos(currentPage() + 1)
             },
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            enabled = itemCount() - 1 != currentPage()
         ) {
             Text(text = stringResource(R.string.next))
         }
@@ -210,7 +217,8 @@ fun WordsDetailContentPreview() {
         onTopBarMenuClick = {},
         onEvent = {},
         audioState = AudioState(),
-        onDetailFavoriteClick = {}
+        onDetailFavoriteClick = {},
+        onDetailSelectListPressed = {}
     )
 }
 

@@ -9,11 +9,11 @@ import com.masterplus.trdictionary.core.domain.use_cases.list_words.AddListWords
 import com.masterplus.trdictionary.core.domain.use_cases.list_words.GetSelectableLists
 import com.masterplus.trdictionary.core.domain.use_cases.list_words.ListWordsUseCases
 import com.masterplus.trdictionary.core.domain.repo.SavePointRepo
+import com.masterplus.trdictionary.core.domain.use_cases.ListInFavoriteControlForDeletionUseCase
 import com.masterplus.trdictionary.core.domain.use_cases.lists.*
 import com.masterplus.trdictionary.core.domain.use_cases.savepoint.*
 import com.masterplus.trdictionary.core.presentation.features.share.domain.use_cases.ShareWordUseCases
 import com.masterplus.trdictionary.features.word_detail.domain.repo.WordDetailRepo
-import com.masterplus.trdictionary.features.word_detail.domain.repo.WordListRepo
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -70,4 +70,10 @@ object UseCasesModule {
     fun provideShareWordUseCases(
         wordDetailRepo: WordDetailRepo,
     ) = ShareWordUseCases(wordDetailRepo)
+
+    @Provides
+    @Singleton
+    fun provideListInFavorite(
+        listRepo: ListRepo
+    ) = ListInFavoriteControlForDeletionUseCase(listRepo)
 }

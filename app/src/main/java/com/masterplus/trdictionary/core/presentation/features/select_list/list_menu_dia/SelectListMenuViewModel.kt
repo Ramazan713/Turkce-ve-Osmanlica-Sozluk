@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.masterplus.trdictionary.core.domain.repo.ListRepo
 import com.masterplus.trdictionary.core.domain.repo.ListWordsRepo
+import com.masterplus.trdictionary.core.domain.use_cases.ListInFavoriteControlForDeletionUseCase
 import com.masterplus.trdictionary.core.domain.use_cases.list_words.ListWordsUseCases
 import com.masterplus.trdictionary.core.presentation.features.select_list.constants.SelectListMenuEnum
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +21,7 @@ import javax.inject.Inject
 class SelectListMenuViewModel @Inject constructor(
     private val listWordsUseCases: ListWordsUseCases,
     private val listWordsRepo: ListWordsRepo,
-    private val listRepo: ListRepo
+    private val listInFavoriteUseCase: ListInFavoriteControlForDeletionUseCase
 ): ViewModel(){
 
     var state by mutableStateOf(SelectListMenuState())
@@ -43,15 +44,16 @@ class SelectListMenuViewModel @Inject constructor(
             }
             is SelectListMenuEvent.AddOrAskFavorite -> {
                 viewModelScope.launch {
-                    val listId = state.listIdControl ?: kotlin.run {
-                        return@launch addFavoriteWord(event.wordId)
+                    listInFavoriteUseCase(state.listIdControl,true).let { showDia->
+                        if(showDia){
+                            state = state.copy(
+                                showDialog = true,
+                                dialogEvent = SelectListMenuDialogEvent.AskFavoriteDelete(event.wordId)
+                            )
+                        }else{
+                            addFavoriteWord(event.wordId)
+                        }
                     }
-                    if(!listRepo.isFavoriteList(listId))
-                        return@launch addFavoriteWord(event.wordId)
-                    state = state.copy(
-                        showDialog = true,
-                        dialogEvent = SelectListMenuDialogEvent.AskFavoriteDelete(event.wordId)
-                    )
                 }
             }
         }

@@ -25,8 +25,8 @@ fun WordsDetailAdaptiveContent(
     onCompoundWordsClicked: (WordDetailMeanings) -> Unit,
     onVolumePressed: (()->Unit)? = null,
     onFavoritePressed: (()->Unit)? = null,
-    onSelectListPressed: (()->Unit)? = null,
     onShareMenuItemClicked: (ShareItemEnum)->Unit,
+    onDetailSelectListPressed: () -> Unit
 ) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(400.dp),
@@ -43,7 +43,7 @@ fun WordsDetailAdaptiveContent(
                 audioState = audioState,
                 onShareMenuItemClicked = onShareMenuItemClicked,
                 onFavoritePressed = onFavoritePressed,
-                onSelectListPressed = onSelectListPressed,
+                onSelectListPressed = onDetailSelectListPressed,
                 onVolumePressed = onVolumePressed,
                 onProverbIdiomWordsClicked = onProverbIdiomWordsClicked,
                 onCompoundWordsClicked = onCompoundWordsClicked,
@@ -61,6 +61,7 @@ fun WordsDetailAdaptiveContent(
     audioState: AudioState? = null,
     onEvent: (WordsListDetailEvent) -> Unit,
     onFavoritePressed: (()->Unit)? = null,
+    onDetailSelectListPressed: () -> Unit
 ){
     WordsDetailAdaptiveContent(
         wordWithSimilar = wordWithSimilar,
@@ -72,14 +73,7 @@ fun WordsDetailAdaptiveContent(
             )
         },
         onFavoritePressed = onFavoritePressed,
-        onSelectListPressed = {
-            onEvent(
-                WordsListDetailEvent.ShowSheet(
-                WordsListDetailSheetEvent.ShowSelectList(
-                    wordWithSimilar.wordId,
-                ))
-            )
-        },
+        onDetailSelectListPressed = onDetailSelectListPressed,
         onVolumePressed = {
             onEvent(WordsListDetailEvent.ListenWords(wordWithSimilar.wordDetail))
         },
@@ -96,6 +90,6 @@ fun WordsDetailAdaptiveContent(
                     WordsListDetailDialogEvent.ShowCompoundWordsList(it)
                 )
             )
-        }
+        },
     )
 }

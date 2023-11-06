@@ -1,40 +1,40 @@
-package com.masterplus.trdictionary.features.word_detail.presentation.word_category
+package com.masterplus.trdictionary.features.word_detail.presentation.word_list_for_list_detail
 
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
 import androidx.paging.compose.LazyPagingItems
 import androidx.window.layout.DisplayFeature
-import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.enums.ListDetailContentType
-import com.masterplus.trdictionary.features.word_detail.domain.model.WordWithSimilar
-import com.masterplus.trdictionary.features.word_detail.domain.use_case.save_point_info.SavePointCategoryInfoUseCases
+import com.masterplus.trdictionary.core.domain.enums.SavePointDestination
 import com.masterplus.trdictionary.core.presentation.features.word_list_detail.WordsListDetailDialogEvent
 import com.masterplus.trdictionary.core.presentation.features.word_list_detail.WordsListDetailEvent
 import com.masterplus.trdictionary.core.presentation.features.word_list_detail.WordsListDetailSheetEvent
 import com.masterplus.trdictionary.core.presentation.features.word_list_detail.WordsListDetailState
 import com.masterplus.trdictionary.core.presentation.features.word_list_detail.pager.WordsPagerListDetailAdaptivePage
+import com.masterplus.trdictionary.features.word_detail.domain.model.WordWithSimilar
 
 @Composable
-fun WordCategoryPage(
+fun WordListForListDetailPage(
     state: WordsListDetailState,
     onEvent: (WordsListDetailEvent) -> Unit,
     words: LazyPagingItems<WordWithSimilar>,
     listDetailContentType: ListDetailContentType,
     windowWidthSizeClass: WindowWidthSizeClass,
     displayFeatures: List<DisplayFeature>,
-    savePointInfo: SavePointCategoryInfoUseCases.SavePointCategoryInfo,
     onNavigateBack: (()->Unit)?,
     onRelatedWordClicked: (Int) -> Unit,
-    initPos: Int
+    initPos: Int,
+    savePointDestination: SavePointDestination,
+    listId: Int,
+    listName: String
 ) {
     WordsPagerListDetailAdaptivePage(
         state = state,
         onEvent = onEvent,
         words = words,
         initPos = initPos,
-        topBarTitle = stringResource(R.string.word_list_c),
-        listHeaderDescription = savePointInfo.savePointTitle,
+        topBarTitle = listName,
+        listHeaderDescription = null,
         listDetailContentType = listDetailContentType,
         windowWidthSizeClass = windowWidthSizeClass,
         displayFeatures = displayFeatures,
@@ -45,31 +45,31 @@ fun WordCategoryPage(
                     WordsListDetailSheetEvent.ShowSelectBottomMenu(
                         word = w,
                         pos = i,
-                        savePointDestination = savePointInfo.savePointDestination,
-                        listIdControl = null,
+                        savePointDestination = savePointDestination,
+                        listIdControl = listId,
                     )
                 )
             )
         },
         onNavigateToRelatedWord = onRelatedWordClicked,
         onDetailFavoriteClick = {w->
-            onEvent(WordsListDetailEvent.AddFavorite(w.wordId))
+            onEvent(WordsListDetailEvent.AddFavorite(w.wordId,listId,w.wordDetail.inFavorite))
         },
         onDetailSelectListPressed = {w->
             onEvent(WordsListDetailEvent.ShowSheet(
-                WordsListDetailSheetEvent.ShowSelectList(w.wordId,null))
+                WordsListDetailSheetEvent.ShowSelectList(w.wordId,listId))
             )
         },
         onSavePointClick = {pos->
             onEvent(
                 WordsListDetailEvent.ShowDialog(
                     WordsListDetailDialogEvent.EditSavePoint(
-                        savePointDestination = savePointInfo.savePointDestination,
-                        shortTitle = savePointInfo.savePointTitle,
+                        savePointDestination = savePointDestination,
+                        shortTitle = listName,
                         pos = pos
                     )
                 )
             )
-        },
+        }
     )
 }

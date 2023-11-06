@@ -6,8 +6,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.res.stringResource
 import com.masterplus.trdictionary.R
+import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowSelectNumberDialog
 import com.masterplus.trdictionary.core.presentation.features.edit_savepoint.EditSavePointDialog
+import com.masterplus.trdictionary.core.presentation.features.select_list.list_menu_dia.SelectListMenuEvent
 import com.masterplus.trdictionary.core.presentation.features.share.domain.enums.ShareItemEnum
 import com.masterplus.trdictionary.core.presentation.features.word_list_detail.WordsListDetailDialogEvent
 import com.masterplus.trdictionary.core.presentation.features.word_list_detail.WordsListDetailEvent
@@ -77,6 +79,17 @@ fun WordsDetailHandleModalEvents(
                 },
                 currentValue = event.currentPos,
                 onClose = ::close
+            )
+        }
+
+        is WordsListDetailDialogEvent.AskFavoriteDelete -> {
+            ShowQuestionDialog(
+                title = stringResource(R.string.question_remove_list_from_favorite),
+                content = stringResource(R.string.affect_current_list),
+                onClosed = ::close,
+                onApproved = {
+                    onEvent(WordsListDetailEvent.AddFavorite(event.wordId))
+                }
             )
         }
     }

@@ -11,7 +11,7 @@ import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.presentation.components.DefaultToolTip
 import com.masterplus.trdictionary.core.presentation.components.navigation.CustomTopAppBar
 import com.masterplus.trdictionary.core.presentation.selections.CustomDropdownBarMenu
-import com.masterplus.trdictionary.features.word_detail.presentation.words_detail.shared.WordsDetailTopBarMenu
+import com.masterplus.trdictionary.features.word_detail.domain.constants.WordsDetailTopBarMenu
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
