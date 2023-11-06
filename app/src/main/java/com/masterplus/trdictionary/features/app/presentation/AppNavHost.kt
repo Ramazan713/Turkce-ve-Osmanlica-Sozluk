@@ -32,12 +32,10 @@ import com.masterplus.trdictionary.features.settings.presentation.navigation.nav
 import com.masterplus.trdictionary.features.settings.presentation.navigation.settingsPage
 import com.masterplus.trdictionary.features.word_detail.presentation.single_word_detail.navigation.navigateToSingleWordDetail
 import com.masterplus.trdictionary.features.word_detail.presentation.single_word_detail.navigation.singleWordDetail
-import com.masterplus.trdictionary.features.word_detail.presentation.word_list.word_list_category.navigation.navigateToWordListCategory
-import com.masterplus.trdictionary.features.word_detail.presentation.word_list.word_list_category.navigation.wordListCategory
 import com.masterplus.trdictionary.features.word_detail.presentation.word_list.word_list_for_list.navigation.navigateToWordListForList
 import com.masterplus.trdictionary.features.word_detail.presentation.word_list.word_list_for_list.navigation.wordListForList
-import com.masterplus.trdictionary.features.word_detail.presentation.word_detail_list.word_category.navigation.navigateToWordsDetailCategory
-import com.masterplus.trdictionary.features.word_detail.presentation.word_detail_list.word_category.navigation.wordsDetailCategory
+import com.masterplus.trdictionary.features.word_detail.presentation.word_category.navigation.navigateToListDetailCategoryWords
+import com.masterplus.trdictionary.features.word_detail.presentation.word_category.navigation.listDetailCategoryWords
 import com.masterplus.trdictionary.features.word_detail.presentation.words_detail.words_detail_list.navigation.navigateToWordsDetailList
 import com.masterplus.trdictionary.features.word_detail.presentation.words_detail.words_detail_list.navigation.wordsDetailList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -80,7 +78,7 @@ fun AppNavHost(
                 navController.navigateToAlphabeticCategory(catEnum.catId)
             },
             onNavigateToWordList = {categoryEnum, subCategoryEnum ->
-                navController.navigateToWordsDetailCategory(categoryEnum.catId,subCategoryEnum.subCatId)
+                navController.navigateToListDetailCategoryWords(categoryEnum.catId,subCategoryEnum.subCatId)
             },
             onNavigateToSearch = {
                 navController.navigateToSearch(it.catId)
@@ -121,21 +119,8 @@ fun AppNavHost(
         alphabeticCategoryPage(
             onNavigateBack = {navController.popBackStack()},
             onNavigateToWordList = {categoryEnum, c ->
-                navController.navigateToWordListCategory(categoryEnum.catId,SubCategoryEnum.Alphabetic.subCatId,c)
+                navController.navigateToListDetailCategoryWords(categoryEnum.catId,SubCategoryEnum.Alphabetic.subCatId,c)
             }
-        )
-
-        wordListCategory(
-            onNavigateBack = {navController.popBackStack()},
-            onNavigateToWordsCategoryDetails = {catId,subCatId,c,newPos->
-//                navigateToWordsDetailCategory(
-//                    catId,
-//                    subCatId,
-//                    c,
-//                    newPos
-//                )
-            },
-            windowWidthSizeClass = windowWidthSizeClass
         )
 
         wordListForList(
@@ -146,14 +131,8 @@ fun AppNavHost(
             windowWidthSizeClass = windowWidthSizeClass
         )
 
-        wordsDetailCategory(
-            onNavigateBack = {
-//                navController.previousBackStackEntry?.savedStateHandle?.set(
-//                    "wordsDetailLastPos",
-//                    lastPos
-//                )
-                navController.popBackStack()
-            },
+        listDetailCategoryWords(
+            onNavigateBack = { navController.popBackStack() },
             onRelatedWordClicked = { wordId ->
                 navController.navigateToSingleWordDetail(wordId)
             },
@@ -192,13 +171,13 @@ fun AppNavHost(
                 navController.navigateToWordListForList(listId, pos)
             },
             onNavigateToCatAll = {catEnum,pos->
-                navController.navigateToWordListCategory(catEnum.catId,SubCategoryEnum.All.subCatId,K.defaultCategoryAlphaChar,pos)
+                navController.navigateToListDetailCategoryWords(catEnum.catId,SubCategoryEnum.All.subCatId,K.defaultCategoryAlphaChar,pos)
             },
             onNavigateToCatRandom = {catEnum,pos->
-                navController.navigateToWordListCategory(catEnum.catId,SubCategoryEnum.Random.subCatId,K.defaultCategoryAlphaChar,pos)
+                navController.navigateToListDetailCategoryWords(catEnum.catId,SubCategoryEnum.Random.subCatId,K.defaultCategoryAlphaChar,pos)
             },
             onNavigateToCatAlphabetic = {catEnum,c,pos->
-                navController.navigateToWordListCategory(catEnum.catId,SubCategoryEnum.Alphabetic.subCatId,c,pos)
+                navController.navigateToListDetailCategoryWords(catEnum.catId,SubCategoryEnum.Alphabetic.subCatId,c,pos)
             }
         )
 

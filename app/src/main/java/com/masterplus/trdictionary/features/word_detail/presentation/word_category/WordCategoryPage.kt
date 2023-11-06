@@ -1,4 +1,4 @@
-package com.masterplus.trdictionary.features.word_detail.presentation.word_detail_list.word_category
+package com.masterplus.trdictionary.features.word_detail.presentation.word_category
 
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable

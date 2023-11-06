@@ -1,4 +1,4 @@
-package com.masterplus.trdictionary.features.word_detail.presentation.word_detail_list.word_category
+package com.masterplus.trdictionary.features.word_detail.presentation.word_category
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -10,7 +10,7 @@ import androidx.paging.cachedIn
 import com.masterplus.trdictionary.features.word_detail.domain.use_case.save_point_info.SavePointCategoryInfoUseCases
 import com.masterplus.trdictionary.features.word_detail.domain.use_case.word_details_completed.WordDetailsCompletedUseCases
 import com.masterplus.trdictionary.core.presentation.features.word_list_detail.WordsListDetailState
-import com.masterplus.trdictionary.features.word_detail.presentation.word_detail_list.word_category.navigation.WordCategoryArgs
+import com.masterplus.trdictionary.features.word_detail.presentation.word_category.navigation.WordCategoryArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
