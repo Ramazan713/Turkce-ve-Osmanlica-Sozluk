@@ -7,7 +7,7 @@ import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
-import com.masterplus.trdictionary.features.word_detail.domain.constants.ShareItemEnum
+import com.masterplus.trdictionary.core.presentation.features.share.domain.enums.ShareItemEnum
 import com.masterplus.trdictionary.features.word_detail.domain.model.AudioState
 import com.masterplus.trdictionary.features.word_detail.domain.model.WordDetailMeanings
 import com.masterplus.trdictionary.features.word_detail.domain.model.WordWithSimilar
@@ -66,7 +66,11 @@ fun WordsDetailAdaptiveContent(
         wordWithSimilar = wordWithSimilar,
         windowWidthSizeClass = windowWidthSizeClass,
         audioState = audioState,
-        onShareMenuItemClicked = {},
+        onShareMenuItemClicked = {
+            onEvent(
+                WordsListDetailEvent.ShareWord(it,wordWithSimilar.wordDetail)
+            )
+        },
         onFavoritePressed = onFavoritePressed,
         onSelectListPressed = {
             onEvent(

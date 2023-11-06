@@ -7,17 +7,11 @@ import com.masterplus.trdictionary.core.util.UiText
 
 
 enum class WordListBottomMenu: IMenuItemEnum {
-    ShareText{
+    ShareWord{
         override val title: UiText
             get() = UiText.Resource(R.string.share)
         override val iconInfo: IconInfo
             get() = IconInfo(R.drawable.ic_baseline_share_24)
-    },
-    CopyText{
-        override val title: UiText
-            get() = UiText.Resource(R.string.copy_content)
-        override val iconInfo: IconInfo
-            get() = IconInfo(R.drawable.ic_baseline_content_copy_24)
     },
     EditSavePoint{
         override val title: UiText

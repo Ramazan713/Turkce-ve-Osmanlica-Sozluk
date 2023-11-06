@@ -5,8 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.masterplus.trdictionary.core.data.local.mapper.toWord
 import com.masterplus.trdictionary.core.domain.use_cases.list_words.ListWordsUseCases
-import com.masterplus.trdictionary.features.word_detail.domain.use_case.share.ShareWordUseCases
+import com.masterplus.trdictionary.core.presentation.features.share.domain.use_cases.ShareWordUseCases
 import com.masterplus.trdictionary.features.word_detail.domain.use_case.tts.TTSNetworkAudioUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -78,6 +79,21 @@ class WordsListDetailViewModel @Inject constructor(
                 state = state.copy(
                     sheetEvent = event.sheetEvent
                 )
+            }
+
+            WordsListDetailEvent.ClearShareResult -> {
+                state = state.copy(
+                    shareResultEvent = null
+                )
+            }
+            is WordsListDetailEvent.ShareWord -> {
+                viewModelScope.launch {
+                    val result = shareWordUseCases.invoke(
+                        word = event.wordDetail.toWord(),
+                        shareItemEnum = event.shareItem
+                    )
+                    state = state.copy(shareResultEvent = result)
+                }
             }
         }
     }

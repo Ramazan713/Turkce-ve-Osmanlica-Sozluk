@@ -11,7 +11,7 @@ import com.masterplus.trdictionary.core.domain.constants.K
 import com.masterplus.trdictionary.core.domain.enums.SavePointDestination
 import com.masterplus.trdictionary.core.domain.repo.ListRepo
 import com.masterplus.trdictionary.core.domain.use_cases.list_words.ListWordsUseCases
-import com.masterplus.trdictionary.features.word_detail.domain.use_case.share.ShareWordUseCases
+import com.masterplus.trdictionary.core.presentation.features.share.domain.use_cases.ShareWordUseCases
 import com.masterplus.trdictionary.features.word_detail.domain.use_case.tts.TTSNetworkAudioUseCase
 import com.masterplus.trdictionary.features.word_detail.domain.use_case.word_details_completed.WordDetailsCompletedUseCases
 import com.masterplus.trdictionary.features.word_detail.presentation.words_detail.shared.WordDetailListDialogEvent
@@ -97,15 +97,15 @@ class WordsDetailListViewModel @Inject constructor(
             }
             is WordsDetailSharedEvent.EvaluateShareWord -> {
                 viewModelScope.launch {
-                    val shareResult = shareWordUseCases.shareWordList(
-                        savePointDestination = event.savePointDestination,
-                        savePointType = event.savePointType,
-                        pos = event.pos,
-                        wordId = event.wordId,
-                        wordRandomOrder = event.wordRandomOrder,
-                        shareItemEnum = event.shareItemEnum,
-                        urlBase = K.DeepLink.categoryDetailBaseUrl)
-                    sharedState = sharedState.copy(uiEvent = WordsDetailSharedUiEvent.ShareWord(shareResult))
+//                    val shareResult = shareWordUseCases.shareWordList(
+//                        savePointDestination = event.savePointDestination,
+//                        savePointType = event.savePointType,
+//                        pos = event.pos,
+//                        wordId = event.wordId,
+//                        wordRandomOrder = event.wordRandomOrder,
+//                        shareItemEnum = event.shareItemEnum,
+//                        urlBase = K.DeepLink.categoryDetailBaseUrl)
+//                    sharedState = sharedState.copy(uiEvent = WordsDetailSharedUiEvent.ShareWord(shareResult))
                 }
             }
             WordsDetailSharedEvent.ClearUiEvent -> {

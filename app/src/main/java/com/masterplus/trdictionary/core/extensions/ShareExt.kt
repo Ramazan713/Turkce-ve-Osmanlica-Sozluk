@@ -26,9 +26,8 @@ fun String.shareText(context: Context){
     context.startActivity(shareIntent)
 }
 
-fun String.copyClipboardText(context: Context,clipboardManager: ClipboardManager){
+fun String.copyClipboardText(clipboardManager: ClipboardManager){
     clipboardManager.setText(buildAnnotatedString { append(this@copyClipboardText) })
-    ToastHelper.showMessage(UiText.Resource(R.string.copied),context)
 }
 
 fun WordDetailMeanings.share(context: Context){

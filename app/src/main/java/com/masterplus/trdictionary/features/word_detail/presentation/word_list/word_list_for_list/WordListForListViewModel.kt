@@ -10,7 +10,7 @@ import androidx.paging.cachedIn
 import com.masterplus.trdictionary.core.domain.constants.K
 import com.masterplus.trdictionary.core.domain.enums.SavePointDestination
 import com.masterplus.trdictionary.core.domain.repo.ListRepo
-import com.masterplus.trdictionary.features.word_detail.domain.use_case.share.ShareWordUseCases
+import com.masterplus.trdictionary.core.presentation.features.share.domain.use_cases.ShareWordUseCases
 import com.masterplus.trdictionary.features.word_detail.domain.use_case.word_details_basic.WordDetailsSimpleUseCases
 import com.masterplus.trdictionary.features.word_detail.presentation.word_list.shared.WordListSharedEvent
 import com.masterplus.trdictionary.features.word_detail.presentation.word_list.shared.WordListSharedState
@@ -59,12 +59,12 @@ class WordListForListViewModel @Inject constructor(
                 )
             }
             is WordListSharedEvent.EvaluateShareWord -> {
-                viewModelScope.launch {
-                    val shareResult = wordShareUseCases.shareWordList(event.savePointDestination,event.savePointType,
-                        event.pos,event.word,event.shareItemEnum,
-                        K.DeepLink.categoryBaseUrl)
-                    sharedState = sharedState.copy(uiEvent = WordListSharedUiEvent.ShareWord(shareResult))
-                }
+//                viewModelScope.launch {
+//                    val shareResult = wordShareUseCases.shareWordList(event.savePointDestination,event.savePointType,
+//                        event.pos,event.word,event.shareItemEnum,
+//                        K.DeepLink.categoryBaseUrl)
+//                    sharedState = sharedState.copy(uiEvent = WordListSharedUiEvent.ShareWord(shareResult))
+//                }
             }
             is WordListSharedEvent.ClearUiEvent -> {
 

@@ -1,6 +1,7 @@
 package com.masterplus.trdictionary.core.presentation.features.word_list_detail
 
 import com.masterplus.trdictionary.core.domain.model.ListView
+import com.masterplus.trdictionary.core.presentation.features.share.domain.enums.ShareItemEnum
 import com.masterplus.trdictionary.features.word_detail.domain.model.WordDetail
 import com.masterplus.trdictionary.features.word_detail.domain.model.WordWithSimilar
 
@@ -10,6 +11,13 @@ sealed interface WordsListDetailEvent{
     data object ClearMessage: WordsListDetailEvent
 
     data object ClearNavigateToPos: WordsListDetailEvent
+
+    data object ClearShareResult: WordsListDetailEvent
+
+    data class ShareWord(
+        val shareItem: ShareItemEnum,
+        val wordDetail: WordDetail
+    ): WordsListDetailEvent
 
     data class HideSelectedWords(
         val lastPos: Int?

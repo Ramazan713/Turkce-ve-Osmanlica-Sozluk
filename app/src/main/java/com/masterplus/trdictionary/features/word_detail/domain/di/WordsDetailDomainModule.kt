@@ -7,8 +7,7 @@ import com.masterplus.trdictionary.features.word_detail.domain.repo.WordDetailRe
 import com.masterplus.trdictionary.features.word_detail.domain.repo.WordListDetailRepo
 import com.masterplus.trdictionary.features.word_detail.domain.repo.WordListRepo
 import com.masterplus.trdictionary.features.word_detail.domain.use_case.save_point_info.SavePointCategoryInfoUseCases
-import com.masterplus.trdictionary.features.word_detail.domain.use_case.share.ShareWordList
-import com.masterplus.trdictionary.features.word_detail.domain.use_case.share.ShareWordUseCases
+import com.masterplus.trdictionary.core.presentation.features.share.domain.use_cases.ShareWordUseCases
 import com.masterplus.trdictionary.features.word_detail.domain.use_case.tts.TTSNetworkAudioUseCase
 import com.masterplus.trdictionary.features.word_detail.domain.use_case.tts.TextToSpeechUseCase
 import com.masterplus.trdictionary.features.word_detail.domain.use_case.word_details_basic.GetCategorySimpleWords
@@ -40,17 +39,7 @@ object WordsDetailDomainModule {
     fun provideTTSNetworkUseCase(ttsUseCase: TextToSpeechUseCase, connectivityProvider: ConnectivityProvider) =
         TTSNetworkAudioUseCase(ttsUseCase, connectivityProvider)
 
-    @Provides
-    @Singleton
-    fun provideShareWordUseCases(
-        wordDetailRepo: WordDetailRepo,
-        wordListRepo: WordListRepo
-    ) =
-        ShareWordUseCases(
-            shareWordList = ShareWordList(
-                wordDetailRepo, wordListRepo
-            ),
-        )
+
 
     @Singleton
     @Provides

@@ -11,6 +11,9 @@ import com.masterplus.trdictionary.core.domain.use_cases.list_words.ListWordsUse
 import com.masterplus.trdictionary.core.domain.repo.SavePointRepo
 import com.masterplus.trdictionary.core.domain.use_cases.lists.*
 import com.masterplus.trdictionary.core.domain.use_cases.savepoint.*
+import com.masterplus.trdictionary.core.presentation.features.share.domain.use_cases.ShareWordUseCases
+import com.masterplus.trdictionary.features.word_detail.domain.repo.WordDetailRepo
+import com.masterplus.trdictionary.features.word_detail.domain.repo.WordListRepo
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -61,4 +64,10 @@ object UseCasesModule {
             deleteSavePoint = DeleteSavePoint(savePointRepo),
             getSavePoints = GetSavePointsByType(savePointRepo)
         )
+
+    @Provides
+    @Singleton
+    fun provideShareWordUseCases(
+        wordDetailRepo: WordDetailRepo,
+    ) = ShareWordUseCases(wordDetailRepo)
 }

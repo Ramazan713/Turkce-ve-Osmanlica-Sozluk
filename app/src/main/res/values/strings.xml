@@ -129,6 +129,7 @@
     <string name="share_link_c">Linki Paylaş</string>
     <string name="share_choices_c">Paylaşma Seçenekleri</string>
     <string name="copy_content">İçeriği kopyala</string>
+    <string name="copy_content_c">İçeriği Kopyala</string>
     <string name="copied">Kopyalandı</string>
     <string name="override_backup_warning">Yerelde bulunan verileriniz silinip buluttaki verileriniz yüklenecektir.(Yerelde kaydedilmemiş verileriniz varsa veri kaybına neden olabilir)</string>
     <string name="add_on_backup_warning">Yerelde bulunan verileriniz silinmeyecektir ama üzerine ekleneceği için veri değişikliğine, gereksiz veri fazlalığına veya veri kaybına neden olabilir </string>

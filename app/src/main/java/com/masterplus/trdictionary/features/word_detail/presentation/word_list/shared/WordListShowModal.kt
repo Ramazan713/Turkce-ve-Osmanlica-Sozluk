@@ -10,7 +10,6 @@ import androidx.compose.ui.res.stringResource
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.enums.SavePointDestination
 import com.masterplus.trdictionary.core.presentation.components.CustomModalBottomSheet
-import com.masterplus.trdictionary.core.extensions.copyClipboardText
 import com.masterplus.trdictionary.core.presentation.features.select_list.list_menu_dia.SelectMenuWithListBottom
 
 @ExperimentalMaterial3Api
@@ -54,7 +53,7 @@ fun WordListShowModal(
                                 ))
                             }
 
-                            WordListBottomMenu.ShareText->{
+                            WordListBottomMenu.ShareWord->{
                                 close()
                                 onEvent(WordListSharedEvent.ShowDialog(true,
                                     WordListSharedDialogEvent.ShowShareDialog(
@@ -63,10 +62,10 @@ fun WordListShowModal(
                                     )
                                 ))
                             }
-
-                            WordListBottomMenu.CopyText->{
-                                event.simpleWord.word.word.copyClipboardText(context, clipboardManager)
-                            }
+//
+//                            WordListBottomMenu.CopyText->{
+//                                event.simpleWord.word.word.copyClipboardText(context, clipboardManager)
+//                            }
 
                         }
                     },

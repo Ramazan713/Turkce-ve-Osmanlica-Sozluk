@@ -22,7 +22,7 @@ import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.data.local.mapper.toWord
 import com.masterplus.trdictionary.core.presentation.components.buttons.PrimaryButton
 import com.masterplus.trdictionary.core.extensions.isLoading
-import com.masterplus.trdictionary.features.word_detail.domain.constants.ShareItemEnum
+import com.masterplus.trdictionary.core.presentation.features.share.domain.enums.ShareItemEnum
 import com.masterplus.trdictionary.features.word_detail.domain.model.AudioState
 import com.masterplus.trdictionary.features.word_detail.domain.model.WordDetailMeanings
 import com.masterplus.trdictionary.features.word_detail.domain.model.WordWithSimilar
@@ -32,13 +32,13 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun WordsDetailContent(
-        pagingWords: LazyPagingItems<WordWithSimilar>,
-        pagerState: PagerState,
-        audioState: AudioState,
-        onEvent: (WordsDetailSharedEvent)->Unit,
-        onFavoriteClicked: (Int, WordDetailMeanings)->Unit,
-        onShareMenuItemClicked: (Int, Int, Int, ShareItemEnum) -> Unit,
-        modifier: Modifier = Modifier
+    pagingWords: LazyPagingItems<WordWithSimilar>,
+    pagerState: PagerState,
+    audioState: AudioState,
+    onEvent: (WordsDetailSharedEvent)->Unit,
+    onFavoriteClicked: (Int, WordDetailMeanings)->Unit,
+    onShareMenuItemClicked: (Int, Int, Int, ShareItemEnum) -> Unit,
+    modifier: Modifier = Modifier
 ){
 
     val scope = rememberCoroutineScope()

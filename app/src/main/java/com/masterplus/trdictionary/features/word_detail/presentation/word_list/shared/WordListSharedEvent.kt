@@ -3,7 +3,7 @@ package com.masterplus.trdictionary.features.word_detail.presentation.word_list.
 import com.masterplus.trdictionary.core.domain.enums.SavePointDestination
 import com.masterplus.trdictionary.core.domain.enums.SavePointType
 import com.masterplus.trdictionary.core.domain.model.Word
-import com.masterplus.trdictionary.features.word_detail.domain.constants.ShareItemEnum
+import com.masterplus.trdictionary.core.presentation.features.share.domain.enums.ShareItemEnum
 
 sealed class WordListSharedEvent{
     data class ShowDialog(val showDialog: Boolean, val dialogEvent: WordListSharedDialogEvent? = null): WordListSharedEvent()

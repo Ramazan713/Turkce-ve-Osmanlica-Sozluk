@@ -3,6 +3,7 @@ package com.masterplus.trdictionary.core.presentation.features.word_list_detail
 import com.masterplus.trdictionary.core.domain.enums.SavePointDestination
 import com.masterplus.trdictionary.core.domain.enums.SavePointType
 import com.masterplus.trdictionary.core.domain.model.Word
+import com.masterplus.trdictionary.features.word_detail.domain.model.WordDetail
 import com.masterplus.trdictionary.features.word_detail.domain.model.WordDetailMeanings
 
 sealed interface WordsListDetailDialogEvent {
@@ -28,10 +29,7 @@ sealed interface WordsListDetailDialogEvent {
 
 
     data class ShowShareDialog(
-        val savePointDestination: SavePointDestination,
-        val savePointType: SavePointType?,
-        val pos: Int?,
-        val word: Word,
+        val word: WordDetail,
     ): WordsListDetailDialogEvent
 
 }

@@ -23,7 +23,7 @@ import com.masterplus.trdictionary.core.extensions.addPrefixZeros
 import com.masterplus.trdictionary.core.extensions.share
 import com.masterplus.trdictionary.core.extensions.shareText
 import com.masterplus.trdictionary.core.presentation.features.select_list.select_list_dia.SelectListBottomContent
-import com.masterplus.trdictionary.features.word_detail.domain.constants.ShareItemEnum
+import com.masterplus.trdictionary.core.presentation.features.share.domain.enums.ShareItemEnum
 import com.masterplus.trdictionary.core.presentation.features.word_list_detail.get_detail_words.ShowSimpleWordsDialog
 import com.masterplus.trdictionary.features.word_detail.presentation.components.WordDetailItem
 
@@ -96,18 +96,18 @@ fun SingleWordDetailPage(
 //                            ))
                         },
                         onShareMenuItemClicked = {sharedItem->
-                            when(sharedItem){
-                                ShareItemEnum.ShareWord -> {
-                                    wordModel.wordDetail.word.shareText(context)
-                                }
-                                ShareItemEnum.ShareWordMeaning -> {
-                                    wordModel.share(context)
-                                }
-                                ShareItemEnum.ShareLink -> {
-                                    val wordIdStr = wordModel.wordId.addPrefixZeros(K.DeepLink.numberZerosLength)
-                                    "${K.DeepLink.singleWordBaseUrl}/${wordIdStr}".shareText(context)
-                                }
-                            }
+//                            when(sharedItem){
+//                                ShareItemEnum.ShareWord -> {
+//                                    wordModel.wordDetail.word.shareText(context)
+//                                }
+//                                ShareItemEnum.ShareWordMeaning -> {
+//                                    wordModel.share(context)
+//                                }
+//                                ShareItemEnum.ShareLink -> {
+//                                    val wordIdStr = wordModel.wordId.addPrefixZeros(K.DeepLink.numberZerosLength)
+//                                    "${K.DeepLink.singleWordBaseUrl}/${wordIdStr}".shareText(context)
+//                                }
+//                            }
                         },
                         audioState = state.audioState,
                         windowWidthSizeClass = windowWidthSizeClass

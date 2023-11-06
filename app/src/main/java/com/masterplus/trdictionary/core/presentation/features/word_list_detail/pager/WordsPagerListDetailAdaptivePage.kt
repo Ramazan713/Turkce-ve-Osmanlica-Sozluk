@@ -16,6 +16,7 @@ import androidx.window.layout.DisplayFeature
 import com.google.accompanist.adaptive.HorizontalTwoPaneStrategy
 import com.google.accompanist.adaptive.TwoPane
 import com.masterplus.trdictionary.core.domain.enums.ListDetailContentType
+import com.masterplus.trdictionary.core.presentation.features.share.presentation.ShareWordEventHandler
 import com.masterplus.trdictionary.features.word_detail.domain.model.WordDetailMeanings
 import com.masterplus.trdictionary.features.word_detail.domain.model.WordWithSimilar
 import com.masterplus.trdictionary.core.presentation.features.word_list_detail.handlers.WordsDetailHandleModalEvents
@@ -55,6 +56,10 @@ fun WordsPagerListDetailAdaptivePage(
         initPos = initPos
     )
 
+    ShareWordEventHandler(
+        event = state.shareResultEvent,
+        onClearEvent = { onEvent(WordsListDetailEvent.ClearShareResult) }
+    )
 
     if(listDetailContentType == ListDetailContentType.DUAL_PANE){
         TwoPane(

@@ -8,6 +8,7 @@ import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.presentation.components.CustomModalBottomSheet
 import com.masterplus.trdictionary.core.presentation.features.select_list.list_menu_dia.SelectMenuWithListBottom
 import com.masterplus.trdictionary.core.presentation.features.select_list.select_list_dia.SelectListBottomContent
+import com.masterplus.trdictionary.core.presentation.features.word_list_detail.WordsListDetailDialogEvent
 import com.masterplus.trdictionary.core.presentation.features.word_list_detail.WordsListDetailEvent
 import com.masterplus.trdictionary.core.presentation.features.word_list_detail.WordsListDetailSheetEvent
 import com.masterplus.trdictionary.features.word_detail.presentation.word_list.shared.WordListBottomMenu
@@ -35,11 +36,10 @@ fun WordsDetailHandleSheetEvents(
                     onClose = ::close,
                     onClickItem = {menuItem->
                         when(menuItem){
-                            WordListBottomMenu.ShareText -> {
-
-                            }
-                            WordListBottomMenu.CopyText -> {
-
+                            WordListBottomMenu.ShareWord -> {
+                                onEvent(WordsListDetailEvent.ShowDialog(
+                                    WordsListDetailDialogEvent.ShowShareDialog(sheetEvent.word.wordDetail)
+                                ))
                             }
                             WordListBottomMenu.EditSavePoint -> {
                                 onSavePointClick(sheetEvent.pos)

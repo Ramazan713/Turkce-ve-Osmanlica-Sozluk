@@ -4,7 +4,7 @@ import com.masterplus.trdictionary.core.domain.enums.SavePointDestination
 import com.masterplus.trdictionary.core.domain.enums.SavePointType
 import com.masterplus.trdictionary.core.domain.model.ListView
 import com.masterplus.trdictionary.core.domain.model.Word
-import com.masterplus.trdictionary.features.word_detail.domain.constants.ShareItemEnum
+import com.masterplus.trdictionary.core.presentation.features.share.domain.enums.ShareItemEnum
 
 sealed class WordsDetailSharedEvent{
 

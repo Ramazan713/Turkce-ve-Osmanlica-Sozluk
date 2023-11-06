@@ -8,10 +8,12 @@ import androidx.compose.ui.res.stringResource
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowSelectNumberDialog
 import com.masterplus.trdictionary.core.presentation.features.edit_savepoint.EditSavePointDialog
+import com.masterplus.trdictionary.core.presentation.features.share.domain.enums.ShareItemEnum
 import com.masterplus.trdictionary.core.presentation.features.word_list_detail.WordsListDetailDialogEvent
 import com.masterplus.trdictionary.core.presentation.features.word_list_detail.WordsListDetailEvent
 import com.masterplus.trdictionary.core.presentation.features.word_list_detail.get_detail_words.ShowCompoundWordsDia
 import com.masterplus.trdictionary.core.presentation.features.word_list_detail.get_detail_words.ShowProverbIdiomWordsDia
+import com.masterplus.trdictionary.core.presentation.selections.SelectMenuItemDialog
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
@@ -57,7 +59,14 @@ fun WordsDetailHandleModalEvents(
             )
         }
         is WordsListDetailDialogEvent.ShowShareDialog -> {
-
+            SelectMenuItemDialog(
+                title = stringResource(id = R.string.share_choices_c),
+                items = ShareItemEnum.values().toList(),
+                onClickItem = {
+                    onEvent(WordsListDetailEvent.ShareWord(it,event.word))
+                },
+                onClosed = ::close
+            )
         }
         is WordsListDetailDialogEvent.ShowSelectNumber -> {
             ShowSelectNumberDialog(

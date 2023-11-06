@@ -14,7 +14,7 @@ import com.masterplus.trdictionary.core.presentation.selections.SelectMenuItemDi
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowSelectNumberDialog
 import com.masterplus.trdictionary.core.extensions.visibleMiddlePosition
 import com.masterplus.trdictionary.core.presentation.features.edit_savepoint.EditSavePointDialog
-import com.masterplus.trdictionary.features.word_detail.domain.constants.ShareItemEnum
+import com.masterplus.trdictionary.core.presentation.features.share.domain.enums.ShareItemEnum
 
 @ExperimentalComposeUiApi
 @ExperimentalFoundationApi

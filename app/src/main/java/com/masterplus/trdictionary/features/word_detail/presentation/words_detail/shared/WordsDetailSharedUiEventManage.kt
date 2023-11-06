@@ -8,7 +8,7 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
 import com.masterplus.trdictionary.core.extensions.share
 import com.masterplus.trdictionary.core.extensions.shareText
-import com.masterplus.trdictionary.features.word_detail.domain.use_case.share.ShareWordUseCases
+import com.masterplus.trdictionary.core.presentation.features.share.domain.use_cases.ShareWordUseCases
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -28,11 +28,11 @@ fun WordListSharedUiEventManage(
                     when (event) {
                         is WordsDetailSharedUiEvent.ShareWord -> {
                             when (val shareResult = event.shareResult) {
-                                is ShareWordUseCases.ShareWordResult.ShareLink -> {
-                                    shareResult.link.shareText(context)
+                                is ShareWordUseCases.ShareWordResult.CopyWord -> {
+
                                 }
                                 is ShareWordUseCases.ShareWordResult.ShareWord -> {
-                                    shareResult.wordMeanings?.wordDetail?.word?.shareText(context)
+//                                    shareResult.wordMeanings?.wordDetail?.word?.shareText(context)
                                 }
                                 is ShareWordUseCases.ShareWordResult.ShareWordWithMeanings -> {
                                     shareResult.wordMeanings?.share(context)
