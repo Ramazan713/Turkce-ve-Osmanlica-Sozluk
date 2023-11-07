@@ -18,70 +18,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SingleWordDetailViewModel @Inject constructor(
-    private val wordDetailUseCases: WordDetailsCompletedUseCases,
-    private val listWordsUseCases: ListWordsUseCases,
-    private val ttsNetworkUseCase: TTSNetworkAudioUseCase,
+    wordDetailUseCases: WordDetailsCompletedUseCases,
     savedStateHandle: SavedStateHandle
 ): ViewModel(){
 
     private val args = SingleWordDetailArgs(savedStateHandle)
 
-    var state by mutableStateOf(SingleWordDetailState())
-        private set
-
-    private var loadDataJob: Job? = null
-
-    init {
-        listenTTSNetworkState()
-        loadData(args.wordId)
-    }
-
-    fun onEvent(event: SingleWordDetailEvent){
-        when(event){
-            is SingleWordDetailEvent.AddFavorite -> {
-                viewModelScope.launch {
-                    listWordsUseCases.addFavoriteListWords(event.wordId)
-                }
-            }
-            is SingleWordDetailEvent.AddListWord -> {
-                viewModelScope.launch {
-                    listWordsUseCases.addListWords(event.listView,event.wordId)
-                }
-            }
-            is SingleWordDetailEvent.ShowModal -> {
-                state = state.copy(showModal = event.showModal, modalEvent = event.modalEvent)
-            }
-            is SingleWordDetailEvent.ShowDialog -> {
-                state = state.copy(showDialog = event.showDialog, dialogEvent = event.dialogEvent)
-            }
-            is SingleWordDetailEvent.ListenWord -> {
-                viewModelScope.launch {
-                    ttsNetworkUseCase(event.word.word)
-                }
-            }
-        }
-    }
-
-    private fun loadData(wordId: Int){
-        loadDataJob?.cancel()
-        loadDataJob = viewModelScope.launch {
-            wordDetailUseCases.getCompletedWordFlow(wordId).collectLatest { word->
-                state = state.copy(allWords = word?.allWords ?: emptyList())
-            }
-        }
-    }
-
-    private fun listenTTSNetworkState(){
-        viewModelScope.launch {
-            ttsNetworkUseCase.audioState.collectLatest {audioState->
-                state = state.copy(audioState = audioState)
-            }
-        }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        ttsNetworkUseCase.dispose()
-    }
-
+    val word = wordDetailUseCases.getCompletedWordFlow(args.wordId)
 }

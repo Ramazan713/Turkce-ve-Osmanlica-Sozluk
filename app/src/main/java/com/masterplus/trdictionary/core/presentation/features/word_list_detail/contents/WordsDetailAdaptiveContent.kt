@@ -1,11 +1,13 @@
 package com.masterplus.trdictionary.core.presentation.features.word_list_detail.contents
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.core.presentation.features.share.domain.enums.ShareItemEnum
 import com.masterplus.trdictionary.features.word_detail.domain.model.AudioState
@@ -18,8 +20,13 @@ import com.masterplus.trdictionary.core.presentation.features.word_list_detail.W
 
 @Composable
 fun WordsDetailAdaptiveContent(
+    modifier: Modifier = Modifier,
     wordWithSimilar: WordWithSimilar,
     windowWidthSizeClass: WindowWidthSizeClass,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(12.dp),
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(12.dp),
+    gridCells: GridCells = GridCells.Adaptive(400.dp),
     audioState: AudioState? = null,
     onProverbIdiomWordsClicked: (WordDetailMeanings) -> Unit,
     onCompoundWordsClicked: (WordDetailMeanings) -> Unit,
@@ -29,9 +36,11 @@ fun WordsDetailAdaptiveContent(
     onDetailSelectListPressed: () -> Unit
 ) {
     LazyVerticalGrid(
-        columns = GridCells.Adaptive(400.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+        modifier = modifier,
+        contentPadding = contentPadding,
+        columns = gridCells,
+        verticalArrangement = verticalArrangement,
+        horizontalArrangement = horizontalArrangement
     ){
         itemsIndexed(
             wordWithSimilar.allWords,
@@ -56,16 +65,26 @@ fun WordsDetailAdaptiveContent(
 
 @Composable
 fun WordsDetailAdaptiveContent(
+    modifier: Modifier = Modifier,
     wordWithSimilar: WordWithSimilar,
     windowWidthSizeClass: WindowWidthSizeClass,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(12.dp),
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(12.dp),
+    gridCells: GridCells = GridCells.Adaptive(400.dp),
     audioState: AudioState? = null,
     onEvent: (WordsListDetailEvent) -> Unit,
     onFavoritePressed: (()->Unit)? = null,
     onDetailSelectListPressed: () -> Unit
 ){
     WordsDetailAdaptiveContent(
+        modifier = modifier,
         wordWithSimilar = wordWithSimilar,
         windowWidthSizeClass = windowWidthSizeClass,
+        contentPadding = contentPadding,
+        verticalArrangement = verticalArrangement,
+        horizontalArrangement = horizontalArrangement,
+        gridCells = gridCells,
         audioState = audioState,
         onShareMenuItemClicked = {
             onEvent(
@@ -91,5 +110,39 @@ fun WordsDetailAdaptiveContent(
                 )
             )
         },
+    )
+}
+
+
+@Composable
+fun WordsDetailAdaptiveContent(
+    modifier: Modifier = Modifier,
+    wordWithSimilar: WordWithSimilar,
+    windowWidthSizeClass: WindowWidthSizeClass,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(12.dp),
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(12.dp),
+    gridCells: GridCells = GridCells.Adaptive(400.dp),
+    audioState: AudioState? = null,
+    onEvent: (WordsListDetailEvent) -> Unit,
+){
+    WordsDetailAdaptiveContent(
+        modifier = modifier,
+        wordWithSimilar = wordWithSimilar,
+        windowWidthSizeClass = windowWidthSizeClass,
+        contentPadding = contentPadding,
+        verticalArrangement = verticalArrangement,
+        horizontalArrangement = horizontalArrangement,
+        gridCells = gridCells,
+        audioState = audioState,
+        onEvent = onEvent,
+        onFavoritePressed = {
+            onEvent(WordsListDetailEvent.AddFavorite(wordWithSimilar.wordId,null,null))
+        },
+        onDetailSelectListPressed = {
+            onEvent(WordsListDetailEvent.ShowSheet(
+                WordsListDetailSheetEvent.ShowSelectList(wordWithSimilar.wordId,null)
+            ))
+        }
     )
 }

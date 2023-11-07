@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 
 @ExperimentalMaterial3Api
 @Composable
@@ -17,7 +18,7 @@ fun CustomTopAppBar(
 ){
     TopAppBar(
         modifier = modifier,
-        title = titleBody ?: { Text(title) },
+        title = titleBody ?: { Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
         scrollBehavior = scrollBehavior,
         navigationIcon = {if(onNavigateBack!=null) NavigationBackItem(onNavigateBack) },
         actions = actions

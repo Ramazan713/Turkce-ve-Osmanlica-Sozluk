@@ -1,202 +1,123 @@
 package com.masterplus.trdictionary.features.word_detail.presentation.single_word_detail
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.*
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.masterplus.trdictionary.*
 import com.masterplus.trdictionary.R
-import com.masterplus.trdictionary.core.data.local.mapper.toWord
-import com.masterplus.trdictionary.core.domain.constants.K
-import com.masterplus.trdictionary.core.domain.model.*
-import com.masterplus.trdictionary.core.presentation.components.CustomModalBottomSheet
 import com.masterplus.trdictionary.core.presentation.components.navigation.CustomTopAppBar
-import com.masterplus.trdictionary.core.extensions.addPrefixZeros
-import com.masterplus.trdictionary.core.extensions.share
-import com.masterplus.trdictionary.core.extensions.shareText
-import com.masterplus.trdictionary.core.presentation.features.select_list.select_list_dia.SelectListBottomContent
-import com.masterplus.trdictionary.core.presentation.features.share.domain.enums.ShareItemEnum
-import com.masterplus.trdictionary.core.presentation.features.word_list_detail.get_detail_words.ShowSimpleWordsDialog
-import com.masterplus.trdictionary.features.word_detail.presentation.components.WordDetailItem
+import com.masterplus.trdictionary.core.presentation.features.share.presentation.ShareWordEventHandler
+import com.masterplus.trdictionary.core.presentation.features.word_list_detail.WordsListDetailEvent
+import com.masterplus.trdictionary.core.presentation.features.word_list_detail.WordsListDetailState
+import com.masterplus.trdictionary.core.presentation.features.word_list_detail.contents.WordsDetailAdaptiveContent
+import com.masterplus.trdictionary.core.presentation.features.word_list_detail.handlers.WordsDetailHandleModalEvents
+import com.masterplus.trdictionary.core.presentation.features.word_list_detail.handlers.WordsDetailHandleSheetEvents
+import com.masterplus.trdictionary.core.util.PreviewDesktop
+import com.masterplus.trdictionary.core.util.SampleDatas
+import com.masterplus.trdictionary.features.word_detail.domain.model.WordWithSimilar
 
-@ExperimentalFoundationApi
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SingleWordDetailPage(
     onNavigateBack: ()->Unit,
     onRelatedWordClicked: (Int)->Unit,
-    state: SingleWordDetailState,
-    onEvent: (SingleWordDetailEvent) -> Unit,
+    state: WordsListDetailState,
+    onEvent: (WordsListDetailEvent) -> Unit,
+    wordWithSimilar: WordWithSimilar?,
     windowWidthSizeClass: WindowWidthSizeClass
-){
-
+) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
-    val context = LocalContext.current
+
+
+    ShareWordEventHandler(
+        event = state.shareResultEvent,
+        onClearEvent = { onEvent(WordsListDetailEvent.ClearShareResult) }
+    )
 
     Scaffold(
         topBar = {
             CustomTopAppBar(
-                title = "",
+                title = wordWithSimilar?.wordDetail?.word ?: "",
                 onNavigateBack = onNavigateBack,
                 scrollBehavior = scrollBehavior,
             )
         },
-        containerColor = MaterialTheme.colorScheme.surfaceVariant,
     ){padding->
-        LazyColumn(
-            modifier = Modifier.padding(padding)
+        Box(
+            modifier = Modifier
+                .padding(padding)
                 .nestedScroll(scrollBehavior.nestedScrollConnection)
                 .fillMaxSize()
-        ){
-            if(state.isLoading){
-                item {
-                    Box(
-                        modifier = Modifier.fillMaxSize().padding(vertical = 13.dp),
-                        contentAlignment = Alignment.Center
-                    ){
-                        CircularProgressIndicator()
-                    }
-                }
-            }else{
-                itemsIndexed(
-                    state.allWords,
-                    key = {_,it->it.wordId}
-                ){index,wordModel->
-                    WordDetailItem(
-                        wordMeanings = wordModel,
-                        showButtons = index == 0,
-                        modifier = Modifier.padding(vertical = 7.dp),
-                        onFavoritePressed = {
-                            onEvent(SingleWordDetailEvent.AddFavorite(wordModel.wordId))
-                        },
-                        onSelectListPressed = {
-                            onEvent(SingleWordDetailEvent.ShowModal(true,
-                                    SingleWordDetailModalEvent.ShowSelectList(wordModel.wordId)))
-                        },
-                        onVolumePressed = {
-                            onEvent(SingleWordDetailEvent.ListenWord(wordModel.wordDetail.toWord()))
-                        },
-                        onProverbIdiomWordsClicked = {
-//                            onEvent(SingleWordDetailEvent.ShowDialog(true,
-//                                    SingleWordDetailDialogEvent.ShowProverbIdiomsWords(wordModel.proverbIdioms)
-//                                )
-//                            )
-                        },
-                        onCompoundWordsClicked = {
-//                            onEvent(SingleWordDetailEvent.ShowDialog(true,
-//                                SingleWordDetailDialogEvent.ShowCompoundWords(wordModel.compoundWords)
-//                            ))
-                        },
-                        onShareMenuItemClicked = {sharedItem->
-//                            when(sharedItem){
-//                                ShareItemEnum.ShareWord -> {
-//                                    wordModel.wordDetail.word.shareText(context)
-//                                }
-//                                ShareItemEnum.ShareWordMeaning -> {
-//                                    wordModel.share(context)
-//                                }
-//                                ShareItemEnum.ShareLink -> {
-//                                    val wordIdStr = wordModel.wordId.addPrefixZeros(K.DeepLink.numberZerosLength)
-//                                    "${K.DeepLink.singleWordBaseUrl}/${wordIdStr}".shareText(context)
-//                                }
-//                            }
-                        },
-                        audioState = state.audioState,
-                        windowWidthSizeClass = windowWidthSizeClass
+        ) {
+            if(wordWithSimilar == null){
+                Box(modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ){
+                    Text(
+                        text = stringResource(id = R.string.no_result),
+                        style = MaterialTheme.typography.bodyLarge,
                     )
                 }
+            }else{
+                WordsDetailAdaptiveContent(
+                    modifier = Modifier.fillMaxSize(),
+                    wordWithSimilar = wordWithSimilar,
+                    windowWidthSizeClass = windowWidthSizeClass,
+                    onEvent = onEvent,
+                    contentPadding = PaddingValues(horizontal = 2.dp, vertical = 2.dp),
+                    audioState = state.audioState,
+                )
             }
         }
     }
 
-    if(state.showDialog){
-        ShowDialog(
-            state = state,
+    state.dialogEvent?.let { dialogEvent->
+        WordsDetailHandleModalEvents(
+            dialogEvent = dialogEvent,
             onEvent = onEvent,
-            onNavigateToDetailWord = onRelatedWordClicked,
+            onNavigateToRelatedWord = onRelatedWordClicked,
+            currentPos = 0,
             windowWidthSizeClass = windowWidthSizeClass
         )
     }
 
-    if(state.showModal){
-        ShowModal(
-            state = state,
-            onEvent = onEvent
+    state.sheetEvent?.let { sheetEvent->
+        WordsDetailHandleSheetEvents(
+            sheetEvent = sheetEvent,
+            onEvent = onEvent,
+            onSavePointClick = {}
         )
     }
-
 }
 
 
-
-@ExperimentalMaterial3Api
-@ExperimentalFoundationApi
+@PreviewDesktop
+//@Preview(showBackground = true)
 @Composable
-private fun ShowModal(
-    state: SingleWordDetailState,
-    onEvent: (SingleWordDetailEvent)->Unit,
-){
-    fun close(){
-        onEvent(SingleWordDetailEvent.ShowModal(false))
-    }
-
-    CustomModalBottomSheet(
-        onDismissRequest = {close()},
-        skipHalfExpanded = false
-    ){
-        when(val event = state.modalEvent){
-            is SingleWordDetailModalEvent.ShowSelectList -> {
-                SelectListBottomContent(
-                    wordId = event.wordId,
-                    onClosed = {close()}
-                )
-            }
-            null -> {}
-        }
-    }
+fun SingleWordDetailNewPagePreview() {
+    val word = SampleDatas.generateWordWithSimilar(similarWords = listOf())
+    SingleWordDetailPage(
+        onRelatedWordClicked = {},
+        onEvent = {},
+        onNavigateBack = {},
+        wordWithSimilar = word,
+        state = WordsListDetailState(),
+        windowWidthSizeClass = WindowWidthSizeClass.Expanded
+    )
 }
 
-
-
-@ExperimentalFoundationApi
-@Composable
-private fun ShowDialog(
-    state: SingleWordDetailState,
-    onEvent: (SingleWordDetailEvent)->Unit,
-    onNavigateToDetailWord: (Int)->Unit,
-    windowWidthSizeClass: WindowWidthSizeClass
-){
-    fun close(){
-        onEvent(SingleWordDetailEvent.ShowDialog(false))
-    }
-
-    when(val event = state.dialogEvent){
-        is SingleWordDetailDialogEvent.ShowCompoundWords -> {
-            ShowSimpleWordsDialog(
-                title = stringResource(R.string.compound_words_c),
-                words = event.words,
-                onClosed = {close()},
-                onClickedWord = {onNavigateToDetailWord(it.wordId)},
-                windowWidthSizeClass = windowWidthSizeClass
-            )
-        }
-        is SingleWordDetailDialogEvent.ShowProverbIdiomsWords -> {
-            ShowSimpleWordsDialog(
-                title = stringResource(R.string.proverb_idiom_text_c),
-                words = event.words,
-                onClosed = {close()},
-                onClickedWord = {onNavigateToDetailWord(it.wordId)},
-                windowWidthSizeClass = windowWidthSizeClass
-            )
-        }
-        null -> {}
-    }
-}

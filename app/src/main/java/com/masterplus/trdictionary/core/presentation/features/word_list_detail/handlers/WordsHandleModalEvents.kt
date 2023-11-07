@@ -48,7 +48,7 @@ fun WordsDetailHandleModalEvents(
             ShowCompoundWordsDia(
                 wordId = event.wordDetailMeanings.wordId,
                 onClosed = ::close,
-                onClickedWord = { onNavigateToRelatedWord(event.wordDetailMeanings.wordId) },
+                onClickedWord = { onNavigateToRelatedWord(it.wordId) },
                 windowWidthSizeClass = windowWidthSizeClass
             )
         }
@@ -56,7 +56,7 @@ fun WordsDetailHandleModalEvents(
             ShowProverbIdiomWordsDia(
                 wordId = event.wordDetailMeanings.wordId,
                 onClosed = ::close,
-                onClickedWord = { onNavigateToRelatedWord(event.wordDetailMeanings.wordId) },
+                onClickedWord = { onNavigateToRelatedWord(it.wordId) },
                 windowWidthSizeClass = windowWidthSizeClass
             )
         }
