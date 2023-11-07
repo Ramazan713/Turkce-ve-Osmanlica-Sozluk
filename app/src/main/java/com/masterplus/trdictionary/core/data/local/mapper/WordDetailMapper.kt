@@ -4,9 +4,9 @@ import com.masterplus.trdictionary.core.data.local.views.WordDetailView
 import com.masterplus.trdictionary.core.domain.enums.DictType
 import com.masterplus.trdictionary.core.domain.enums.WordType
 import com.masterplus.trdictionary.core.domain.model.Word
-import com.masterplus.trdictionary.features.word_detail.domain.model.WordDetail
+import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.model.WordDetail
 
-fun WordDetailView.toWordDetail(): WordDetail{
+fun WordDetailView.toWordDetail(): WordDetail {
     return WordDetail(
         inAnyList = inAnyList,
         inFavorite = inFavorite,

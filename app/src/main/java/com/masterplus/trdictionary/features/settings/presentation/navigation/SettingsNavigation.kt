@@ -9,7 +9,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.compose.composable
-import com.masterplus.trdictionary.core.presentation.features.premium.PremiumViewModel
+import com.masterplus.trdictionary.core.shared_features.premium.PremiumViewModel
 import com.masterplus.trdictionary.features.settings.presentation.SettingViewModel
 import com.masterplus.trdictionary.features.settings.presentation.SettingsPage
 

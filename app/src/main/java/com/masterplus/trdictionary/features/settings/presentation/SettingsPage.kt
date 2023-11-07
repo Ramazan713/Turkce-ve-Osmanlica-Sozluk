@@ -15,7 +15,8 @@ import com.masterplus.trdictionary.core.domain.model.premium.*
 import com.masterplus.trdictionary.core.presentation.components.buttons.NegativeButton
 import com.masterplus.trdictionary.core.presentation.components.navigation.CustomTopAppBar
 import com.masterplus.trdictionary.core.presentation.dialog_body.LoadingDialog
-import com.masterplus.trdictionary.core.presentation.features.premium.*
+import com.masterplus.trdictionary.core.shared_features.premium.PremiumEvent
+import com.masterplus.trdictionary.core.shared_features.premium.PremiumState
 import com.masterplus.trdictionary.features.settings.presentation.sections.*
 
 @ExperimentalFoundationApi

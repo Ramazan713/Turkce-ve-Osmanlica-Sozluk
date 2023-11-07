@@ -9,10 +9,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
-import com.masterplus.trdictionary.R
-import com.masterplus.trdictionary.core.util.ToastHelper
-import com.masterplus.trdictionary.core.util.UiText
-import com.masterplus.trdictionary.features.word_detail.domain.model.WordDetailMeanings
+import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.model.WordDetailMeanings
 
 
 fun String.shareText(context: Context){

@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.enums.DictType
 import com.masterplus.trdictionary.core.domain.model.SimpleWordResult
-import com.masterplus.trdictionary.features.word_detail.domain.model.WordWithSimilar
+import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.model.WordWithSimilar
 
 
 @ExperimentalFoundationApi

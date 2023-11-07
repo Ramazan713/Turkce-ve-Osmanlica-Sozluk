@@ -11,7 +11,7 @@ import com.masterplus.trdictionary.core.domain.enums.ThemeEnum
 import com.masterplus.trdictionary.core.domain.model.premium.PremiumProduct
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDialog
 import com.masterplus.trdictionary.core.presentation.selections.ShowSelectRadioItemAlertDialog
-import com.masterplus.trdictionary.core.presentation.features.premium.ShowPremiumProductDialog
+import com.masterplus.trdictionary.core.shared_features.premium.ShowPremiumProductDialog
 import com.masterplus.trdictionary.features.settings.presentation.SettingDialogEvent
 import com.masterplus.trdictionary.features.settings.presentation.SettingEvent
 import com.masterplus.trdictionary.features.settings.presentation.SettingState

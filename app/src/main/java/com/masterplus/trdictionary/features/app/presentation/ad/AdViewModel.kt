@@ -6,9 +6,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.masterplus.trdictionary.core.domain.constants.K
-import com.masterplus.trdictionary.features.word_detail.presentation.single_word_detail.navigation.RouteSingleWordDetail
-import com.masterplus.trdictionary.features.word_detail.presentation.word_category.navigation.RouteListDetailCategoryWords
-import com.masterplus.trdictionary.features.word_detail.presentation.word_list_for_list_detail.navigation.RouteWordListForListDetail
+import com.masterplus.trdictionary.features.word_detail.single_word_detail.navigation.RouteSingleWordDetail
+import com.masterplus.trdictionary.features.word_detail.word_category.navigation.RouteListDetailCategoryWords
+import com.masterplus.trdictionary.features.word_detail.word_list_for_list_detail.navigation.RouteWordListForListDetail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.ObsoleteCoroutinesApi

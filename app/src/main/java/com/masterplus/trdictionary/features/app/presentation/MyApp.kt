@@ -1,18 +1,11 @@
 package com.masterplus.trdictionary.features.app.presentation
 
 import android.app.Activity
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.PermanentNavigationDrawer
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
@@ -21,14 +14,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -37,7 +27,7 @@ import androidx.window.layout.FoldingFeature
 import com.google.accompanist.adaptive.calculateDisplayFeatures
 import com.masterplus.trdictionary.core.domain.enums.AppNavigationType
 import com.masterplus.trdictionary.core.domain.enums.DevicePosture
-import com.masterplus.trdictionary.core.presentation.features.premium.PremiumViewModel
+import com.masterplus.trdictionary.core.shared_features.premium.PremiumViewModel
 import com.masterplus.trdictionary.features.app.domain.model.AppNavRoute
 import com.masterplus.trdictionary.features.app.domain.model.kAppNavRouteNames
 import com.masterplus.trdictionary.features.app.domain.model.kAppNavRoutes
@@ -45,7 +35,6 @@ import com.masterplus.trdictionary.features.app.extensions.navigateToNavRoute
 import com.masterplus.trdictionary.features.app.presentation.ad.AdEvent
 import com.masterplus.trdictionary.features.app.presentation.ad.AdViewModel
 import com.masterplus.trdictionary.features.app.presentation.app_navigations.AppBottomNavigationBar
-import com.masterplus.trdictionary.features.app.presentation.app_navigations.AppModalDrawerNavigationBar
 import com.masterplus.trdictionary.features.app.presentation.app_navigations.AppPersistentDrawerNavigationBar
 import com.masterplus.trdictionary.features.app.presentation.app_navigations.AppRailNavigationBar
 import com.masterplus.trdictionary.features.app.presentation.components.AdPremiumControl
@@ -53,10 +42,8 @@ import com.masterplus.trdictionary.features.app.presentation.components.InAppFea
 import com.masterplus.trdictionary.features.app.presentation.components.NavigationAnimatedVisibility
 import com.masterplus.trdictionary.features.app.presentation.in_app.InAppEvent
 import com.masterplus.trdictionary.features.app.presentation.in_app.InAppFeaturesViewModel
-import com.masterplus.trdictionary.features.list.presentation.show_list.ShowListViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.ObsoleteCoroutinesApi
-import kotlinx.coroutines.launch
 
 @ObsoleteCoroutinesApi
 @ExperimentalFoundationApi

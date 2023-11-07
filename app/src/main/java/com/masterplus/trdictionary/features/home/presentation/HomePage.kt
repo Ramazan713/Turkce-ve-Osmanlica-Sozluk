@@ -21,7 +21,7 @@ import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.presentation.selections.CustomDropdownBarMenu
 import com.masterplus.trdictionary.core.presentation.components.EmptySearchField
 import com.masterplus.trdictionary.core.presentation.components.navigation.CustomTopAppBar
-import com.masterplus.trdictionary.core.presentation.features.premium.ShowPremiumActiveDialog
+import com.masterplus.trdictionary.core.shared_features.premium.ShowPremiumActiveDialog
 import com.masterplus.trdictionary.features.home.domain.constants.HomeTopBarMenuEnum
 import com.masterplus.trdictionary.features.home.presentation.components.*
 

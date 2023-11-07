@@ -10,7 +10,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.masterplus.trdictionary.core.presentation.features.theme.ThemeViewModel
+import com.masterplus.trdictionary.core.shared_features.theme.ThemeViewModel
 
 private val LightColors = lightColorScheme(
     primary = md_theme_light_primary,

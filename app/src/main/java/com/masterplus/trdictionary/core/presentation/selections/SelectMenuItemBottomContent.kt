@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.core.domain.enums.IMenuItemEnum
 import com.masterplus.trdictionary.core.presentation.components.DialogHeader
 import com.masterplus.trdictionary.core.presentation.components.IconLabelRow
-import com.masterplus.trdictionary.core.presentation.features.share.domain.enums.ShareItemEnum
+import com.masterplus.trdictionary.core.shared_features.share.domain.enums.ShareItemEnum
 
 
 @Composable

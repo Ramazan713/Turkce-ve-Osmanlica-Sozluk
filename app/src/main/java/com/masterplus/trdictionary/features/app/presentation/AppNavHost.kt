@@ -16,7 +16,7 @@ import com.masterplus.trdictionary.core.domain.enums.DevicePosture
 import com.masterplus.trdictionary.core.domain.enums.ListDetailContentType
 import com.masterplus.trdictionary.features.app.domain.model.AppNavRoute
 import com.masterplus.trdictionary.core.domain.enums.SubCategoryEnum
-import com.masterplus.trdictionary.core.presentation.features.premium.PremiumViewModel
+import com.masterplus.trdictionary.core.shared_features.premium.PremiumViewModel
 import com.masterplus.trdictionary.features.category.presentation.alphabetic.navigation.alphabeticCategoryPage
 import com.masterplus.trdictionary.features.category.presentation.alphabetic.navigation.navigateToAlphabeticCategory
 import com.masterplus.trdictionary.features.category.presentation.category.navigation.categoryPage
@@ -30,12 +30,12 @@ import com.masterplus.trdictionary.features.search.presentation.navigation.navig
 import com.masterplus.trdictionary.features.search.presentation.navigation.searchPage
 import com.masterplus.trdictionary.features.settings.presentation.navigation.navigateToSettings
 import com.masterplus.trdictionary.features.settings.presentation.navigation.settingsPage
-import com.masterplus.trdictionary.features.word_detail.presentation.single_word_detail.navigation.navigateToSingleWordDetail
-import com.masterplus.trdictionary.features.word_detail.presentation.single_word_detail.navigation.singleWordDetail
-import com.masterplus.trdictionary.features.word_detail.presentation.word_category.navigation.navigateToListDetailCategoryWords
-import com.masterplus.trdictionary.features.word_detail.presentation.word_category.navigation.listDetailCategoryWords
-import com.masterplus.trdictionary.features.word_detail.presentation.word_list_for_list_detail.navigation.navigateToWordListForListDetail
-import com.masterplus.trdictionary.features.word_detail.presentation.word_list_for_list_detail.navigation.wordListForListDetail
+import com.masterplus.trdictionary.features.word_detail.single_word_detail.navigation.navigateToSingleWordDetail
+import com.masterplus.trdictionary.features.word_detail.single_word_detail.navigation.singleWordDetail
+import com.masterplus.trdictionary.features.word_detail.word_category.navigation.navigateToListDetailCategoryWords
+import com.masterplus.trdictionary.features.word_detail.word_category.navigation.listDetailCategoryWords
+import com.masterplus.trdictionary.features.word_detail.word_list_for_list_detail.navigation.navigateToWordListForListDetail
+import com.masterplus.trdictionary.features.word_detail.word_list_for_list_detail.navigation.wordListForListDetail
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi

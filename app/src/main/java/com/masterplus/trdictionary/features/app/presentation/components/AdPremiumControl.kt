@@ -8,8 +8,8 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.flowWithLifecycle
-import com.masterplus.trdictionary.core.presentation.features.premium.PremiumEvent
-import com.masterplus.trdictionary.core.presentation.features.premium.PremiumState
+import com.masterplus.trdictionary.core.shared_features.premium.PremiumEvent
+import com.masterplus.trdictionary.core.shared_features.premium.PremiumState
 import com.masterplus.trdictionary.features.app.presentation.ad.*
 import kotlinx.coroutines.flow.collectLatest
 

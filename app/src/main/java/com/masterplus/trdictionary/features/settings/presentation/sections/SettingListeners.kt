@@ -12,9 +12,9 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
 import com.masterplus.trdictionary.core.util.ToastHelper
 import com.masterplus.trdictionary.core.extensions.refreshApp
-import com.masterplus.trdictionary.core.presentation.features.premium.PremiumEvent
-import com.masterplus.trdictionary.core.presentation.features.premium.PremiumState
-import com.masterplus.trdictionary.core.presentation.features.premium.PremiumUiEvent
+import com.masterplus.trdictionary.core.shared_features.premium.PremiumEvent
+import com.masterplus.trdictionary.core.shared_features.premium.PremiumState
+import com.masterplus.trdictionary.core.shared_features.premium.PremiumUiEvent
 import com.masterplus.trdictionary.features.settings.presentation.SettingDialogEvent
 import com.masterplus.trdictionary.features.settings.presentation.SettingEvent
 import com.masterplus.trdictionary.features.settings.presentation.SettingState

@@ -6,7 +6,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.masterplus.trdictionary.core.presentation.features.premium.PremiumViewModel
+import com.masterplus.trdictionary.core.shared_features.premium.PremiumViewModel
 import com.masterplus.trdictionary.features.home.presentation.HomePage
 import com.masterplus.trdictionary.features.home.presentation.HomeViewModel
 

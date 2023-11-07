@@ -2,15 +2,11 @@
 
 package com.masterplus.trdictionary.features.list.presentation.show_list
 
-import android.content.pm.ActivityInfo
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -19,7 +15,7 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import com.google.common.truth.Truth.assertThat
 import com.masterplus.trdictionary.MainActivity
-import com.masterplus.trdictionary.core.data.di.AppModule
+import com.masterplus.trdictionary.core.di.AppModule
 import com.masterplus.trdictionary.features.list.presentation.show_list.navigation.RouteList
 import com.masterplus.trdictionary.features.list.presentation.show_list.navigation.showListPage
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -32,7 +28,6 @@ import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.features.list.presentation.archive_list.navigation.RouteArchive
 import com.masterplus.trdictionary.features.list.presentation.archive_list.navigation.archiveListPage
 import com.masterplus.trdictionary.features.list.presentation.archive_list.navigation.navigateToArchiveList
-import kotlinx.coroutines.runBlocking
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class,
     ExperimentalFoundationApi::class
