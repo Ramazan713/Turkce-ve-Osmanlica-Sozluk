@@ -1,6 +1,7 @@
 package com.masterplus.trdictionary.features.settings.presentation.sections
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,7 +28,9 @@ fun ProfileSettingSection(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = Modifier.fillMaxWidth().padding(vertical = 13.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 13.dp)
     ) {
 
         state.user?.let { user->
@@ -65,12 +68,9 @@ fun ProfileSettingSection(
         }?: kotlin.run {
             UnRegisteredProfileIcon()
 
-            PrimaryButton(
-                title = stringResource(R.string.sign_in),
-                onClick = {
-                    onEvent(SettingEvent.SignInLaunch)
-                },
-            )
+            Button(onClick = { onEvent(SettingEvent.SignInLaunch) }) {
+                Text(text = stringResource(R.string.sign_in))
+            }
         }
 
     }

@@ -3,6 +3,11 @@ package com.masterplus.trdictionary.features.settings.presentation
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.*
@@ -10,6 +15,8 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.model.premium.*
 import com.masterplus.trdictionary.core.presentation.components.buttons.NegativeButton
@@ -17,6 +24,9 @@ import com.masterplus.trdictionary.core.presentation.components.navigation.Custo
 import com.masterplus.trdictionary.core.presentation.dialog_body.LoadingDialog
 import com.masterplus.trdictionary.core.shared_features.premium.PremiumEvent
 import com.masterplus.trdictionary.core.shared_features.premium.PremiumState
+import com.masterplus.trdictionary.core.util.PreviewDesktop
+import com.masterplus.trdictionary.core.util.PreviewTablet
+import com.masterplus.trdictionary.features.settings.domain.model.User
 import com.masterplus.trdictionary.features.settings.presentation.sections.*
 
 @ExperimentalFoundationApi
@@ -49,14 +59,18 @@ fun SettingsPage(
                 scrollBehavior = topAppBarScrollBehavior
             )
         },
-        containerColor = MaterialTheme.colorScheme.surfaceVariant,
     ){paddings->
-        LazyColumn(
-            modifier = Modifier.padding(paddings)
+        LazyVerticalStaggeredGrid(
+            modifier = Modifier
+                .padding(paddings)
                 .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
+                .fillMaxSize(),
+            columns = StaggeredGridCells.Adaptive(400.dp),
+            horizontalArrangement = Arrangement.spacedBy(30.dp),
+            verticalItemSpacing = 10.dp
         ){
 
-            item {
+            item(span = StaggeredGridItemSpan.FullLine) {
                 ProfileSettingSection(
                     state = state,
                     onEvent = onEvent
@@ -68,13 +82,14 @@ fun SettingsPage(
                     onEvent = onEvent
                 )
             }
-            item {
-                if(state.user!=null){
+            if(state.user != null){
+                item {
                     CloudBackupSection {
                         onEvent(it)
                     }
                 }
             }
+
             item {
                 PremiumSection(
                     premiumProduct = premiumProduct,
@@ -91,20 +106,23 @@ fun SettingsPage(
             item {
                 ApplicationSettingSection()
             }
-            item {
-                if(state.user!=null){
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
-                        NegativeButton(
-                            title = stringResource(R.string.sign_out),
-                            onClick = {
-                                onEvent(SettingEvent.ShowDialog(true,
+            if(state.user != null){
+                item {
+                    TextButton(
+                        modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp),
+                        onClick = {
+                            onEvent(SettingEvent.ShowDialog(true,
                                 SettingDialogEvent.AskSignOut))
-                            },
-                            modifier = Modifier.fillMaxWidth()
+                        }
+                    ) {
+                        Text(
+                            text = stringResource(R.string.sign_out),
+                            style = MaterialTheme.typography.bodyLarge.copy(
+                                color = MaterialTheme.colorScheme.error
+                            )
                         )
                     }
                 }
-
             }
         }
     }
@@ -130,7 +148,22 @@ fun SettingsPage(
 }
 
 
-
+@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
+@PreviewDesktop
+@PreviewTablet
+@Preview(showBackground = true)
+@Composable
+fun SettingsPagePreview() {
+    SettingsPage(
+        onEvent = {},
+        onNavigateBack = {},
+        onPremiumEvent = {},
+        premiumState = PremiumState(),
+        premiumProduct = null,
+        state = SettingState(user = User("asd","email@gmail.com",null,"myName")),
+        windowWidthSizeClass = WindowWidthSizeClass.Compact
+    )
+}
 
 
 
