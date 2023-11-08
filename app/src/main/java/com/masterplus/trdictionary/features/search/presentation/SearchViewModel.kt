@@ -10,14 +10,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.masterplus.trdictionary.core.domain.constants.K
 import com.masterplus.trdictionary.core.domain.enums.CategoryEnum
+import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.model.WordWithSimilar
 import com.masterplus.trdictionary.features.search.domain.constants.SearchKind
 import com.masterplus.trdictionary.features.search.domain.repo.HistoryRepo
 import com.masterplus.trdictionary.features.search.domain.repo.SearchRepo
 import com.masterplus.trdictionary.features.search.presentation.navigation.SearchArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,19 +42,35 @@ class SearchViewModel @Inject constructor(
     private val searchArgs = SearchArgs(savedStateHandle)
 
     private var historyLoadJob: Job? = null
+    private var searchResultJob: Job? = null
 
-    private var searchJob: Job? = null
+    private val queryFilterFlow = MutableSharedFlow<String>()
+    private val categoryFilterFlow = MutableSharedFlow<CategoryEnum>()
+    private val searchKindFilterFlow = MutableSharedFlow<SearchKind>()
 
-    init {
-        loadHistories()
-        setDefaultFilter()
+    private val combinedDataFlow = combine(
+        queryFilterFlow,
+        searchKindFilterFlow,
+        categoryFilterFlow
+    ){ query, searchKindFilter, categoryFilter->
+        SearchModel(query,categoryFilter,searchKindFilter)
     }
 
 
+    init {
+        listenSearchResult()
+        listenHistories()
+        setDefaultFilter()
+    }
+
     fun onEvent(event: SearchEvent){
         when(event){
-            is SearchEvent.ChangeQuery -> {
-                setQuery(query = event.query)
+            is SearchEvent.ClearQuery -> {
+                search("")
+            }
+            is SearchEvent.SearchQuery -> {
+                event.queryText?.let { search(it) }
+                event.query?.let { search(it) }
             }
             is SearchEvent.DeleteHistory -> {
                 viewModelScope.launch {
@@ -54,92 +78,110 @@ class SearchViewModel @Inject constructor(
                 }
             }
             is SearchEvent.HistoryClicked -> {
-                navigateToDetailWord(event.history.content,event.history.wordId,true)
-                setQuery("")
-            }
-            is SearchEvent.NavigateToDetailWord -> {
-                navigateToDetailWord(event.content,event.wordId,false)
-            }
-            is SearchEvent.SetQuery -> {
-                setQuery(event.query)
+                search(event.history.content)
             }
             is SearchEvent.ChangeFilter -> {
                 changeFilter(event)
             }
-
             is SearchEvent.ShowDialog -> {
-                state = state.copy(showDialog = event.showDialog, dialogEvent = event.dialogEvent)
+                state = state.copy(dialogEvent = event.dialogEvent)
             }
-            SearchEvent.ClearUiEvent -> {
-                state = state.copy(searchUiEvent = null)
+            SearchEvent.HideDetail -> {
+                state = state.copy(
+                    isDetailOpen = false,
+                    selectedWordId = null
+                )
+            }
+            is SearchEvent.ShowDetail -> {
+                state = state.copy(
+                    isDetailOpen = true,
+                    selectedWordId = event.wordWithSimilar.wordId
+                )
             }
         }
     }
 
     private fun setDefaultFilter(){
-        val cat = CategoryEnum.fromCatId(searchArgs.catId)
-        state = state.copy(
-            defaultCategory = cat,
-            categoryFilter = cat
-        )
-    }
-
-    private fun changeFilter(event: SearchEvent.ChangeFilter){
-        state = state.copy(
-            categoryFilter = event.catEnum,
-            searchKind = event.searchKind,
-            badge = findBadgeCount(event.catEnum,event.searchKind)
-        )
-        searchQuerySafe(state.query.text)
-    }
-
-
-    private fun setQuery(query: String){
-        setQuery(state.query.copy(text = query, selection = TextRange(query.length)))
-    }
-
-    private fun setQuery(query: TextFieldValue){
-        state = state.copy(
-            query = query
-        )
-        searchQuerySafe(query.text)
-    }
-
-    private fun searchQuerySafe(query: String){
-        searchJob?.cancel()
-        searchJob = viewModelScope.launch {
-            delay(K.searchDelayMilliSeconds)
-            search(query)
+        viewModelScope.launch {
+            val cat = CategoryEnum.fromCatId(searchArgs.catId)
+            state = state.copy(
+                defaultCategory = cat,
+                categoryFilter = cat
+            )
+            searchKindFilterFlow.emit(state.searchKind)
+            categoryFilterFlow.emit(cat)
         }
     }
 
     private fun search(query: String){
-        if (query.isBlank() || query.length == 1){
-            state = state.copy(wordResults = emptyList())
-            return
-        }
-        viewModelScope.launch {
-            state = state.copy(searchLoading = true)
-            val result = searchRepo.searchSimple(query.trim(), state.categoryFilter, state.searchKind)
-            state = state.copy(wordResults = result, searchLoading = false)
-        }
+        search(state.query.copy(text = query, selection = TextRange(query.length)))
     }
 
-    private fun navigateToDetailWord(content: String, wordId: Int,popCurrentPage: Boolean){
+    private fun search(query: TextFieldValue){
         viewModelScope.launch {
-            historyRepo.insertOrUpdateHistory(content,wordId)
-            state = state.copy(searchUiEvent = SearchUiEvent.NavigateToDetailWord(wordId,popCurrentPage))
-        }
-    }
-
-    private fun loadHistories(){
-        historyLoadJob?.cancel()
-        historyLoadJob = viewModelScope.launch {
-            historyRepo.getFlowHistories().collectLatest {
-                state = state.copy(histories = it)
+            val text = query.text
+            if(text != state.query.text){
+                state = state.copy(query = query, selectedWordId = null)
+                queryFilterFlow.emit(text)
             }
         }
     }
+
+    private fun changeFilter(event: SearchEvent.ChangeFilter){
+        viewModelScope.launch {
+            state = state.copy(
+                categoryFilter = event.catEnum,
+                searchKind = event.searchKind,
+                badge = findBadgeCount(event.catEnum,event.searchKind)
+            )
+            searchKindFilterFlow.emit(event.searchKind)
+            categoryFilterFlow.emit(event.catEnum)
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
+    private fun listenSearchResult(){
+
+        searchResultJob?.cancel()
+        searchResultJob = viewModelScope.launch{
+            combinedDataFlow
+            .distinctUntilChanged()
+            .debounce {
+                state = state.copy(searchLoading = true)
+                K.searchDelayMilliSeconds
+            }.flatMapLatest { searchModel->
+
+                val query = searchModel.query
+                if (query.isBlank() || query.length == 1){
+                    state = state.copy(
+                        wordResults = emptyList(),
+                        selectedWordId = null,
+                        searchLoading = false
+                    )
+                    return@flatMapLatest emptyFlow<List<WordWithSimilar>>()
+                }
+                historyRepo.insertOrUpdateHistory(query)
+
+                searchRepo.search(query,searchModel.categoryEnum,searchModel.searchKind)
+            }.collectLatest { searchResults->
+                state = state.copy(
+                    wordResults = searchResults,
+                    searchLoading = false,
+                    selectedWordId = state.selectedWordId ?: searchResults.firstOrNull()?.wordId
+                )
+            }
+        }
+    }
+
+    private fun listenHistories(){
+        historyLoadJob?.cancel()
+        historyLoadJob = viewModelScope.launch {
+            historyRepo.getFlowHistories().collectLatest { histories->
+                state = state.copy(histories = histories)
+            }
+        }
+    }
+
 
     private fun findBadgeCount(categoryEnum: CategoryEnum,searchKind: SearchKind): String?{
         var badgeCount = 0
@@ -153,5 +195,10 @@ class SearchViewModel @Inject constructor(
 
         return if(badgeCount!=0) badgeCount.toString() else null
     }
-
 }
+
+private data class SearchModel(
+    val query: String,
+    val categoryEnum: CategoryEnum,
+    val searchKind: SearchKind
+)

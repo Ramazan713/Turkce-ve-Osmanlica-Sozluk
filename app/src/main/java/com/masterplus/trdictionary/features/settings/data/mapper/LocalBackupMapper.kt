@@ -15,7 +15,6 @@ fun HistoryEntity.toHistoryBackup(): HistoryBackup {
         id = id,
         content = content,
         timeStamp = timeStamp,
-        wordId = wordId
     )
 }
 
@@ -24,7 +23,6 @@ fun HistoryBackup.toHistoryEntity(): HistoryEntity{
         id = id,
         content = content,
         timeStamp = timeStamp,
-        wordId = wordId
     )
 }
 

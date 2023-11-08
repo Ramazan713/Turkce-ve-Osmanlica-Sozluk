@@ -82,7 +82,8 @@ object WordsDetailDomainModule {
             getListCompletedWordsPaging = GetListCompletedWordsPaging(
                 wordListDetailRepo = wordDetailListRepo,
                 getCompletedInfo = getCompletedWordInfo
-            )
+            ),
+            completedWordInfo = getCompletedWordInfo
         )
 
 }

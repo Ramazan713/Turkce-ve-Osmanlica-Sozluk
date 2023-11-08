@@ -14,8 +14,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.R
+import com.masterplus.trdictionary.core.presentation.components.DefaultToolTip
 import com.masterplus.trdictionary.features.search.domain.model.History
 
 
@@ -40,12 +42,17 @@ fun HistoryItem(
         Text(
             history.content,
             style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(horizontal = 10.dp).weight(1f)
+            modifier = Modifier
+                .padding(horizontal = 10.dp)
+                .weight(1f)
         )
-        IconButton(onClick = {
-            onDeleteClick()
-        }){
-            Icon(Icons.Default.Close, contentDescription = null)
+
+        DefaultToolTip(tooltip = stringResource(id = R.string.delete)) {
+            IconButton(onClick = onDeleteClick){
+                Icon(Icons.Default.Close, contentDescription = stringResource(id = R.string.delete))
+            }
         }
+
+
     }
 }

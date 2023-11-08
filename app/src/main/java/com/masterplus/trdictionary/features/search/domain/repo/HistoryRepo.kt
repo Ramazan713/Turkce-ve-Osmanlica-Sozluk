@@ -7,7 +7,7 @@ interface HistoryRepo {
 
     fun getFlowHistories(): Flow<List<History>>
 
-    suspend fun insertOrUpdateHistory(query: String,wordId: Int)
+    suspend fun insertOrUpdateHistory(query: String)
 
     suspend fun deleteHistories()
 

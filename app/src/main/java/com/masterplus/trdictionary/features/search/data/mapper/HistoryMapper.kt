@@ -6,12 +6,12 @@ import com.masterplus.trdictionary.features.search.domain.model.History
 
 fun HistoryEntity.toHistory(): History {
     return History(
-        id, content, wordId, timeStamp
+        id, content, timeStamp
     )
 }
 
 fun History.toHistoryEntity(): HistoryEntity{
     return HistoryEntity(
-        id, content, wordId, timeStamp
+        id, content, timeStamp
     )
 }

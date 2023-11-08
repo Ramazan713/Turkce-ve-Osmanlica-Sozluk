@@ -12,10 +12,11 @@ import com.masterplus.trdictionary.core.data.local.entities.ListWordsEntity
 import com.masterplus.trdictionary.core.data.local.entities.SavePointEntity
 import com.masterplus.trdictionary.core.data.local.migrations.Migration1To2Spec
 import com.masterplus.trdictionary.core.data.local.migrations.Migration2To3Spec
+import com.masterplus.trdictionary.core.data.local.migrations.Migration3To4Spec
 import com.masterplus.trdictionary.core.data.local.services.*
 
 @Database(
-    version = 3,
+    version = 4,
     exportSchema = true,
     entities = [
         AuthorEntity::class, CompoundWordsCrossRef::class, ExampleEntity::class,
@@ -29,8 +30,9 @@ import com.masterplus.trdictionary.core.data.local.services.*
         ListViewEntity::class
     ],
     autoMigrations = [
-        AutoMigration(1,2,Migration1To2Spec::class),
-        AutoMigration(2,3, Migration2To3Spec::class)
+        AutoMigration(1,2, Migration1To2Spec::class),
+        AutoMigration(2,3, Migration2To3Spec::class),
+        AutoMigration(3,4, Migration3To4Spec::class)
     ]
 )
 abstract class AppDatabase: RoomDatabase() {

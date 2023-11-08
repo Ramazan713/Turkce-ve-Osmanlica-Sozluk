@@ -1,216 +1,167 @@
 package com.masterplus.trdictionary.features.search.presentation
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material3.*
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.flowWithLifecycle
-import com.masterplus.trdictionary.R
-import com.masterplus.trdictionary.core.presentation.components.RotatableLaunchEffect
-import com.masterplus.trdictionary.core.presentation.components.SimpleWordItem
-import com.masterplus.trdictionary.features.search.presentation.components.BadgeIcon
-import com.masterplus.trdictionary.features.search.presentation.components.HistoryItem
+import androidx.window.layout.DisplayFeature
+import com.google.accompanist.adaptive.HorizontalTwoPaneStrategy
+import com.google.accompanist.adaptive.TwoPane
+import com.masterplus.trdictionary.core.domain.enums.ListDetailContentType
+import com.masterplus.trdictionary.core.shared_features.share.presentation.ShareWordEventHandler
+import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.WordsListDetailEvent
+import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.WordsListDetailState
+import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.handlers.WordsDetailModalEventsHandler
+import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.handlers.WordsDetailSheetEventsHandler
 import com.masterplus.trdictionary.features.search.presentation.components.SearchFilterDialog
-import com.masterplus.trdictionary.features.search.presentation.components.SearchKeyBoard
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.filter
+import com.masterplus.trdictionary.features.search.presentation.contents.SearchDetailPageContent
+import com.masterplus.trdictionary.features.search.presentation.contents.SearchResultPageContent
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun SearchPage(
-    onBackPressed: ()->Unit,
-    onNavigateToWordDetail: (Int,Boolean)->Unit,
-    state: SearchState,
-    onEvent: (SearchEvent) -> Unit
+    onNavigateToBack: ()->Unit,
+    searchState: SearchState,
+    onSearchEvent: (SearchEvent) -> Unit,
+    wordsState: WordsListDetailState,
+    onWordsEvent: (WordsListDetailEvent) -> Unit,
+    onRelatedWordClicked: (Int) -> Unit,
+    windowWidthSizeClass: WindowWidthSizeClass,
+    listDetailContentType: ListDetailContentType,
+    displayFeatures: List<DisplayFeature>
 ){
-    val backgroundColor = MaterialTheme.colorScheme.surfaceVariant
-    val focusRequester = remember { FocusRequester() }
 
-    RotatableLaunchEffect {
-        focusRequester.requestFocus()
-    }
+    val gridState = rememberLazyGridState()
 
-    val currentOnNavigateToWordDetail by rememberUpdatedState(onNavigateToWordDetail)
-    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    ShareWordEventHandler(
+        event = wordsState.shareResultEvent,
+        onClearEvent = { onWordsEvent(WordsListDetailEvent.ClearShareResult) }
+    )
 
-    LaunchedEffect(state,lifecycle){
-        snapshotFlow { state }
-            .filter { state.searchUiEvent!=null }
-            .flowWithLifecycle(lifecycle)
-            .collectLatest {
-                when(val event = state.searchUiEvent){
-                    is SearchUiEvent.NavigateToDetailWord -> {
-                        currentOnNavigateToWordDetail(event.wordId,event.popCurrentPage)
-                        onEvent(SearchEvent.ClearUiEvent)
-                    }
-                    null -> {}
-                }
-            }
-    }
-
-    Column(
-        modifier = Modifier.fillMaxSize()
-            .background(backgroundColor),
-    ) {
-        TextField(
-            state.query,
-            onValueChange = {
-                onEvent(SearchEvent.ChangeQuery(it))
+    if(listDetailContentType == ListDetailContentType.DUAL_PANE){
+        TwoPane(
+            first = {
+                SearchResultPageContent(
+                    onBackPressed = onNavigateToBack,
+                    state = searchState,
+                    onEvent = onSearchEvent,
+                    isFullPage = false,
+                    gridState = gridState
+                )
             },
-            modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
-            leadingIcon = {
-                IconButton(onClick = onBackPressed){
-                    Icon(Icons.Default.ArrowBack,contentDescription = null)
-                }
+            second = {
+                SearchDetailPageContent(
+                    onNavigateBack = null,
+                    audioState = wordsState.audioState,
+                    onEvent = onWordsEvent,
+                    wordWithSimilar = searchState.selectedWord,
+                    windowWidthSizeClass = windowWidthSizeClass
+                )
             },
-            trailingIcon = {
-                Row {
-                    IconButton(onClick = {
-                        focusRequester.requestFocus()
-                        onEvent(SearchEvent.SetQuery(""))
-                    }){
-                        Icon(Icons.Default.Clear,contentDescription = null)
-                    }
-                    BadgeIcon(
-                        R.drawable.ic_baseline_filter_alt_24,
-                        badgeContent = state.badge,
-                        onClicked = {
-                            onEvent(SearchEvent.ShowDialog(true,SearchDialogEvent.ShowFilter))
-                        }
-                    )
-                }
-            },
-            placeholder = { Text(stringResource(R.string.n_search_in,state.categoryFilter.title.asString())) },
-            colors = TextFieldDefaults.textFieldColors(
-                containerColor = backgroundColor
-            ),
-            singleLine = true
+            strategy = HorizontalTwoPaneStrategy(0.5f,12.dp),
+            displayFeatures = displayFeatures
         )
-
-        LazyColumn(
-            contentPadding = PaddingValues(horizontal = 5.dp, vertical = 3.dp),
-            verticalArrangement = Arrangement.spacedBy(2.dp)
-        ) {
-            item {
-                LazyRow(
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    item {
-                        SearchKeyBoard(
-                            modifier = Modifier
-                                .padding(vertical = 3.dp)
-                                .fillMaxWidth()
-                        ) {text->
-                            onEvent(SearchEvent.SetQuery(state.query.text+text))
-                        }
-                    }
-                }
+    }else{
+        SinglePane(
+            searchState = searchState,
+            onSearchEvent = onSearchEvent,
+            wordsState = wordsState,
+            gridState = gridState,
+            onWordsEvent = onWordsEvent,
+            windowWidthSizeClass = windowWidthSizeClass,
+            onNavigateToBack = onNavigateToBack,
+            onDetailClose = {
+                onSearchEvent(SearchEvent.HideDetail)
             }
-
-            if(state.query.text.isNotBlank()){
-
-                if(state.searchLoading){
-                    item {
-                        Box(
-                            modifier = Modifier
-                                .padding(vertical = 19.dp)
-                                .fillMaxWidth()
-                                .animateItemPlacement()
-                            ,
-                        ){
-                            CircularProgressIndicator(
-                                modifier = Modifier.align(Alignment.Center),
-                            )
-                        }
-                    }
-                }else if(state.wordResults.isEmpty()){
-                    item {
-                        Text(
-                            stringResource(R.string.not_fount_any_result),
-                            modifier = Modifier
-                                .padding(vertical = 19.dp)
-                                .fillMaxWidth(),
-                            style = MaterialTheme.typography.bodyLarge,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }else{
-                    items(
-                        state.wordResults,
-                        key = {it.wordId}
-                    ){ simpleWord->
-                        SimpleWordItem(
-                            onClicked = {
-                                onEvent(SearchEvent.NavigateToDetailWord(
-                                    simpleWord.wordContent,simpleWord.wordId))
-                            },
-                            modifier = Modifier.animateItemPlacement(),
-                            simpleWord = simpleWord,
-                            meaningMaxLines = 2
-                        )
-                    }
-                }
-
-            }else{
-                items(
-                    state.histories,
-                    key = {it.id?:it.wordId}
-                ){history->
-                    HistoryItem(history,
-                        onClick = {
-                            onEvent(SearchEvent.HistoryClicked(history))
-                        },
-                        onDeleteClick = {
-                            onEvent(SearchEvent.DeleteHistory(history))
-                        },
-                        modifier = Modifier.padding(vertical = 3.dp).fillMaxWidth()
-                    )
-                }
-            }
-        }
+        )
     }
 
 
 
-    if(state.showDialog){
+    searchState.dialogEvent?.let { dialogEvent->
         ShowDialog(
-            state = state,
-            onEvent = onEvent
+            state = searchState,
+            dialogEvent = dialogEvent,
+            onEvent = onSearchEvent
         )
     }
+
+    wordsState.dialogEvent?.let { dialogEvent->
+        WordsDetailModalEventsHandler(
+            dialogEvent = dialogEvent,
+            onEvent = onWordsEvent,
+            onNavigateToRelatedWord = onRelatedWordClicked,
+            currentPos = 0,
+            windowWidthSizeClass = windowWidthSizeClass
+        )
+    }
+
+    wordsState.sheetEvent?.let { sheetEvent->
+        WordsDetailSheetEventsHandler(
+            sheetEvent = sheetEvent,
+            onEvent = onWordsEvent,
+            onSavePointClick = {}
+        )
+    }
+
 
 }
 
 
 @Composable
+private fun SinglePane(
+    searchState: SearchState,
+    onSearchEvent: (SearchEvent) -> Unit,
+    wordsState: WordsListDetailState,
+    gridState: LazyGridState,
+    onWordsEvent: (WordsListDetailEvent) -> Unit,
+    windowWidthSizeClass: WindowWidthSizeClass,
+    onNavigateToBack: ()->Unit,
+    onDetailClose: () -> Unit
+) {
+    val word = searchState.selectedWord
+    if(searchState.isDetailOpen && word != null){
+        BackHandler {
+            onDetailClose()
+        }
+
+        SearchDetailPageContent(
+            onNavigateBack = onDetailClose,
+            audioState = wordsState.audioState,
+            onEvent = onWordsEvent,
+            wordWithSimilar = searchState.selectedWord,
+            windowWidthSizeClass = windowWidthSizeClass
+        )
+    }else{
+        SearchResultPageContent(
+            onBackPressed = onNavigateToBack,
+            state = searchState,
+            onEvent = onSearchEvent,
+            isFullPage = true,
+            gridState = gridState
+        )
+    }
+}
+
+
+@Composable
 private fun ShowDialog(
+    dialogEvent: SearchDialogEvent,
     state: SearchState,
     onEvent: (SearchEvent)->Unit
 ){
     fun close(){
-        onEvent(SearchEvent.ShowDialog(false))
+        onEvent(SearchEvent.ShowDialog(null))
     }
 
-    when(state.dialogEvent){
+    when(dialogEvent){
         SearchDialogEvent.ShowFilter -> {
             SearchFilterDialog(
-                onClosed = {close()},
+                onClosed = ::close,
                 onApproved = {categoryEnum, searchKind ->
                     onEvent(SearchEvent.ChangeFilter(categoryEnum,searchKind))
                 },
@@ -219,10 +170,22 @@ private fun ShowDialog(
                 defaultCategoryEnum = state.defaultCategory
             )
         }
-        null -> {}
     }
-
 }
 
-
+@Preview(showBackground = true)
+@Composable
+fun SearchPagePreview() {
+    SearchPage(
+        onNavigateToBack = {},
+        searchState = SearchState(query = TextFieldValue("asd")),
+        onSearchEvent = {},
+        wordsState = WordsListDetailState(),
+        onWordsEvent = {},
+        onRelatedWordClicked = {},
+        listDetailContentType = ListDetailContentType.SINGLE_PANE,
+        displayFeatures = listOf(),
+        windowWidthSizeClass = WindowWidthSizeClass.Compact
+    )
+}
 

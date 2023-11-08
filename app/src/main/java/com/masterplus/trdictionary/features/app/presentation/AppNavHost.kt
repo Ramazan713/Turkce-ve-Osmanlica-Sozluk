@@ -145,12 +145,12 @@ fun AppNavHost(
             onBackPressed = {
                 navController.popBackStack()
             },
-            onNavigateToWordDetail = {wordId,removeStack->
-                val navOptions = if (removeStack)NavOptions.Builder()
-                    .setPopUpTo(navController.currentDestination?.route?:"",inclusive = true)
-                    .build() else null
-                navController.navigateToSingleWordDetail(wordId,navOptions)
-            }
+            onRelatedWordClicked = {wordId->
+                navController.navigateToSingleWordDetail(wordId)
+            },
+            windowWidthSizeClass = windowWidthSizeClass,
+            listDetailContentType = listDetailContentType,
+            displayFeatures = displayFeatures
         )
 
         selectSavePoint(

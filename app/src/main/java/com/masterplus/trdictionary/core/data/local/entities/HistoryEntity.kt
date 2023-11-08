@@ -8,6 +8,5 @@ data class HistoryEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int?,
     val content: String,
-    val wordId: Int,
     val timeStamp: Long
 )

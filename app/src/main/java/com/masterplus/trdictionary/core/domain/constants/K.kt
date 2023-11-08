@@ -11,7 +11,7 @@ object K {
     const val wordListPageSize = 50
     const val wordListJumpThreshold = 100
 
-    const val searchDelayMilliSeconds = 300L
+    const val searchDelayMilliSeconds = 500L
 
 
     const val defaultCategoryAlphaChar = "*"

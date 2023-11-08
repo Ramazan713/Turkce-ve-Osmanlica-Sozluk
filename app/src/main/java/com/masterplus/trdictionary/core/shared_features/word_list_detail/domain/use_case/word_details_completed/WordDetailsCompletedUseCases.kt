@@ -3,5 +3,6 @@ package com.masterplus.trdictionary.core.shared_features.word_list_detail.domain
 data class WordDetailsCompletedUseCases(
     val getCompletedWordFlow: GetCompletedWordFlow,
     val getCategoryCompletedWordsPaging: GetCategoryCompletedWordsPaging,
-    val getListCompletedWordsPaging: GetListCompletedWordsPaging
+    val getListCompletedWordsPaging: GetListCompletedWordsPaging,
+    val completedWordInfo: GetCompletedWordInfo
 )

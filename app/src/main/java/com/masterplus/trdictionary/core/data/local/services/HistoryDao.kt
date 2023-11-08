@@ -16,8 +16,8 @@ interface HistoryDao {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateHistory(historyEntity: HistoryEntity)
 
-    @Query("""select * from histories where wordId = :wordId""")
-    suspend fun getHistoryByWordId(wordId: Int): HistoryEntity?
+    @Query("""select * from histories where lower(content) = lower(:content)""")
+    suspend fun getHistoryByContent(content: String): HistoryEntity?
 
     @Delete
     suspend fun deleteHistory(historyEntity: HistoryEntity)

@@ -2,6 +2,7 @@ package com.masterplus.trdictionary.features.search.data
 
 import com.masterplus.trdictionary.core.data.local.AppDatabase
 import com.masterplus.trdictionary.core.domain.preferences.AppPreferences
+import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.use_case.word_details_completed.WordDetailsCompletedUseCases
 import com.masterplus.trdictionary.features.search.domain.repo.HistoryRepo
 import com.masterplus.trdictionary.features.search.domain.repo.SearchRepo
 import dagger.Module
@@ -21,6 +22,10 @@ object SearchModule {
 
     @Provides
     @Singleton
-    fun provideSearchRepo(db: AppDatabase,appPreferences: AppPreferences): SearchRepo =
-        SearchRepoImpl(db.searchDao(),appPreferences)
+    fun provideSearchRepo(
+        db: AppDatabase,
+        appPreferences: AppPreferences,
+        wordDetailsCompletedUseCases: WordDetailsCompletedUseCases
+    ): SearchRepo =
+        SearchRepoImpl(db.searchDao(),appPreferences,wordDetailsCompletedUseCases)
 }

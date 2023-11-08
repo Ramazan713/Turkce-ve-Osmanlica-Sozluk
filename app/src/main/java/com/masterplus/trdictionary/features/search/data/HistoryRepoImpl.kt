@@ -19,13 +19,13 @@ class HistoryRepoImpl @Inject constructor(
         return historyDao.getFlowHistories().map { items->items.map { it.toHistory() } }
     }
 
-    override suspend fun insertOrUpdateHistory(query: String,wordId: Int) {
-        val history = historyDao.getHistoryByWordId(wordId)
+    override suspend fun insertOrUpdateHistory(query: String) {
+        val history = historyDao.getHistoryByContent(query)
         val timeStamp = Date().time
         val updatedHistory: HistoryEntity = if(history!=null){
-            HistoryEntity(id = history.id, content = query, timeStamp = timeStamp, wordId = wordId)
+            HistoryEntity(id = history.id, content = query, timeStamp = timeStamp)
         }else{
-            HistoryEntity(content = query, timeStamp = timeStamp, id = null, wordId = wordId)
+            HistoryEntity(content = query, timeStamp = timeStamp, id = null)
         }
         historyDao.insertHistory(updatedHistory)
     }
