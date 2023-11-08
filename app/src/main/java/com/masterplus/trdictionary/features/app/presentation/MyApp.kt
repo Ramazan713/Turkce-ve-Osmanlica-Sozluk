@@ -1,6 +1,13 @@
 package com.masterplus.trdictionary.features.app.presentation
 
 import android.app.Activity
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandIn
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -164,6 +171,8 @@ fun AppContent(
         bottomBar = {
             NavigationAnimatedVisibility(
                 navigationVisible && navigationType == AppNavigationType.BOTTOM_NAVIGATION,
+                enter = fadeIn(tween(700)) + slideInVertically { it },
+                exit = fadeOut(tween(700)) + slideOutVertically { it },
             ){
                 AppBottomNavigationBar(
                     currentDestination = currentNavRoute,

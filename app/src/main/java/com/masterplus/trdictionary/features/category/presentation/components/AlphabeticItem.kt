@@ -27,7 +27,7 @@ fun AlphabeticItem(
     ListItem(
         modifier = Modifier
             .clip(shape)
-            .border(1.dp, MaterialTheme.colorScheme.outline, shape)
+            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, shape)
             .clickable { onClicked() },
         colors = ListItemDefaults.colors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer

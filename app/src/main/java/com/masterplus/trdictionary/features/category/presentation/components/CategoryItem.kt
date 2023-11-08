@@ -46,7 +46,7 @@ fun CategoryItem(
         colors = CardDefaults.cardColors(
             containerColor = color
         ),
-        border = BorderStroke(1.dp,MaterialTheme.colorScheme.outline),
+        border = BorderStroke(1.dp,MaterialTheme.colorScheme.outlineVariant),
     ) {
 
         Row(

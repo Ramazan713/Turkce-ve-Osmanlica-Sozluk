@@ -1,6 +1,7 @@
 package com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.contents
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,6 +9,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,7 +35,7 @@ import com.masterplus.trdictionary.core.shared_features.word_list_detail.present
 fun WordListContent(
     modifier: Modifier = Modifier,
     pagingWords: LazyPagingItems<WordWithSimilar>,
-    lazyGridState: LazyGridState,
+    lazyStaggeredState: LazyStaggeredGridState,
     onEvent: (WordsListDetailEvent) -> Unit,
     listHeaderDescription: String? = null,
     selectedPod: Int? = null,
@@ -40,7 +44,7 @@ fun WordListContent(
     WordListContent(
         modifier = modifier,
         pagingWords = pagingWords,
-        lazyGridState = lazyGridState,
+        lazyStaggeredState = lazyStaggeredState,
         listHeaderDescription = listHeaderDescription,
         selectedPod = selectedPod,
         onListItemLongClick = onListItemLongClick,
@@ -59,7 +63,7 @@ fun WordListContent(
 fun WordListContent(
     modifier: Modifier = Modifier,
     pagingWords: LazyPagingItems<WordWithSimilar>,
-    lazyGridState: LazyGridState,
+    lazyStaggeredState: LazyStaggeredGridState,
     listHeaderDescription: String? = null,
     selectedPod: Int? = null,
     onListItemLongClick: (Int, WordDetailMeanings) -> Unit,
@@ -94,9 +98,11 @@ fun WordListContent(
                     )
                 }
 
-                LazyVerticalGrid(
-                    columns = GridCells.Adaptive(300.dp),
-                    state = lazyGridState
+                LazyVerticalStaggeredGrid(
+                    columns = StaggeredGridCells.Adaptive(350.dp),
+                    state = lazyStaggeredState,
+                    horizontalArrangement = Arrangement.spacedBy(3.dp),
+                    verticalItemSpacing = 5.dp
                 ){
                     items(
                         pagingWords.itemCount,
@@ -111,7 +117,6 @@ fun WordListContent(
                                 onClicked = {
                                     onListItemClick(i,word)
                                 },
-                                modifier = Modifier.padding(vertical = 3.dp),
                                 onLongClicked = {
                                     onListItemLongClick(i,word.wordDetailMeanings)
                                 }

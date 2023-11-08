@@ -1,5 +1,6 @@
 package com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.handlers
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
@@ -71,12 +72,12 @@ fun WordsDetailModalEventsHandler(
         }
         is WordsListDetailDialogEvent.ShowSelectNumber -> {
             ShowSelectNumberDialog(
-                minValue = 1,
-                maxValue = event.itemCount - 1,
+                minPos = 0,
+                maxPos = event.itemCount - 1,
                 onApprove = {pos->
                     onEvent(WordsListDetailEvent.NavigateToPos(pos))
                 },
-                currentValue = event.currentPos,
+                currentPos = event.currentPos,
                 onClose = ::close
             )
         }

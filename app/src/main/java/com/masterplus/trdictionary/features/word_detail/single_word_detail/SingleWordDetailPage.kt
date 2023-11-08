@@ -77,7 +77,7 @@ fun SingleWordDetailPage(
                     wordWithSimilar = wordWithSimilar,
                     windowWidthSizeClass = windowWidthSizeClass,
                     onEvent = onEvent,
-                    contentPadding = PaddingValues(horizontal = 2.dp, vertical = 2.dp),
+                    contentPadding = PaddingValues(horizontal = 4.dp, vertical = 4.dp),
                     audioState = state.audioState,
                 )
             }

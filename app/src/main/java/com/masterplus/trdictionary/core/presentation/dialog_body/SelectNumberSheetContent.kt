@@ -1,11 +1,10 @@
 package com.masterplus.trdictionary.core.presentation.dialog_body
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -18,28 +17,26 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.util.PreviewDesktop
 
 
 @Composable
 fun ShowSelectNumberDialog(
-    minValue: Int,
-    maxValue: Int,
+    minPos: Int,
+    maxPos: Int,
     onApprove: (Int) -> Unit,
     onClose:() -> Unit,
-    currentValue: Int = minValue,
+    currentPos: Int = minPos,
 ){
     var textState by rememberSaveable(
         stateSaver = TextFieldValue.Saver
     ) {
         mutableStateOf(
-            TextFieldValue(currentValue.toString(),
-            TextRange(currentValue.toString().length))
+            TextFieldValue(currentPos.plus(1).toString(),
+            TextRange(currentPos.plus(1).toString().length))
         )
     }
     var errorState by rememberSaveable{
@@ -56,7 +53,7 @@ fun ShowSelectNumberDialog(
         onDismissRequest = onClose,
         title = {
             Text(
-                stringResource(R.string.error_mismatch_range_with_values,minValue,maxValue),
+                stringResource(R.string.error_mismatch_range_with_values,minPos + 1,maxPos + 1),
                 style = MaterialTheme.typography.bodyLarge
             )
         },
@@ -69,8 +66,8 @@ fun ShowSelectNumberDialog(
                         checkNumberAndApprove(
                             context,
                             onSetError = { errorState = it },
-                            minValue = minValue,
-                            maxValue = maxValue,
+                            minValue = minPos,
+                            maxValue = maxPos,
                             text = textState.text,
                             onApprove = {
                                 onApprove(it)
@@ -107,8 +104,8 @@ fun ShowSelectNumberDialog(
                     checkNumberAndApprove(
                         context,
                         onSetError = { errorState = it },
-                        minValue = minValue,
-                        maxValue = maxValue,
+                        minValue = minPos,
+                        maxValue = maxPos,
                         text = textState.text,
                         onApprove = {
                             onApprove(it)
@@ -131,12 +128,8 @@ private fun checkNumberAndApprove(
     text: String,
     onApprove: (Int) -> Unit
 ){
-    val num = text.toIntOrNull()
+    val num = text.toIntOrNull()?.minus(1) ?: return onSetError(context.getString(R.string.error_only_enter_number))
 
-    if(num == null){
-        onSetError(context.getString(R.string.error_only_enter_number))
-        return
-    }
     if(num < minValue || num > maxValue){
         onSetError(context.getString(R.string.error_mismatch_range))
         return
@@ -150,8 +143,8 @@ private fun checkNumberAndApprove(
 @Composable
 fun ShowSelectNumberDialogPreview() {
     ShowSelectNumberDialog(
-        minValue = 10,
-        maxValue = 100,
+        minPos = 10,
+        maxPos = 100,
         onApprove = {},
         onClose = {}
     )

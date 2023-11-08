@@ -49,7 +49,7 @@ fun PremiumItem(
             .padding(1.dp)
             .clip(shape)
             .background(MaterialTheme.colorScheme.primaryContainer,shape)
-            .border(Dp.Hairline,MaterialTheme.colorScheme.outline,shape)
+            .border(Dp.Hairline,MaterialTheme.colorScheme.outlineVariant,shape)
             .clickable { onClicked(freeSubsOffer ?: subsProduct.mainSubsOffer) }
             .padding(bottom = 7.dp, top = 5.dp)
         ,

@@ -1,7 +1,10 @@
 package com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.pager
 
+import android.os.Parcelable
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,13 +27,34 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
+import kotlinx.parcelize.Parcelize
+
+private suspend fun LazyStaggeredGridState.customScrollToPos(pos: Int, animate: Boolean = true){
+    if(animate){
+        animateScrollToItem(pos)
+    }else{
+        scrollToItem(pos)
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+private suspend fun PagerState.customScrollToPos(pos: Int, animate: Boolean = true){
+    if(animate){
+        animateScrollToPage(pos)
+    }else{
+        scrollToPage(pos)
+    }
+}
+
+
+
 
 @OptIn(ExperimentalFoundationApi::class, FlowPreview::class)
 @Composable
 fun WordsPagerPosHandler(
     state: WordsListDetailState,
     pagerState: PagerState,
-    lazyGridState: LazyGridState,
+    lazyStaggeredState: LazyStaggeredGridState,
     listDetailContentType: ListDetailContentType,
     onClearPos: () -> Unit,
     initPos: () -> Int
@@ -39,10 +63,10 @@ fun WordsPagerPosHandler(
 
     val currentOnClearPos by rememberUpdatedState(newValue = onClearPos)
     val currentPagerState by rememberUpdatedState(newValue = pagerState)
-    val currentLazyGridState by rememberUpdatedState(newValue = lazyGridState)
+    val currentLazyStaggeredState by rememberUpdatedState(newValue = lazyStaggeredState)
 
     var currentPos by rememberSaveable {
-        mutableIntStateOf(initPos())
+        mutableStateOf(CurrentPos(initPos(),scrollTo = false))
     }
     var posForRefresh by rememberSaveable {
         mutableStateOf(false)
@@ -64,7 +88,7 @@ fun WordsPagerPosHandler(
             .flowWithLifecycle(lifecycleOwner.lifecycle)
             .collectLatest { pos->
                 currentOnClearPos()
-                currentLazyGridState.scrollToItem(pos)
+                currentLazyStaggeredState.scrollToItem(pos)
             }
     }
 
@@ -74,7 +98,7 @@ fun WordsPagerPosHandler(
             .flowWithLifecycle(lifecycleOwner.lifecycle)
             .collectLatest { pos->
                 posForRefresh = true
-                currentPos = pos
+                currentPos = CurrentPos(pos)
                 currentOnClearPos()
             }
     }
@@ -82,29 +106,34 @@ fun WordsPagerPosHandler(
     LaunchedEffect(currentPos,lifecycleOwner,listDetailContentType){
         snapshotFlow { currentPos }
             .distinctUntilChanged()
+            .filter { it.scrollTo }
             .filter { listDetailContentType == ListDetailContentType.DUAL_PANE }
+            .map { it.pos }
             .flowWithLifecycle(lifecycleOwner.lifecycle)
             .collectLatest { pos->
+                currentLazyStaggeredState.customScrollToPos(pos, animate = !posForRefresh)
+                currentPagerState.customScrollToPos(pos, animate = !posForRefresh)
                 if(posForRefresh){
                     posForRefresh = false
-                    currentLazyGridState.scrollToItem(pos)
-                    currentPagerState.scrollToPage(pos)
-                }else{
-                    currentPagerState.animateScrollToPage(pos)
-                    currentLazyGridState.animateScrollToItem(pos)
                 }
             }
     }
 
     LaunchedEffect(currentPos,lifecycleOwner,listDetailContentType){
         snapshotFlow { currentPos }
+            .distinctUntilChanged()
+            .filter { it.scrollTo }
             .filter { listDetailContentType == ListDetailContentType.SINGLE_PANE }
+            .map { it.pos }
             .flowWithLifecycle(lifecycleOwner.lifecycle)
             .collectLatest { pos->
                 if(state.isDetailOpen){
-                    currentPagerState.animateScrollToPage(pos)
+                    currentPagerState.customScrollToPos(pos, animate = !posForRefresh)
                 }else{
-                    currentLazyGridState.animateScrollToItem(pos)
+                    currentLazyStaggeredState.customScrollToPos(pos, animate = !posForRefresh)
+                }
+                if(posForRefresh){
+                    posForRefresh = false
                 }
             }
     }
@@ -115,20 +144,29 @@ fun WordsPagerPosHandler(
             .distinctUntilChanged()
             .flowWithLifecycle(lifecycleOwner.lifecycle)
             .collectLatest {pos->
-                currentPos = pos
+                currentPos = CurrentPos(pos,false)
+                currentLazyStaggeredState.animateScrollToItem(pos)
             }
     }
 
 
-    LaunchedEffect(lazyGridState,lifecycleOwner){
-        snapshotFlow { lazyGridState.layoutInfo }
+    LaunchedEffect(lazyStaggeredState,lifecycleOwner){
+        snapshotFlow { lazyStaggeredState.layoutInfo }
             .debounce(500)
-            .filter { it.isNumberInRange(currentPos) == false }
+            .filter { it.isNumberInRange(currentPos.pos) == false }
             .map { it.visibleItemsInfo.firstOrNull()?.index ?: 0 }
             .distinctUntilChanged()
             .flowWithLifecycle(lifecycleOwner.lifecycle)
             .collectLatest {pos->
-                currentPos = pos
+                currentPos = CurrentPos(pos,false)
+                currentPagerState.animateScrollToPage(pos)
             }
     }
 }
+
+
+@Parcelize
+private data class CurrentPos(
+    val pos: Int,
+    val scrollTo: Boolean = true
+): Parcelable

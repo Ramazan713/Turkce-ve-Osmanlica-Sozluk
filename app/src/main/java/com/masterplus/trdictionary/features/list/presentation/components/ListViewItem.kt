@@ -38,7 +38,7 @@ fun ListViewItem(
             .fillMaxWidth()
             .clip(shape)
             .background(MaterialTheme.colorScheme.secondaryContainer,shape)
-            .border(1.dp,MaterialTheme.colorScheme.outline,shape)
+            .border(1.dp,MaterialTheme.colorScheme.outlineVariant,shape)
             .clickable {
                 onClick()
             }

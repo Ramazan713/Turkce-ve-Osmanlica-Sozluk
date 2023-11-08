@@ -23,7 +23,7 @@ fun PremiumFeature(
     ListItem(
         modifier = modifier
             .clip(shape)
-            .border(Dp.Hairline,MaterialTheme.colorScheme.outline,shape),
+            .border(Dp.Hairline,MaterialTheme.colorScheme.outlineVariant,shape),
         leadingContent = { Icon(painter = painterResource(R.drawable.baseline_check_24),contentDescription = null) },
         headlineContent = { Text(title) },
         colors = ListItemDefaults.colors(

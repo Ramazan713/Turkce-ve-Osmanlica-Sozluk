@@ -171,6 +171,13 @@ fun EditSavePointDialog(
                 horizontalArrangement = Arrangement.spacedBy(7.dp)
             ){
                 Button(
+                    onClick = {onEvent(EditSavePointEvent.OverrideSavePoint(pos))  },
+                    modifier = Modifier.weight(1f),
+                    enabled = state.selectedSavePoint != null,
+                ) {
+                    Text(text = stringResource(R.string.override),)
+                }
+                Button(
                     onClick = {
                         state.selectedSavePoint?.let { savePoint ->
                             onNavigateLoad(savePoint)
@@ -182,20 +189,13 @@ fun EditSavePointDialog(
                 ) {
                     Text(text = stringResource(R.string.load))
                 }
-                Button(
-                    onClick = {onEvent(EditSavePointEvent.OverrideSavePoint(pos))  },
-                    modifier = Modifier.weight(1f),
-                    enabled = state.selectedSavePoint != null,
-                ) {
-                    Text(text = stringResource(R.string.override),)
-                }
             }
         }
 
         if(state.showDialog){
             ShowDialog(
                 state.dialogEvent,
-                onEvent = { onEvent(it) },
+                onEvent = onEvent,
                 pos, saveKey,destinationId
             )
         }

@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.window.layout.DisplayFeature
 import com.google.accompanist.adaptive.HorizontalTwoPaneStrategy
 import com.google.accompanist.adaptive.TwoPane
+import com.masterplus.trdictionary.core.domain.constants.K
 import com.masterplus.trdictionary.core.domain.enums.CategoryEnum
 import com.masterplus.trdictionary.core.domain.enums.ListDetailContentType
 import com.masterplus.trdictionary.core.domain.enums.SubCategoryEnum
@@ -45,6 +46,7 @@ fun CategoryPage(
                  CategoryList(
                      state = state,
                      scrollBehavior = listScrollBehavior,
+                     isFullPage = false,
                      onNavigateToSetting = onNavigateToSetting,
                      onNavigateToDetail = { onEvent(CategoryEvent.OpenDetail(it)) }
                  )
@@ -61,7 +63,7 @@ fun CategoryPage(
                     onNavigateToBack = { onEvent(CategoryEvent.CloseDetail) }
                 )
             },
-            strategy = HorizontalTwoPaneStrategy(0.5f,12.dp),
+            strategy = HorizontalTwoPaneStrategy(0.5f, K.twoPaneSpace),
             displayFeatures = displayFeatures
         )
     }else{
@@ -114,6 +116,7 @@ fun SinglePane(
         CategoryList(
             state = state,
             scrollBehavior = listScrollBehavior,
+            isFullPage = true,
             onNavigateToSetting = onNavigateToSetting,
             onNavigateToDetail = { onEvent(CategoryEvent.OpenDetail(it)) }
         )

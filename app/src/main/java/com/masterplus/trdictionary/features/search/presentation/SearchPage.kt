@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.window.layout.DisplayFeature
 import com.google.accompanist.adaptive.HorizontalTwoPaneStrategy
 import com.google.accompanist.adaptive.TwoPane
+import com.masterplus.trdictionary.core.domain.constants.K
 import com.masterplus.trdictionary.core.domain.enums.ListDetailContentType
 import com.masterplus.trdictionary.core.shared_features.share.presentation.ShareWordEventHandler
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.WordsListDetailEvent
@@ -62,7 +63,7 @@ fun SearchPage(
                     windowWidthSizeClass = windowWidthSizeClass
                 )
             },
-            strategy = HorizontalTwoPaneStrategy(0.5f,12.dp),
+            strategy = HorizontalTwoPaneStrategy(0.5f, K.twoPaneSpace),
             displayFeatures = displayFeatures
         )
     }else{

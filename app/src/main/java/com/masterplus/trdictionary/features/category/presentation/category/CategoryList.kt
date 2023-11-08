@@ -34,6 +34,7 @@ import com.masterplus.trdictionary.features.category.presentation.components.Cat
 fun CategoryList(
     state: CategoryState,
     scrollBehavior: TopAppBarScrollBehavior,
+    isFullPage: Boolean,
     onNavigateToSetting: ()-> Unit,
     onNavigateToDetail: (Category) -> Unit
 ) {
@@ -65,7 +66,7 @@ fun CategoryList(
                     title = category.title.asString(context),
                     onClicked = { onNavigateToDetail(category) },
                     resourceId = category.resourceId,
-                    selected = state.selectedCategory == category && state.isDetailOpen,
+                    selected = state.selectedCategory == category && !isFullPage,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -115,7 +116,8 @@ fun CategoryItemPreview() {
         state = CategoryState(categories = categories),
         scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
         onNavigateToSetting = {},
-        onNavigateToDetail = {}
+        onNavigateToDetail = {},
+        isFullPage = false
     )
 }
 

@@ -3,8 +3,11 @@ package com.masterplus.trdictionary.core.shared_features.word_list_detail.presen
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
@@ -15,8 +18,10 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.window.layout.DisplayFeature
 import com.google.accompanist.adaptive.HorizontalTwoPaneStrategy
 import com.google.accompanist.adaptive.TwoPane
+import com.masterplus.trdictionary.core.domain.constants.K
 import com.masterplus.trdictionary.core.domain.enums.ListDetailContentType
 import com.masterplus.trdictionary.core.shared_features.share.presentation.ShareWordEventHandler
+import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.constants.WordsPagerTopBarMenu
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.model.WordDetailMeanings
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.model.WordWithSimilar
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.handlers.WordsDetailModalEventsHandler
@@ -44,13 +49,13 @@ fun WordsPagerListDetailAdaptivePage(
     initPos: Int = 0
 ) {
 
-    val lazyGridState = rememberLazyGridState(initialFirstVisibleItemIndex = initPos)
+    val lazyStaggeredState = rememberLazyStaggeredGridState(initialFirstVisibleItemIndex = initPos)
     val pagerState = rememberPagerState(initialPage = initPos, pageCount = { words.itemCount })
 
     WordsPagerPosHandler(
         state = state,
         pagerState = pagerState,
-        lazyGridState = lazyGridState,
+        lazyStaggeredState = lazyStaggeredState,
         listDetailContentType = listDetailContentType,
         onClearPos = { onEvent(WordsListDetailEvent.ClearNavigateToPos) },
         initPos = { initPos }
@@ -65,9 +70,11 @@ fun WordsPagerListDetailAdaptivePage(
         TwoPane(
             first = {
                 WordsPagerListContent(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(2.dp),
                     pagingWords = words,
-                    lazyGridState = lazyGridState,
+                    lazyStaggeredState = lazyStaggeredState,
                     onTopBarMenuClick = {
                         handleTopBarMenu(it, onSavePointClick,pagerState.currentPage)
                     },
@@ -81,6 +88,7 @@ fun WordsPagerListDetailAdaptivePage(
             },
             second = {
                 WordsPagerDetailContent(
+                    modifier = Modifier.padding(2.dp),
                     pagingWords = words,
                     pagerState = pagerState,
                     windowWidthSizeClass = windowWidthSizeClass,
@@ -98,7 +106,7 @@ fun WordsPagerListDetailAdaptivePage(
                     title = topBarTitle,
                 )
             },
-            HorizontalTwoPaneStrategy(0.5f,12.dp),
+            HorizontalTwoPaneStrategy(0.5f, K.twoPaneSpace),
             displayFeatures = displayFeatures
         )
     }else{
@@ -108,7 +116,7 @@ fun WordsPagerListDetailAdaptivePage(
             pagingWords = words,
             windowWidthSizeClass = windowWidthSizeClass,
             pagerState = pagerState,
-            lazyGridState = lazyGridState,
+            lazyStaggeredState = lazyStaggeredState,
             onNavigateBack = onNavigateBack,
             onListItemLongClick = onListItemLongClick,
             onDetailFavoriteClick = onDetailFavoriteClick,
@@ -152,7 +160,7 @@ fun SinglePage(
     pagingWords: LazyPagingItems<WordWithSimilar>,
     windowWidthSizeClass: WindowWidthSizeClass,
     pagerState: PagerState,
-    lazyGridState: LazyGridState,
+    lazyStaggeredState: LazyStaggeredGridState,
     onListItemLongClick: (Int, WordDetailMeanings) -> Unit,
     onDetailFavoriteClick: (WordDetailMeanings) -> Unit,
     onDetailSelectListPressed: (WordDetailMeanings) -> Unit,
@@ -169,6 +177,7 @@ fun SinglePage(
         }
 
         WordsPagerDetailContent(
+            modifier = Modifier.padding(2.dp),
             pagingWords = pagingWords,
             pagerState = pagerState,
             windowWidthSizeClass = windowWidthSizeClass,
@@ -185,9 +194,11 @@ fun SinglePage(
         )
     }else{
         WordsPagerListContent(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(2.dp),
             pagingWords = pagingWords,
-            lazyGridState = lazyGridState,
+            lazyStaggeredState = lazyStaggeredState,
             onListItemLongClick = onListItemLongClick,
             onTopBarMenuClick = {
                 handleTopBarMenu(it, onSavePointClick,pagerState.currentPage)
@@ -201,12 +212,12 @@ fun SinglePage(
 }
 
 private fun handleTopBarMenu(
-    menuItem: com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.constants.WordsPagerTopBarMenu,
+    menuItem: WordsPagerTopBarMenu,
     onSavePointClick: (Int?) -> Unit,
     currentPos: Int
 ){
     when(menuItem){
-        com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.constants.WordsPagerTopBarMenu.SavePoint -> {
+        WordsPagerTopBarMenu.SavePoint -> {
             onSavePointClick(currentPos)
         }
     }
