@@ -1,5 +1,6 @@
 package com.masterplus.trdictionary.features.list.presentation.show_list
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -11,9 +12,12 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -22,6 +26,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.enums.SavePointDestination
@@ -37,6 +42,8 @@ import com.masterplus.trdictionary.core.presentation.components.navigation.Custo
 import com.masterplus.trdictionary.core.presentation.selections.rememberAdaptiveSelectMenuState
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowGetTextDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDialog
+import com.masterplus.trdictionary.core.util.ShowLifecycleSnackBarMessage
+import com.masterplus.trdictionary.core.util.rememberDefaultSnackBar
 
 import com.masterplus.trdictionary.features.list.presentation.components.ListViewItem
 import com.masterplus.trdictionary.features.list.presentation.show_list.constants.ShowListBarMenuEnum
@@ -65,13 +72,16 @@ fun ShowListPage(
         hideSheetAfterMenuClick = true
     )
 
-    ListenLifecycleMessage(
+    val defaultSnackBar = rememberDefaultSnackBar()
+
+    ShowLifecycleSnackBarMessage(
         message = state.message,
+        snackBar = defaultSnackBar,
         onDismiss = { onEvent(ShowListEvent.ClearMessage) }
     )
 
-
     Scaffold(
+        snackbarHost = defaultSnackBar.snackBarHost,
         topBar = {
             GetTopBar(
                 topAppBarScrollBehavior = topAppBarScrollBehavior,
