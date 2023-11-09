@@ -19,7 +19,6 @@ import androidx.lifecycle.flowWithLifecycle
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.enums.CategoryEnum
 import com.masterplus.trdictionary.core.domain.model.SavePoint
-import com.masterplus.trdictionary.core.presentation.components.ListenLifecycleMessage
 import com.masterplus.trdictionary.core.presentation.selections.CustomDropdownMenu
 import com.masterplus.trdictionary.core.presentation.components.SavePointItem
 import com.masterplus.trdictionary.core.presentation.components.navigation.CustomTopAppBar
@@ -27,6 +26,8 @@ import com.masterplus.trdictionary.core.presentation.dialog_body.ShowGetTextDial
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDialog
 import com.masterplus.trdictionary.core.util.PreviewDesktop
 import com.masterplus.trdictionary.core.util.SampleDatas
+import com.masterplus.trdictionary.core.util.ShowLifecycleSnackBarMessage
+import com.masterplus.trdictionary.core.util.rememberDefaultSnackBar
 import kotlinx.coroutines.flow.collectLatest
 
 @ExperimentalFoundationApi
@@ -51,6 +52,7 @@ fun SelectSavePointPage(
     val currentOnNavigateToCatAll by rememberUpdatedState(onNavigateToCatAll)
     val currentOnNavigateToCatRandom by rememberUpdatedState(onNavigateToCatRandom)
     val currentOnNavigateToCatAlphabetic by rememberUpdatedState(onNavigateToCatAlphabetic)
+    val currentOnEvent by rememberUpdatedState(newValue = onEvent)
 
     state.uiEvent?.let { uiEvent->
         LaunchedEffect(uiEvent,lifecycle){
@@ -71,17 +73,21 @@ fun SelectSavePointPage(
                             currentOnNavigateToCatAlphabetic(event.catEnum,event.c,event.pos)
                         }
                     }
-                    onEvent(SelectSavePointEvent.ClearUiEvent)
+                    currentOnEvent(SelectSavePointEvent.ClearUiEvent)
                 }
         }
     }
 
-    ListenLifecycleMessage(
+    val defaultSnackBar = rememberDefaultSnackBar()
+
+    ShowLifecycleSnackBarMessage(
         message = state.message,
+        snackBar = defaultSnackBar,
         onDismiss = { onEvent(SelectSavePointEvent.ClearMessage) }
     )
 
     Scaffold(
+        snackbarHost = defaultSnackBar.snackBarHost,
         topBar = {
             CustomTopAppBar(
                 title = stringResource(R.string.n_savepoints_c,state.title),
@@ -90,7 +96,6 @@ fun SelectSavePointPage(
             )
         },
     ) {paddings->
-
         Box(
             modifier = Modifier
                 .padding(paddings)

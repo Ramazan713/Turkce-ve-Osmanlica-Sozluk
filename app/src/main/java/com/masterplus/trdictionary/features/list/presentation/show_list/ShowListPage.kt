@@ -37,7 +37,6 @@ import com.masterplus.trdictionary.core.presentation.selections.AdaptiveSelectSh
 import com.masterplus.trdictionary.core.presentation.selections.CustomDropdownBarMenu
 import com.masterplus.trdictionary.core.presentation.components.CustomModalBottomSheet
 import com.masterplus.trdictionary.core.presentation.components.DefaultToolTip
-import com.masterplus.trdictionary.core.presentation.components.ListenLifecycleMessage
 import com.masterplus.trdictionary.core.presentation.components.navigation.CustomTopAppBar
 import com.masterplus.trdictionary.core.presentation.selections.rememberAdaptiveSelectMenuState
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowGetTextDialog

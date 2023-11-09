@@ -21,11 +21,11 @@ import com.masterplus.trdictionary.core.domain.model.SavePoint
 import com.masterplus.trdictionary.core.presentation.components.SavePointItem
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.presentation.components.DialogHeader
-import com.masterplus.trdictionary.core.presentation.components.ListenLifecycleMessage
 import com.masterplus.trdictionary.core.presentation.dialog_body.CustomDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowGetTextDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDialog
 import com.masterplus.trdictionary.core.util.SampleDatas
+import com.masterplus.trdictionary.core.util.ShowLifecycleToastMessage
 
 
 @ExperimentalFoundationApi
@@ -72,7 +72,7 @@ fun EditSavePointDialog(
         onEvent(EditSavePointEvent.LoadData(saveKey))
     }
 
-    ListenLifecycleMessage(
+    ShowLifecycleToastMessage(
         message = state.message,
         onDismiss = { onEvent(EditSavePointEvent.ClearMessage) }
     )

@@ -18,12 +18,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.presentation.components.DialogHeader
-import com.masterplus.trdictionary.core.presentation.components.ListenLifecycleMessage
-import com.masterplus.trdictionary.core.presentation.components.buttons.NegativeButton
-import com.masterplus.trdictionary.core.presentation.components.buttons.PrimaryButton
 import com.masterplus.trdictionary.core.presentation.dialog_body.CustomDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.LoadingDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDialog
+import com.masterplus.trdictionary.core.util.ShowLifecycleToastMessage
 import com.masterplus.trdictionary.features.settings.presentation.backup_select.ShowCloudSelectBackup
 import com.masterplus.trdictionary.features.settings.presentation.components.TextIcon
 
@@ -59,7 +57,7 @@ fun ShowCloudSetting(
         mutableStateOf(false)
     }
 
-    ListenLifecycleMessage(
+    ShowLifecycleToastMessage(
         message = state.message,
         onDismiss = onClearMessage
     )

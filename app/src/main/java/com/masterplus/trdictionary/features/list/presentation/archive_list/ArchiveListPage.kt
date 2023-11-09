@@ -26,8 +26,9 @@ import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDia
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.model.ListView
 import com.masterplus.trdictionary.core.presentation.selections.AdaptiveSelectSheetMenu
-import com.masterplus.trdictionary.core.presentation.components.ListenLifecycleMessage
 import com.masterplus.trdictionary.core.presentation.selections.rememberAdaptiveSelectMenuState
+import com.masterplus.trdictionary.core.util.ShowLifecycleSnackBarMessage
+import com.masterplus.trdictionary.core.util.rememberDefaultSnackBar
 
 @ExperimentalMaterial3Api
 @ExperimentalFoundationApi
@@ -47,12 +48,16 @@ fun ArchiveListPage(
     )
 
 
-    ListenLifecycleMessage(
+    val defaultSnackBar = rememberDefaultSnackBar()
+
+    ShowLifecycleSnackBarMessage(
         message = state.message,
+        snackBar = defaultSnackBar,
         onDismiss = { onEvent(ArchiveListEvent.ClearMessage) }
     )
 
     Scaffold(
+        snackbarHost = defaultSnackBar.snackBarHost,
         topBar = {
             CustomTopAppBar(
                 title = stringResource(R.string.archive_n),

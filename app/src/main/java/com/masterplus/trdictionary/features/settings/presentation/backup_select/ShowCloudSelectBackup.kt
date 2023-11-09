@@ -27,7 +27,7 @@ import com.masterplus.trdictionary.core.presentation.dialog_body.LoadingDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDialog
 import com.masterplus.trdictionary.core.extensions.refreshApp
 import com.masterplus.trdictionary.core.presentation.components.DialogHeader
-import com.masterplus.trdictionary.core.presentation.components.ListenLifecycleMessage
+import com.masterplus.trdictionary.core.util.ShowLifecycleToastMessage
 import com.masterplus.trdictionary.features.settings.domain.model.BackupMeta
 import com.masterplus.trdictionary.features.settings.presentation.components.SelectableText
 import com.masterplus.trdictionary.features.settings.presentation.components.TextIcon
@@ -61,7 +61,7 @@ fun ShowCloudSelectBackup(
     val context = LocalContext.current
     val lifecycle = LocalLifecycleOwner.current.lifecycle
 
-    ListenLifecycleMessage(
+    ShowLifecycleToastMessage(
         message = state.message,
         onDismiss = { onEvent(SelectBackupEvent.ClearMessage) }
     )
