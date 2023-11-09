@@ -13,7 +13,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
-import com.masterplus.trdictionary.core.presentation.components.buttons.PrimaryButton
 import com.masterplus.trdictionary.features.settings.presentation.SettingEvent
 import com.masterplus.trdictionary.features.settings.presentation.SettingState
 import com.masterplus.trdictionary.features.settings.presentation.components.UnRegisteredProfileIcon

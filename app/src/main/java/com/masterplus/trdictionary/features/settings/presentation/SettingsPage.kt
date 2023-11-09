@@ -19,7 +19,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.model.premium.*
-import com.masterplus.trdictionary.core.presentation.components.buttons.NegativeButton
 import com.masterplus.trdictionary.core.presentation.components.navigation.CustomTopAppBar
 import com.masterplus.trdictionary.core.presentation.dialog_body.LoadingDialog
 import com.masterplus.trdictionary.core.shared_features.premium.PremiumEvent
