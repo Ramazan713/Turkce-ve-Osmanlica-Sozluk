@@ -1,5 +1,6 @@
 package com.masterplus.trdictionary.core.di
 
+import android.app.Application
 import com.masterplus.trdictionary.core.data.local.TransactionProvider
 import com.masterplus.trdictionary.core.domain.repo.ListRepo
 import com.masterplus.trdictionary.core.domain.repo.ListViewRepo
@@ -9,6 +10,7 @@ import com.masterplus.trdictionary.core.domain.use_cases.list_words.AddListWords
 import com.masterplus.trdictionary.core.domain.use_cases.list_words.GetSelectableLists
 import com.masterplus.trdictionary.core.domain.use_cases.list_words.ListWordsUseCases
 import com.masterplus.trdictionary.core.domain.repo.SavePointRepo
+import com.masterplus.trdictionary.core.domain.use_cases.GetAppSha1UseCase
 import com.masterplus.trdictionary.core.domain.use_cases.ListInFavoriteControlForDeletionUseCase
 import com.masterplus.trdictionary.core.domain.use_cases.lists.*
 import com.masterplus.trdictionary.core.domain.use_cases.savepoint.*
@@ -76,4 +78,10 @@ object UseCasesModule {
     fun provideListInFavorite(
         listRepo: ListRepo
     ) = ListInFavoriteControlForDeletionUseCase(listRepo)
+
+
+    @Provides
+    @Singleton
+    fun provideGetAppSha1(application: Application) = GetAppSha1UseCase(application)
+
 }

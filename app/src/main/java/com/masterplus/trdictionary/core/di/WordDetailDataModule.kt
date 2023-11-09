@@ -2,6 +2,7 @@ package com.masterplus.trdictionary.core.di
 
 import android.app.Application
 import com.masterplus.trdictionary.core.data.local.AppDatabase
+import com.masterplus.trdictionary.core.domain.use_cases.GetAppSha1UseCase
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.data.remote.TextToSpeechApiService
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.data.remote.TextToSpeechDataSource
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.data.remote.TextToSpeechDataSourceImpl
@@ -61,7 +62,11 @@ object WordDetailDataModule {
 
     @Singleton
     @Provides
-    fun provideTextToSpeechDataSource(api: TextToSpeechApiService): TextToSpeechDataSource =
-        TextToSpeechDataSourceImpl(api)
+    fun provideTextToSpeechDataSource(
+        api: TextToSpeechApiService,
+        getAppSha1UseCase: GetAppSha1UseCase,
+        application: Application
+    ): TextToSpeechDataSource =
+        TextToSpeechDataSourceImpl(api,getAppSha1UseCase, application)
 
 }

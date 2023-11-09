@@ -16,6 +16,8 @@ interface TextToSpeechApiService {
     @POST("v1/text:synthesize")
     suspend fun synthesize(
         @Header("Authorization") authorization: String,
+        @Header("x-android-package") packageName: String,
+        @Header("x-android-cert") cert: String,
         @Query("key") key: String,
         @Body request: TextToSpeechRequest,
     ): Response<TextToSpeechResponse>
