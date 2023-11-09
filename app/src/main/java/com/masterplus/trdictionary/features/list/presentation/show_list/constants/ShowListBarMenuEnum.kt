@@ -1,5 +1,8 @@
 package com.masterplus.trdictionary.features.list.presentation.show_list.constants
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.Settings
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.enums.IMenuItemEnum
 import com.masterplus.trdictionary.core.domain.enums.IconInfo
@@ -10,12 +13,12 @@ enum class ShowListBarMenuEnum: IMenuItemEnum {
         override val title: UiText
             get() = UiText.Resource(R.string.save_point)
         override val iconInfo: IconInfo
-            get() = IconInfo(drawableId = R.drawable.ic_baseline_save_24)
+            get() = IconInfo(imageVector = Icons.Default.Save)
     },
     Settings{
         override val title: UiText
             get() = UiText.Resource(R.string.settings)
         override val iconInfo: IconInfo
-            get() = IconInfo(R.drawable.ic_baseline_settings_24)
+            get() = IconInfo(imageVector = Icons.Default.Settings)
     }
 }

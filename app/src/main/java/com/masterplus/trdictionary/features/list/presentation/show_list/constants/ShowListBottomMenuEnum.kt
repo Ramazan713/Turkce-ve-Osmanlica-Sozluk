@@ -1,5 +1,11 @@
 package com.masterplus.trdictionary.features.list.presentation.show_list.constants
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Archive
+import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.Folder
+import androidx.compose.material.icons.filled.FolderDelete
+import androidx.compose.material.icons.outlined.DriveFileRenameOutline
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.enums.IMenuItemEnum
 import com.masterplus.trdictionary.core.domain.enums.IconInfo
@@ -11,7 +17,7 @@ enum class ShowListBottomMenuEnum: IMenuItemEnum {
             get() = UiText.Resource(R.string.rename)
 
         override val iconInfo: IconInfo
-            get() = IconInfo(drawableId = R.drawable.ic_baseline_drive_file_rename_outline_24)
+            get() = IconInfo(imageVector = Icons.Outlined.DriveFileRenameOutline)
 
     },
     Delete {
@@ -19,7 +25,7 @@ enum class ShowListBottomMenuEnum: IMenuItemEnum {
             get() = UiText.Resource(R.string.delete)
 
         override val iconInfo: IconInfo
-            get() = IconInfo(drawableId = R.drawable.ic_baseline_folder_delete_24)
+            get() = IconInfo(imageVector = Icons.Default.FolderDelete)
 
     },
     Archive{
@@ -27,7 +33,7 @@ enum class ShowListBottomMenuEnum: IMenuItemEnum {
             get() = UiText.Resource(R.string.archive_v)
 
         override val iconInfo: IconInfo
-            get() = IconInfo(drawableId = R.drawable.ic_baseline_archive_24)
+            get() = IconInfo(imageVector = Icons.Default.Archive)
 
     },
     Copy{
@@ -35,7 +41,7 @@ enum class ShowListBottomMenuEnum: IMenuItemEnum {
             get() = UiText.Resource(R.string.copy_make)
 
         override val iconInfo: IconInfo
-            get() = IconInfo(drawableId = R.drawable.ic_baseline_content_copy_24)
+            get() = IconInfo(imageVector = Icons.Default.ContentCopy)
     };
 
     companion object{

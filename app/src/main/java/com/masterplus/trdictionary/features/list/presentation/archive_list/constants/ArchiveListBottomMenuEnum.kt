@@ -1,5 +1,9 @@
 package com.masterplus.trdictionary.features.list.presentation.archive_list.constants
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FolderDelete
+import androidx.compose.material.icons.filled.Unarchive
+import androidx.compose.material.icons.outlined.DriveFileRenameOutline
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.enums.IMenuItemEnum
 import com.masterplus.trdictionary.core.domain.enums.IconInfo
@@ -12,7 +16,7 @@ enum class ArchiveListBottomMenuEnum: IMenuItemEnum {
             get() = UiText.Resource(R.string.rename)
 
         override val iconInfo: IconInfo
-            get() = IconInfo(drawableId = R.drawable.ic_baseline_drive_file_rename_outline_24)
+            get() = IconInfo(imageVector = Icons.Outlined.DriveFileRenameOutline)
 
     },
     Delete {
@@ -20,7 +24,7 @@ enum class ArchiveListBottomMenuEnum: IMenuItemEnum {
             get() = UiText.Resource(R.string.delete)
 
         override val iconInfo: IconInfo
-            get() = IconInfo(drawableId = R.drawable.ic_baseline_folder_delete_24)
+            get() = IconInfo(imageVector = Icons.Default.FolderDelete)
 
     },
     UnArchive{
@@ -28,7 +32,7 @@ enum class ArchiveListBottomMenuEnum: IMenuItemEnum {
             get() = UiText.Resource(R.string.unarchive)
 
         override val iconInfo: IconInfo
-            get() = IconInfo(drawableId = R.drawable.ic_baseline_unarchive_24)
+            get() = IconInfo(imageVector = Icons.Default.Unarchive)
 
     },
 }

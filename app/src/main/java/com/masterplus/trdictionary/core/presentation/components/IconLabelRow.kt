@@ -55,14 +55,15 @@ fun IconLabelRow(
                 .padding(paddings),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            Spacer(Modifier.width(2.dp))
             iconInfo?.let { iconInfo->
                 Icon(
-                    painter = painterResource(iconInfo.drawableId),
+                    imageVector = iconInfo.imageVector,
                     contentDescription = iconInfo.description?.asString(),
                     modifier = Modifier
                         .size(30.dp)
                         .weight(1f),
-                    tint = iconInfo.tintColor ?: LocalContentColor.current
+                    tint = iconInfo.tintColor?.asColor() ?: LocalContentColor.current
                 )
             }
 

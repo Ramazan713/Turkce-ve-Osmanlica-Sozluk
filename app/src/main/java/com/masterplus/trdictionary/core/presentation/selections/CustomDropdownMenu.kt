@@ -119,10 +119,10 @@ fun <T: IMenuItemEnum> CustomDropdownMenu(
                         {
                             item.iconInfo?.let { iconInfo->
                                 Icon(
-                                    painterResource(iconInfo.drawableId),
+                                    imageVector = iconInfo.imageVector,
                                     contentDescription = stringResource(R.string.n_menu_item,title),
-                                    tint = iconInfo.tintColor ?: LocalContentColor.current,
-                                    )
+                                    tint = iconInfo.tintColor?.asColor() ?: LocalContentColor.current,
+                                )
                             }
                         }
                     }

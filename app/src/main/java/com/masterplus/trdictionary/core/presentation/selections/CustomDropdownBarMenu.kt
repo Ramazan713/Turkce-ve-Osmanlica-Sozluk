@@ -98,9 +98,10 @@ fun <T: IMenuItemEnum> CustomDropdownBarMenu(
                     },
                     modifier = Modifier.clip(shape),
                     leadingIcon = {item.iconInfo?.let { iconInfo->
-                        Icon(painterResource(iconInfo.drawableId),
+                        Icon(
+                            imageVector = iconInfo.imageVector,
                             contentDescription = stringResource(R.string.n_menu_item,title),
-                            tint = iconInfo.tintColor?: LocalContentColor.current
+                            tint = iconInfo.tintColor?.asColor() ?: LocalContentColor.current
                         )
                     }},
                 )
