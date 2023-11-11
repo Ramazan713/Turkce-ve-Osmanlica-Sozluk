@@ -4,12 +4,15 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
 import com.android.billingclient.api.*
 import com.google.android.gms.ads.*
@@ -32,17 +35,20 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         MobileAds.initialize(this) {}
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
             val navController = rememberNavController()
 
-            TRDictionaryTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                ) {
-                    MyApp(
-                        navController,
-                    )
+            Box(modifier = Modifier.safeDrawingPadding()){
+                TRDictionaryTheme {
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                    ) {
+                        MyApp(
+                            navController,
+                        )
+                    }
                 }
             }
         }

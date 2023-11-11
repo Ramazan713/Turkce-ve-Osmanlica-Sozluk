@@ -171,8 +171,6 @@ fun AppContent(
         bottomBar = {
             NavigationAnimatedVisibility(
                 navigationVisible && navigationType == AppNavigationType.BOTTOM_NAVIGATION,
-                enter = fadeIn(tween(700)) + slideInVertically { it },
-                exit = fadeOut(tween(700)) + slideOutVertically { it },
             ){
                 AppBottomNavigationBar(
                     currentDestination = currentNavRoute,
