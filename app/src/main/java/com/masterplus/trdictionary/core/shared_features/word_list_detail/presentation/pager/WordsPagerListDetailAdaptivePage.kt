@@ -28,6 +28,7 @@ import com.masterplus.trdictionary.core.shared_features.word_list_detail.present
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.handlers.WordsDetailSheetEventsHandler
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.WordsListDetailEvent
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.WordsListDetailState
+import com.masterplus.trdictionary.core.util.ShowLifecycleToastMessage
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -65,6 +66,12 @@ fun WordsPagerListDetailAdaptivePage(
         event = state.shareResultEvent,
         onClearEvent = { onEvent(WordsListDetailEvent.ClearShareResult) }
     )
+
+    ShowLifecycleToastMessage(
+        message = state.message,
+        onDismiss = { onEvent(WordsListDetailEvent.ClearMessage) }
+    )
+
 
     if(listDetailContentType == ListDetailContentType.DUAL_PANE){
         TwoPane(

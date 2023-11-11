@@ -28,6 +28,7 @@ import com.masterplus.trdictionary.core.shared_features.word_list_detail.present
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.handlers.WordsDetailSheetEventsHandler
 import com.masterplus.trdictionary.core.util.PreviewDesktop
 import com.masterplus.trdictionary.core.util.SampleDatas
+import com.masterplus.trdictionary.core.util.ShowLifecycleToastMessage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,6 +46,11 @@ fun SingleWordDetailPage(
     ShareWordEventHandler(
         event = state.shareResultEvent,
         onClearEvent = { onEvent(WordsListDetailEvent.ClearShareResult) }
+    )
+
+    ShowLifecycleToastMessage(
+        message = state.message,
+        onDismiss = { onEvent(WordsListDetailEvent.ClearMessage) }
     )
 
     Scaffold(

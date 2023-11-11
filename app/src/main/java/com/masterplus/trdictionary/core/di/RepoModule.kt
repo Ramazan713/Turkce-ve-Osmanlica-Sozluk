@@ -9,6 +9,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import javax.inject.Singleton
 
@@ -48,5 +49,11 @@ object RepoModule {
     @Singleton
     fun providePremiumRepo(scope: CoroutineScope, application: Application) =
         PremiumRepo(application,scope)
+
+
+    @Provides
+    @Singleton
+    fun provideAppFileRepo(application: Application,ioDispatcher: CoroutineDispatcher): AppFileRepo =
+        AppFileRepoImpl(application,ioDispatcher)
 
 }

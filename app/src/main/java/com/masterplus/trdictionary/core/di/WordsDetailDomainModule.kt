@@ -1,14 +1,10 @@
 package com.masterplus.trdictionary.core.di
 
 import android.app.Application
-import com.masterplus.trdictionary.core.domain.ConnectivityProvider
-import com.masterplus.trdictionary.core.shared_features.word_list_detail.data.remote.TextToSpeechDataSource
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.repo.WordDetailRepo
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.repo.WordListDetailRepo
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.repo.WordListRepo
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.use_case.save_point_info.SavePointCategoryInfoUseCases
-import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.use_case.tts.TTSNetworkAudioUseCase
-import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.use_case.tts.TextToSpeechUseCase
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.use_case.word_details_basic.GetCategorySimpleWords
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.use_case.word_details_basic.GetListSimpleWords
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.use_case.word_details_basic.WordDetailsSimpleUseCases
@@ -33,15 +29,6 @@ object WordsDetailDomainModule {
     @Provides
     fun provideSavepointCategoryInfo(application: Application) =
         SavePointCategoryInfoUseCases(application)
-
-    @Provides
-    fun provideTTSUseCase(dataSource: TextToSpeechDataSource, application: Application) =
-        TextToSpeechUseCase(dataSource,application)
-
-    @Provides
-    fun provideTTSNetworkUseCase(ttsUseCase: TextToSpeechUseCase, connectivityProvider: ConnectivityProvider) =
-        TTSNetworkAudioUseCase(ttsUseCase, connectivityProvider)
-
 
 
     @Singleton

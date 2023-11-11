@@ -9,7 +9,8 @@ import com.masterplus.trdictionary.core.data.local.mapper.toWord
 import com.masterplus.trdictionary.core.domain.use_cases.ListInFavoriteControlForDeletionUseCase
 import com.masterplus.trdictionary.core.domain.use_cases.list_words.ListWordsUseCases
 import com.masterplus.trdictionary.core.shared_features.share.domain.use_cases.ShareWordUseCases
-import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.use_case.tts.TTSNetworkAudioUseCase
+import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.repo.TTSRepo
+import com.masterplus.trdictionary.core.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -18,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class WordsListDetailViewModel @Inject constructor(
     private val listWordsUseCases: ListWordsUseCases,
-    private val ttsNetworkUseCase: TTSNetworkAudioUseCase,
+    private val ttsRepo: TTSRepo,
     private val shareWordUseCases: ShareWordUseCases,
     private val listInFavoriteControlForDeletionUseCase: ListInFavoriteControlForDeletionUseCase
 ): ViewModel() {
@@ -77,7 +78,15 @@ class WordsListDetailViewModel @Inject constructor(
             }
             is WordsListDetailEvent.ListenWords -> {
                 viewModelScope.launch {
-                    ttsNetworkUseCase(event.word.word)
+                    val result = ttsRepo.synthesizeAndPlay(
+                        key = event.word.id.toString(),
+                        text = event.word.word
+                    )
+                    if(result is Resource.Error){
+                        state = state.copy(
+                            message = result.error
+                        )
+                    }
                 }
             }
             is WordsListDetailEvent.ShowDialog -> {
@@ -110,7 +119,7 @@ class WordsListDetailViewModel @Inject constructor(
 
     private fun listenTTSNetworkState(){
         viewModelScope.launch {
-            ttsNetworkUseCase.audioState.collectLatest {audioState->
+            ttsRepo.audioState.collectLatest {audioState->
                 state = state.copy(audioState = audioState)
             }
         }
@@ -118,6 +127,6 @@ class WordsListDetailViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        ttsNetworkUseCase.dispose()
+        ttsRepo.dispose()
     }
 }

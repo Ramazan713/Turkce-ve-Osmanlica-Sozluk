@@ -19,6 +19,7 @@ import com.masterplus.trdictionary.core.shared_features.word_list_detail.present
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.WordsListDetailState
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.handlers.WordsDetailModalEventsHandler
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.handlers.WordsDetailSheetEventsHandler
+import com.masterplus.trdictionary.core.util.ShowLifecycleToastMessage
 import com.masterplus.trdictionary.features.search.presentation.components.SearchFilterDialog
 import com.masterplus.trdictionary.features.search.presentation.contents.SearchDetailPageContent
 import com.masterplus.trdictionary.features.search.presentation.contents.SearchResultPageContent
@@ -41,6 +42,11 @@ fun SearchPage(
     ShareWordEventHandler(
         event = wordsState.shareResultEvent,
         onClearEvent = { onWordsEvent(WordsListDetailEvent.ClearShareResult) }
+    )
+
+    ShowLifecycleToastMessage(
+        message = wordsState.message,
+        onDismiss = { onWordsEvent(WordsListDetailEvent.ClearMessage) }
     )
 
     if(listDetailContentType == ListDetailContentType.DUAL_PANE){
