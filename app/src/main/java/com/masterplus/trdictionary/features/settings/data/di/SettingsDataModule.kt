@@ -1,7 +1,7 @@
 package com.masterplus.trdictionary.features.settings.data.di
 
-import com.masterplus.trdictionary.features.settings.data.GsonParser
-import com.masterplus.trdictionary.features.settings.domain.JsonParser
+import com.masterplus.trdictionary.core.data.GsonParser
+import com.masterplus.trdictionary.core.domain.JsonParser
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

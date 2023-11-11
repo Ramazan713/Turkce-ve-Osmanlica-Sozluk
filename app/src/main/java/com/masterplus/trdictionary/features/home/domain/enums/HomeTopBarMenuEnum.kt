@@ -1,4 +1,4 @@
-package com.masterplus.trdictionary.features.home.domain.constants
+package com.masterplus.trdictionary.features.home.domain.enums
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings

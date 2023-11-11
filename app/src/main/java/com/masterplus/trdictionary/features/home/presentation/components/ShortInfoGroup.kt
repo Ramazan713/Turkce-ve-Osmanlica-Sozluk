@@ -1,8 +1,6 @@
 package com.masterplus.trdictionary.features.home.presentation.components
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,7 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.presentation.components.DefaultToolTip
-import com.masterplus.trdictionary.features.home.presentation.ShortInfoModel
+import com.masterplus.trdictionary.features.home.domain.models.ShortInfoModel
 
 
 @Composable

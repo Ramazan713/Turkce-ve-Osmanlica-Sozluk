@@ -5,7 +5,7 @@ import com.masterplus.trdictionary.core.data.local.TransactionProvider
 import com.masterplus.trdictionary.core.domain.preferences.AppPreferences
 import com.masterplus.trdictionary.core.data.local.services.LocalBackupDao
 import com.masterplus.trdictionary.features.settings.data.mapper.*
-import com.masterplus.trdictionary.features.settings.domain.JsonParser
+import com.masterplus.trdictionary.core.domain.JsonParser
 import com.masterplus.trdictionary.features.settings.domain.model.*
 import com.masterplus.trdictionary.features.settings.domain.repo.LocalBackupRepo
 import java.lang.reflect.Type

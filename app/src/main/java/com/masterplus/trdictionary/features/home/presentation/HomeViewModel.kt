@@ -5,25 +5,23 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.masterplus.trdictionary.features.home.domain.ShortInfoEnum
+import com.masterplus.trdictionary.features.home.domain.enums.ShortInfoEnum
+import com.masterplus.trdictionary.features.home.domain.models.ShortInfoModel
 import com.masterplus.trdictionary.features.home.domain.use_cases.ShortInfoUseCases
+import com.masterplus.trdictionary.features.home.domain.use_cases.widget.ShortInfoWidgetUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val shortInfoUseCases: ShortInfoUseCases
+    private val shortInfoUseCases: ShortInfoUseCases,
+    private val shortInfoWidgetUseCases: ShortInfoWidgetUseCases
 ): ViewModel(){
 
     var state by mutableStateOf(HomeState())
         private set
 
-    init {
-        viewModelScope.launch {
-            loadShortsInfo()
-        }
-    }
 
     fun onEvent(event: HomeEvent){
         when(event){
@@ -32,12 +30,18 @@ class HomeViewModel @Inject constructor(
                     refreshShortInfo(event.shortInfoModel)
                 }
             }
+            HomeEvent.LoadData -> {
+                viewModelScope.launch {
+                    loadShortsInfo()
+                }
+            }
         }
     }
 
     private suspend fun refreshShortInfo(shortInfoModel: ShortInfoModel){
         setState(shortInfoModel.copy(isLoading = true))
         val simpleWord = shortInfoUseCases.getShortInfo(shortInfoModel.shortInfo,true)
+        shortInfoWidgetUseCases.refreshInfoModel(shortInfoModel.shortInfo,false)
         setState(shortInfoModel.copy(simpleWord = simpleWord,isLoading = false))
     }
 

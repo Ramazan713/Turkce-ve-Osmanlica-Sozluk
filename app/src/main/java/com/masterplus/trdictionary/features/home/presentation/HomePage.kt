@@ -1,5 +1,6 @@
 package com.masterplus.trdictionary.features.home.presentation
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -8,21 +9,30 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.presentation.selections.CustomDropdownBarMenu
 import com.masterplus.trdictionary.core.presentation.components.EmptySearchField
 import com.masterplus.trdictionary.core.presentation.components.navigation.CustomTopAppBar
 import com.masterplus.trdictionary.core.shared_features.premium.ShowPremiumActiveDialog
-import com.masterplus.trdictionary.features.home.domain.constants.HomeTopBarMenuEnum
+import com.masterplus.trdictionary.core.util.ListenEventLifecycle
+import com.masterplus.trdictionary.features.home.domain.enums.HomeTopBarMenuEnum
 import com.masterplus.trdictionary.features.home.presentation.components.*
 
 
@@ -42,6 +52,12 @@ fun HomePage(
     var showPremiumActive by rememberSaveable{
         mutableStateOf(false)
     }
+
+    ListenEventLifecycle(
+        onStart = {
+            onEvent(HomeEvent.LoadData)
+        }
+    )
 
     Scaffold(
         topBar = {
@@ -74,7 +90,8 @@ fun HomePage(
         },
     ){paddings->
         LazyVerticalGrid(
-            modifier = Modifier.padding(paddings)
+            modifier = Modifier
+                .padding(paddings)
                 .nestedScroll(scrollBehavior.nestedScrollConnection)
                 .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(13.dp),

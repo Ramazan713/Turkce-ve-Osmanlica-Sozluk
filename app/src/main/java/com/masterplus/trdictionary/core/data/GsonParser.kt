@@ -1,7 +1,7 @@
-package com.masterplus.trdictionary.features.settings.data
+package com.masterplus.trdictionary.core.data
 
 import com.google.gson.Gson
-import com.masterplus.trdictionary.features.settings.domain.JsonParser
+import com.masterplus.trdictionary.core.domain.JsonParser
 import java.lang.reflect.Type
 
 class GsonParser : JsonParser {

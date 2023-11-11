@@ -3,7 +3,7 @@ package com.masterplus.trdictionary.features.home.domain.use_cases
 import android.content.SharedPreferences
 import com.masterplus.trdictionary.core.domain.enums.ProverbIdiomEnum
 import com.masterplus.trdictionary.core.domain.model.SimpleWordResult
-import com.masterplus.trdictionary.features.home.domain.ShortInfoEnum
+import com.masterplus.trdictionary.features.home.domain.enums.ShortInfoEnum
 import com.masterplus.trdictionary.features.home.domain.repo.ShortInfoRepo
 import javax.inject.Inject
 

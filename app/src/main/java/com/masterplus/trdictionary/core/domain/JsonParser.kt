@@ -1,4 +1,4 @@
-package com.masterplus.trdictionary.features.settings.domain
+package com.masterplus.trdictionary.core.domain
 
 import java.lang.reflect.Type
 

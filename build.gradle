@@ -3,6 +3,11 @@ buildscript {
         //compose_ui_version = '1.4.2'
         hilt_version = '2.48.1'
     }
+
+    repositories {
+        mavenCentral()
+    }
+
     dependencies {
         classpath 'com.google.gms:google-services:4.4.0'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.9'

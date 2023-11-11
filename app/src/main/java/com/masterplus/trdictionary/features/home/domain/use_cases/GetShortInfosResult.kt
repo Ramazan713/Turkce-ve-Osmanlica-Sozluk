@@ -2,7 +2,7 @@ package com.masterplus.trdictionary.features.home.domain.use_cases
 
 import android.content.SharedPreferences
 import com.masterplus.trdictionary.core.domain.model.SimpleWordResult
-import com.masterplus.trdictionary.features.home.domain.ShortInfoEnum
+import com.masterplus.trdictionary.features.home.domain.enums.ShortInfoEnum
 import java.util.*
 import javax.inject.Inject
 

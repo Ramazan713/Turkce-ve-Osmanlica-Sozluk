@@ -1,5 +1,7 @@
 package com.masterplus.trdictionary.features.home.presentation
 
+import com.masterplus.trdictionary.features.home.domain.models.ShortInfoModel
+
 
 data class HomeState(
     val wordShortInfo: ShortInfoModel = ShortInfoModel(),

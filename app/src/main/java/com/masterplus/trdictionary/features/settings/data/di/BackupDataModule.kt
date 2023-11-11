@@ -9,7 +9,7 @@ import com.masterplus.trdictionary.features.settings.data.local.repo.BackupMetaI
 import com.masterplus.trdictionary.features.settings.data.local.repo.LocalBackupRepoImpl
 import com.masterplus.trdictionary.features.settings.data.manager.BackupManagerImpl
 import com.masterplus.trdictionary.features.settings.data.repo.StorageServiceImpl
-import com.masterplus.trdictionary.features.settings.domain.JsonParser
+import com.masterplus.trdictionary.core.domain.JsonParser
 import com.masterplus.trdictionary.features.settings.domain.manager.BackupManager
 import com.masterplus.trdictionary.features.settings.domain.repo.BackupMetaRepo
 import com.masterplus.trdictionary.features.settings.domain.repo.LocalBackupRepo
