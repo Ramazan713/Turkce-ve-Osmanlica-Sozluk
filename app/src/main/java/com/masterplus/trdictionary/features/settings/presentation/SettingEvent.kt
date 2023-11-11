@@ -1,7 +1,6 @@
 package com.masterplus.trdictionary.features.settings.presentation
 
 import androidx.activity.result.ActivityResult
-import com.masterplus.trdictionary.core.domain.enums.SearchResultEnum
 import com.masterplus.trdictionary.core.domain.enums.ThemeEnum
 
 sealed class SettingEvent {
@@ -10,7 +9,7 @@ sealed class SettingEvent {
 
     data class SetThemeEnum(val themeEnum: ThemeEnum): SettingEvent()
 
-    data class SetSearchResultEnum(val searchResult: SearchResultEnum): SettingEvent()
+    data class SetSearchResultEnum(val searchResult: Int): SettingEvent()
 
     data class SetDynamicTheme(val useDynamic: Boolean): SettingEvent()
 

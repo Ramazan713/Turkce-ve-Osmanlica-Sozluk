@@ -6,10 +6,10 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.masterplus.trdictionary.R
-import com.masterplus.trdictionary.core.domain.enums.SearchResultEnum
 import com.masterplus.trdictionary.core.domain.enums.ThemeEnum
 import com.masterplus.trdictionary.core.domain.model.premium.PremiumProduct
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDialog
+import com.masterplus.trdictionary.core.presentation.dialog_body.ShowSelectNumberDialog
 import com.masterplus.trdictionary.core.presentation.selections.ShowSelectRadioItemAlertDialog
 import com.masterplus.trdictionary.core.shared_features.premium.ShowPremiumProductDialog
 import com.masterplus.trdictionary.features.settings.presentation.SettingDialogEvent
@@ -90,13 +90,13 @@ fun ShowSettingDialog(
                onClosed = { close() }
            )
         }
-        SettingDialogEvent.SelectSearchResultEnum -> {
-            ShowSelectRadioItemAlertDialog(
-                items = SearchResultEnum.values().toList(),
-                selectedItem = state.searchResultEnum,
-                title = stringResource(R.string.choice_search_result_counts),
-                onClose = {close()},
-                onApprove = {onEvent(SettingEvent.SetSearchResultEnum(it))}
+        is SettingDialogEvent.SelectSearchResult -> {
+            ShowSelectNumberDialog(
+                minPos = event.minPos,
+                maxPos = event.maxPos,
+                currentPos = state.searchResult - 1,
+                onApprove = {onEvent(SettingEvent.SetSearchResultEnum(it + 1))},
+                onClose = ::close
             )
         }
         is SettingDialogEvent.ShowPremiumDia -> {

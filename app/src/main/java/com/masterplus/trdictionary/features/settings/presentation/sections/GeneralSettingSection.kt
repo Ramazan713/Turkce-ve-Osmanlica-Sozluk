@@ -32,11 +32,13 @@ fun GeneralSettingSection(
 
         SettingItem(
             title = stringResource(R.string.search_result_counts),
-            subTitle = state.searchResultEnum.title.asString(),
+            subTitle = state.searchResult.toString(),
             onClick = {
                 onEvent(
                     SettingEvent.ShowDialog(true,
-                        SettingDialogEvent.SelectSearchResultEnum))
+                        SettingDialogEvent.SelectSearchResult(0,99)
+                    )
+                )
             },
             resourceId = R.drawable.baseline_search_24
         )

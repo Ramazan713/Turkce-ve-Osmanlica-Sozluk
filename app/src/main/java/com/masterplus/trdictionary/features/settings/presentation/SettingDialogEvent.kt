@@ -3,21 +3,24 @@ package com.masterplus.trdictionary.features.settings.presentation
 import com.masterplus.trdictionary.core.domain.model.premium.PremiumProduct
 
 sealed class SettingDialogEvent {
-    object SelectThemeEnum: SettingDialogEvent()
+    data object SelectThemeEnum: SettingDialogEvent()
 
-    object SelectSearchResultEnum: SettingDialogEvent()
+    data class SelectSearchResult(
+        val minPos: Int,
+        val maxPos: Int
+    ): SettingDialogEvent()
 
-    object AskResetDefault: SettingDialogEvent()
+    data object AskResetDefault: SettingDialogEvent()
 
-    object AskSignOut: SettingDialogEvent()
+    data object AskSignOut: SettingDialogEvent()
 
-    object ShowCloudBackup: SettingDialogEvent()
+    data object ShowCloudBackup: SettingDialogEvent()
 
-    object ShowSelectBackup: SettingDialogEvent()
+    data object ShowSelectBackup: SettingDialogEvent()
 
-    object AskMakeBackupBeforeSignOut: SettingDialogEvent()
+    data object AskMakeBackupBeforeSignOut: SettingDialogEvent()
 
-    object AskDeleteAllData: SettingDialogEvent()
+    data object AskDeleteAllData: SettingDialogEvent()
 
     data class ShowPremiumDia(val premiumProduct: PremiumProduct?): SettingDialogEvent()
 }

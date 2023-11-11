@@ -33,7 +33,7 @@ class SearchRepoImpl @Inject constructor(
     ): Flow<List<WordWithSimilar>> {
 
         val searchResultCount = searchCount ?:
-            appPreferences.getEnumItem(KPref.searchResultCountEnum).resultNum
+            appPreferences.getItem(KPref.searchResultCount)
 
         return search(
             query,categoryEnum, searchKind,searchResultCount

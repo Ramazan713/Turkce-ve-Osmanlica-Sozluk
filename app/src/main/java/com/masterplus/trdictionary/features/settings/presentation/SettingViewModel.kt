@@ -108,8 +108,8 @@ class SettingViewModel @Inject constructor(
                }
             }
             is SettingEvent.SetSearchResultEnum -> {
-                appPreferences.setEnumItem(KPref.searchResultCountEnum,event.searchResult)
-                state = state.copy(searchResultEnum = event.searchResult)
+                appPreferences.setItem(KPref.searchResultCount,event.searchResult)
+                state = state.copy(searchResult = event.searchResult)
             }
             is SettingEvent.ClearMessage -> {
                 state = state.copy(message = null)
@@ -165,11 +165,11 @@ class SettingViewModel @Inject constructor(
     private fun init(){
         val themeModel = themeRepo.getThemeModel()
         val useArchiveAsList = appPreferences.getItem(KPref.useArchiveLikeList)
-        val searchResult = appPreferences.getEnumItem(KPref.searchResultCountEnum)
+        val searchResult = appPreferences.getItem(KPref.searchResultCount)
         state = state.copy(
             themeModel = themeModel,
             useArchiveAsList = useArchiveAsList,
-            searchResultEnum = searchResult
+            searchResult = searchResult
         )
     }
 

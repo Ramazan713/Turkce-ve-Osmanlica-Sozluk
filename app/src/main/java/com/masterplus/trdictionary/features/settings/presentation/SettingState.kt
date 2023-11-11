@@ -1,6 +1,6 @@
 package com.masterplus.trdictionary.features.settings.presentation
 
-import com.masterplus.trdictionary.core.domain.enums.SearchResultEnum
+import com.masterplus.trdictionary.core.domain.constants.KPref
 import com.masterplus.trdictionary.core.domain.model.ThemeModel
 import com.masterplus.trdictionary.core.util.UiText
 import com.masterplus.trdictionary.features.settings.domain.model.User
@@ -8,7 +8,7 @@ import com.masterplus.trdictionary.features.settings.domain.model.User
 
 data class SettingState(
     val themeModel: ThemeModel = ThemeModel(),
-    val searchResultEnum: SearchResultEnum = SearchResultEnum.defaultValue,
+    val searchResult: Int = KPref.searchResultCount.default,
     val user: User? = null,
     val isLoading: Boolean = false,
     val useArchiveAsList: Boolean = false,
