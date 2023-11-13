@@ -7,10 +7,12 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.masterplus.trdictionary.core.data.ConnectivityProviderImpl
+import com.masterplus.trdictionary.core.data.GsonParser
 import com.masterplus.trdictionary.core.data.local.AppDatabase
 import com.masterplus.trdictionary.core.data.local.TransactionProvider
 import com.masterplus.trdictionary.core.data.preferences.AppPreferencesImpl
 import com.masterplus.trdictionary.core.domain.ConnectivityProvider
+import com.masterplus.trdictionary.core.domain.JsonParser
 import com.masterplus.trdictionary.core.domain.preferences.AppPreferences
 import dagger.Module
 import dagger.Provides
@@ -53,6 +55,11 @@ object AppModule {
     @Singleton
     fun provideAppPreferences(sharedPreferences: SharedPreferences): AppPreferences =
         AppPreferencesImpl(sharedPreferences)
+
+
+    @Provides
+    @Singleton
+    fun provideJsonParser(): JsonParser = GsonParser()
 
     @Provides
     @Singleton

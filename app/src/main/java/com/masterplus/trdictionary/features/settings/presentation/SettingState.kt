@@ -3,19 +3,15 @@ package com.masterplus.trdictionary.features.settings.presentation
 import com.masterplus.trdictionary.core.domain.constants.KPref
 import com.masterplus.trdictionary.core.domain.model.ThemeModel
 import com.masterplus.trdictionary.core.util.UiText
-import com.masterplus.trdictionary.features.settings.domain.model.User
+import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.model.User
 
 
 data class SettingState(
     val themeModel: ThemeModel = ThemeModel(),
     val searchResult: Int = KPref.searchResultCount.default,
-    val user: User? = null,
     val isLoading: Boolean = false,
     val useArchiveAsList: Boolean = false,
-    val showDialog: Boolean = false,
     val dialogEvent: SettingDialogEvent? = null,
-    val showModal: Boolean = false,
-    val modalEvent: SettingModalEvent? = null,
+    val sheetEvent: SettingSheetEvent? = null,
     val message: UiText? = null,
-    val settingUiEvent: SettingUiEvent? = null
 )

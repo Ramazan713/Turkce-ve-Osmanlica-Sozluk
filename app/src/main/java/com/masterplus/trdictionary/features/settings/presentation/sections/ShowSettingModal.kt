@@ -10,28 +10,27 @@ import com.masterplus.trdictionary.core.presentation.selections.SelectMenuItemBo
 import com.masterplus.trdictionary.features.settings.domain.enums.BackupLoadSectionEnum
 import com.masterplus.trdictionary.features.settings.presentation.SettingDialogEvent
 import com.masterplus.trdictionary.features.settings.presentation.SettingEvent
-import com.masterplus.trdictionary.features.settings.presentation.SettingModalEvent
+import com.masterplus.trdictionary.features.settings.presentation.SettingSheetEvent
 import com.masterplus.trdictionary.features.settings.presentation.SettingState
 
 
 @ExperimentalMaterial3Api
 @Composable
 fun ShowSettingModal(
-    state: SettingState,
+    sheetEvent: SettingSheetEvent,
     onEvent: (SettingEvent)->Unit,
 ){
 
     fun close(){
-        onEvent(SettingEvent.ShowModal(false))
+        onEvent(SettingEvent.ShowSheet(null))
     }
 
     CustomModalBottomSheet(
-        onDismissRequest = { close() },
+        onDismissRequest = ::close,
         skipHalfExpanded = true
     ){
-        when(state.modalEvent){
-            null -> {}
-            is SettingModalEvent.BackupSectionInit -> {
+        when(sheetEvent){
+            is SettingSheetEvent.BackupSectionInit -> {
                 SelectMenuItemBottomContent(
                     title = stringResource(R.string.operations_download_cloud_backup),
                     items = BackupLoadSectionEnum.values().toList(),
@@ -39,18 +38,17 @@ fun ShowSettingModal(
                         close()
                         when(menuItem){
                             BackupLoadSectionEnum.LoadLastBackup -> {
-                                onEvent(SettingEvent.LoadLastBackup)
+                                sheetEvent.onLoadLastBackup()
                             }
                             BackupLoadSectionEnum.ShowBackupFiles -> {
-                                onEvent(SettingEvent.ShowDialog(true,
-                                    SettingDialogEvent.ShowSelectBackup))
+                                onEvent(SettingEvent.ShowDialog(SettingDialogEvent.ShowSelectBackup))
                             }
                             BackupLoadSectionEnum.NotShowAgain -> {
                                 onEvent(SettingEvent.NotShowBackupInitDialog)
                             }
                         }
                     },
-                    onClose = { close() }
+                    onClose = ::close
                 )
             }
         }
@@ -63,10 +61,7 @@ fun ShowSettingModal(
 @Composable
 fun ShowSettingModalPreview() {
     ShowSettingModal(
-        state = SettingState(
-            modalEvent = SettingModalEvent.BackupSectionInit,
-            showModal = true
-        ),
+        sheetEvent = SettingSheetEvent.BackupSectionInit({}),
         onEvent = {}
     )
 }

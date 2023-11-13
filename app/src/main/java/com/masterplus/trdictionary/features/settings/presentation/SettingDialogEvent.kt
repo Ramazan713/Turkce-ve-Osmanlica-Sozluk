@@ -14,6 +14,8 @@ sealed class SettingDialogEvent {
 
     data object AskSignOut: SettingDialogEvent()
 
+    data object ShowAuthDia: SettingDialogEvent()
+
     data object ShowCloudBackup: SettingDialogEvent()
 
     data object ShowSelectBackup: SettingDialogEvent()

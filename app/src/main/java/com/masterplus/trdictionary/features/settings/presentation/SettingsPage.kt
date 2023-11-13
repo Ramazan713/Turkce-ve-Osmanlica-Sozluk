@@ -25,7 +25,9 @@ import com.masterplus.trdictionary.core.shared_features.premium.PremiumEvent
 import com.masterplus.trdictionary.core.shared_features.premium.PremiumState
 import com.masterplus.trdictionary.core.util.PreviewDesktop
 import com.masterplus.trdictionary.core.util.PreviewTablet
-import com.masterplus.trdictionary.features.settings.domain.model.User
+import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.model.User
+import com.masterplus.trdictionary.core.shared_features.auth_and_backup.presentation.auth.AuthEvent
+import com.masterplus.trdictionary.core.shared_features.auth_and_backup.presentation.auth.AuthState
 import com.masterplus.trdictionary.features.settings.presentation.sections.*
 
 @ExperimentalFoundationApi
@@ -39,6 +41,8 @@ fun SettingsPage(
     premiumProduct: PremiumProduct?,
     state: SettingState,
     onEvent: (SettingEvent)->Unit,
+    authState: AuthState,
+    onAuthEvent: (AuthEvent) -> Unit,
     windowWidthSizeClass: WindowWidthSizeClass,
 ){
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
@@ -47,8 +51,11 @@ fun SettingsPage(
         premiumState = premiumState,
         onPremiumEvent = onPremiumEvent,
         state = state,
-        onEvent = onEvent
+        onEvent = onEvent,
+        authState = authState,
+        onAuthEvent = onAuthEvent
     )
+
 
     Scaffold(
         topBar = {
@@ -71,7 +78,7 @@ fun SettingsPage(
 
             item(span = StaggeredGridItemSpan.FullLine) {
                 ProfileSettingSection(
-                    state = state,
+                    user = authState.user,
                     onEvent = onEvent
                 )
             }
@@ -81,7 +88,7 @@ fun SettingsPage(
                     onEvent = onEvent
                 )
             }
-            if(state.user != null){
+            if(authState.user != null){
                 item {
                     CloudBackupSection {
                         onEvent(it)
@@ -105,13 +112,12 @@ fun SettingsPage(
             item {
                 ApplicationSettingSection()
             }
-            if(state.user != null){
+            if(authState.user != null){
                 item {
                     TextButton(
                         modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp),
                         onClick = {
-                            onEvent(SettingEvent.ShowDialog(true,
-                                SettingDialogEvent.AskSignOut))
+                            onEvent(SettingEvent.ShowDialog(SettingDialogEvent.AskSignOut))
                         }
                     ) {
                         Text(
@@ -126,22 +132,34 @@ fun SettingsPage(
         }
     }
 
-    if(state.isLoading){
-        LoadingDialog()
-    } else if(state.showDialog){
+
+    state.dialogEvent?.let { dialogEvent->
         ShowSettingDialog(
             state = state,
             onEvent = onEvent,
             onPremiumProductClicked = { product,offerToken->
                 onPremiumEvent(PremiumEvent.Purchase(product, offerToken))
             },
-            windowWidthSizeClass = windowWidthSizeClass
+            windowWidthSizeClass = windowWidthSizeClass,
+            onAuthEvent = onAuthEvent,
+            authState = authState,
+            dialogEvent = dialogEvent
         )
-    }else if(state.showModal){
+    }
+
+    state.sheetEvent?.let { sheetEvent->
         ShowSettingModal(
-            state = state,
+            sheetEvent = sheetEvent,
             onEvent = onEvent
         )
+    }
+
+    if(state.isLoading){
+        LoadingDialog()
+    }
+
+    if(authState.isLoading){
+        LoadingDialog()
     }
 
 }
@@ -159,8 +177,10 @@ fun SettingsPagePreview() {
         onPremiumEvent = {},
         premiumState = PremiumState(),
         premiumProduct = null,
-        state = SettingState(user = User("asd","email@gmail.com",null,"myName")),
-        windowWidthSizeClass = WindowWidthSizeClass.Compact
+        state = SettingState(),
+        windowWidthSizeClass = WindowWidthSizeClass.Compact,
+        authState = AuthState(),
+        onAuthEvent = {}
     )
 }
 

@@ -24,8 +24,7 @@ fun GeneralSettingSection(
             subTitle = state.themeModel.themeEnum.title.asString(),
             onClick = {
                 onEvent(
-                    SettingEvent.ShowDialog(true,
-                    SettingDialogEvent.SelectThemeEnum))
+                    SettingEvent.ShowDialog(SettingDialogEvent.SelectThemeEnum))
             },
             resourceId = R.drawable.ic_baseline_palette_24
         )
@@ -35,9 +34,7 @@ fun GeneralSettingSection(
             subTitle = state.searchResult.toString(),
             onClick = {
                 onEvent(
-                    SettingEvent.ShowDialog(true,
-                        SettingDialogEvent.SelectSearchResult(0,99)
-                    )
+                    SettingEvent.ShowDialog(SettingDialogEvent.SelectSearchResult(0,99))
                 )
             },
             resourceId = R.drawable.baseline_search_24

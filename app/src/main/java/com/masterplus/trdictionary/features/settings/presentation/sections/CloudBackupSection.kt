@@ -17,7 +17,7 @@ fun CloudBackupSection(
     ){
         SettingItem(
             title = stringResource(R.string.cloud_backup),
-            onClick = {onEvent(SettingEvent.ShowDialog(true, SettingDialogEvent.ShowCloudBackup))},
+            onClick = {onEvent(SettingEvent.ShowDialog(SettingDialogEvent.ShowCloudBackup))},
             resourceId = R.drawable.ic_baseline_cloud_24
         )
     }

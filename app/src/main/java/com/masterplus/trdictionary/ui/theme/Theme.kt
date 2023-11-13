@@ -10,6 +10,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.masterplus.trdictionary.core.domain.model.ThemeModel
 import com.masterplus.trdictionary.core.shared_features.theme.ThemeViewModel
 
 private val LightColors = lightColorScheme(
@@ -77,14 +78,27 @@ private val DarkColors = darkColorScheme(
     scrim = md_theme_dark_scrim,
 )
 
+
 @Composable
 fun TRDictionaryTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     themeViewModel: ThemeViewModel = hiltViewModel(),
     content: @Composable () -> Unit
+){
+    TRDictionaryTheme(
+        useDarkTheme = useDarkTheme,
+        state = themeViewModel.state,
+        content = content
+    )
+}
+
+@Composable
+fun TRDictionaryTheme(
+    useDarkTheme: Boolean = false,
+    state: ThemeModel,
+    content: @Composable () -> Unit
 ) {
 
-    val state = themeViewModel.state
     val context = LocalContext.current
 
     val colorScheme = if(state.useDynamicColor){

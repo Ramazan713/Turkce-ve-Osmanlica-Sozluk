@@ -9,6 +9,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.compose.composable
+import com.masterplus.trdictionary.core.shared_features.auth_and_backup.presentation.auth.AuthViewModel
 import com.masterplus.trdictionary.core.shared_features.premium.PremiumViewModel
 import com.masterplus.trdictionary.features.settings.presentation.SettingViewModel
 import com.masterplus.trdictionary.features.settings.presentation.SettingsPage
@@ -30,6 +31,7 @@ fun NavGraphBuilder.settingsPage(
         routeName
     ){
         val settingViewModel: SettingViewModel = hiltViewModel()
+        val authViewModel = hiltViewModel<AuthViewModel>()
 
         val premiumProduct by premiumViewModel.firstPremiumProduct.collectAsStateWithLifecycle()
 
@@ -40,7 +42,9 @@ fun NavGraphBuilder.settingsPage(
             premiumState = premiumViewModel.state,
             onPremiumEvent = premiumViewModel::onEvent,
             premiumProduct = premiumProduct,
-            windowWidthSizeClass = windowWidthSizeClass
+            windowWidthSizeClass = windowWidthSizeClass,
+            authState = authViewModel.state,
+            onAuthEvent = authViewModel::onEvent
         )
     }
 }

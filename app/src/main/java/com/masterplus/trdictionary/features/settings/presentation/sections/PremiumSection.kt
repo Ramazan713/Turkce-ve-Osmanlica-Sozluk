@@ -26,7 +26,7 @@ fun PremiumSection(
             SettingItem(
                 title = stringResource(R.string.premium),
                 onClick = {
-                    onEvent(SettingEvent.ShowDialog(true,SettingDialogEvent.ShowPremiumDia(premiumProduct)))
+                    onEvent(SettingEvent.ShowDialog(SettingDialogEvent.ShowPremiumDia(premiumProduct)))
                 },
                 resourceId = R.drawable.workspace_premium_black_24dp
             )

@@ -111,6 +111,8 @@
     <string name="add_backup">Yedek oluştur</string>
     <string name="backup_n">Yedekleme</string>
     <string name="sign_in">Giriş yap</string>
+    <string name="sign_in_c">Giriş Yap</string>
+    <string name="sign_up_c">Kayıt Ol</string>
     <string name="question_add_backup">Yedekleme yapmak ister misiniz?</string>
     <string name="unsaved_data_may_lose">Kaydedilmeyen verileriniz kaybolabilir</string>
     <string name="operations_download_cloud_backup">Buluttaki yedeklerle alakalı işlemler</string>
@@ -204,4 +206,14 @@
     <string name="no_result">Sonuç bulunamadı</string>
     <string name="clear_v">Temizle</string>
     <string name="filter">Filtre</string>
+    <string name="email_send_for_reset_password">E-posta şifrenizi sırfırlamanız için gönderildi</string>
+    <string name="enter_email_for_reset_password">Şifresini sıfırlamak istediğiniz e-posta adresini giriniz</string>
+    <string name="login_with_n_c">%1$s ile Giriş Yap</string>
+    <string name="forget_password">Şifremi unuttum</string>
+    <string name="password">Şifre</string>
+    <string name="email">E-posta</string>
+    <string name="email_field_can_not_be_empty">E-posta alanı boş olamaz</string>
+    <string name="enter_valid_email">Geçerli bir e-posta yazınız</string>
+    <string name="password_field_can_not_be_empty">Şifre alanı boş olamaz</string>
+    <string name="password_field_must_be_at_least_seven_size">Şifre alanı en az 7 karekter olmalıdır</string>
 </resources>

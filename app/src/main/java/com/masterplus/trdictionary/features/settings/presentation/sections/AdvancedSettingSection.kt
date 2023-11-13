@@ -32,14 +32,14 @@ fun AdvancedSettingSection(
             title = stringResource(R.string.reset_default_setting),
             resourceId = R.drawable.ic_baseline_settings_backup_restore_24,
             onClick = {
-                onEvent(SettingEvent.ShowDialog(true, SettingDialogEvent.AskResetDefault))
+                onEvent(SettingEvent.ShowDialog(SettingDialogEvent.AskResetDefault))
             }
         )
         SettingItem(
             title = stringResource(R.string.delete_all_data),
             resourceId = R.drawable.ic_baseline_delete_forever_24,
             onClick = {
-                onEvent(SettingEvent.ShowDialog(true, SettingDialogEvent.AskDeleteAllData))
+                onEvent(SettingEvent.ShowDialog(SettingDialogEvent.AskDeleteAllData))
             }
         )
     }

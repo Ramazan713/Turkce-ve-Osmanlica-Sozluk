@@ -12,13 +12,19 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
 import com.masterplus.trdictionary.core.util.ToastHelper
 import com.masterplus.trdictionary.core.extensions.refreshApp
+import com.masterplus.trdictionary.core.presentation.dialog_body.LoadingDialog
+import com.masterplus.trdictionary.core.shared_features.auth_and_backup.presentation.auth.AuthEvent
+import com.masterplus.trdictionary.core.shared_features.auth_and_backup.presentation.auth.AuthState
+import com.masterplus.trdictionary.core.shared_features.auth_and_backup.presentation.auth.AuthUiAction
+import com.masterplus.trdictionary.core.shared_features.auth_and_backup.presentation.auth.handlers.ListenAuthUiAction
 import com.masterplus.trdictionary.core.shared_features.premium.PremiumEvent
 import com.masterplus.trdictionary.core.shared_features.premium.PremiumState
 import com.masterplus.trdictionary.core.shared_features.premium.PremiumUiEvent
+import com.masterplus.trdictionary.core.util.ShowLifecycleToastMessage
 import com.masterplus.trdictionary.features.settings.presentation.SettingDialogEvent
 import com.masterplus.trdictionary.features.settings.presentation.SettingEvent
+import com.masterplus.trdictionary.features.settings.presentation.SettingSheetEvent
 import com.masterplus.trdictionary.features.settings.presentation.SettingState
-import com.masterplus.trdictionary.features.settings.presentation.SettingUiEvent
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filter
 
@@ -30,43 +36,45 @@ fun SettingListeners(
     premiumState: PremiumState,
     onPremiumEvent: (PremiumEvent)->Unit,
     state: SettingState,
-    onEvent: (SettingEvent)->Unit
+    onEvent: (SettingEvent)->Unit,
+    authState: AuthState,
+    onAuthEvent: (AuthEvent) -> Unit
 ){
     val context = LocalContext.current
     val lifecycle = LocalLifecycleOwner.current.lifecycle
-
-    val activityResult = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()){ result->
-        onEvent(SettingEvent.SignInWithGoogle(result))
-    }
 
     LaunchedEffect(true){
         onEvent(SettingEvent.LoadData)
     }
 
-    LaunchedEffect(state,lifecycle){
-        snapshotFlow { state }
-            .filter { it.settingUiEvent != null }
-            .flowWithLifecycle(lifecycle)
-            .collectLatest {
-                when(val event = it.settingUiEvent){
-                    is SettingUiEvent.LaunchGoogleSignIn -> {
-                        activityResult.launch(event.intent)
-                    }
-                    is SettingUiEvent.RefreshApp -> {
-                        context.refreshApp()
-                    }
-                    null -> {}
+    ListenAuthUiAction(
+        uiAction = authState.uiAction,
+        onClose = {action->
+            onAuthEvent(AuthEvent.ClearUiAction)
+            when(action){
+                AuthUiAction.RefreshApp -> {
+                    context.refreshApp()
                 }
-                onEvent(SettingEvent.ClearUiEvent)
+                AuthUiAction.ShowBackupSectionForLogin -> {
+                    onEvent(SettingEvent.ShowSheet(
+                        SettingSheetEvent.BackupSectionInit {
+                            onAuthEvent(AuthEvent.LoadLastBackup)
+                        })
+                    )
+                }
             }
-    }
-
-    state.message?.let { message->
-        LaunchedEffect(message){
-            ToastHelper.showMessage(message,context)
-            onEvent(SettingEvent.ClearMessage)
         }
-    }
+    )
+
+    ShowLifecycleToastMessage(
+        message = state.message,
+        onDismiss = { onEvent(SettingEvent.ClearMessage) }
+    )
+
+    ShowLifecycleToastMessage(
+        message = authState.message,
+        onDismiss = { onAuthEvent(AuthEvent.ClearMessage) }
+    )
 
     LaunchedEffect(premiumState,lifecycle){
         snapshotFlow { premiumState }
@@ -90,7 +98,6 @@ fun SettingListeners(
     val isPremiumPurchased by remember(premiumState.isPremium) {
         derivedStateOf {
             premiumState.isPremium &&
-                    state.showDialog &&
                     (state.dialogEvent is SettingDialogEvent.ShowPremiumDia)
         }
     }
@@ -100,7 +107,7 @@ fun SettingListeners(
             .flowWithLifecycle(lifecycle)
             .collectLatest {
                 if(it){
-                    onEvent(SettingEvent.ShowDialog(false))
+                    onEvent(SettingEvent.ShowDialog(null))
                 }
             }
     }
