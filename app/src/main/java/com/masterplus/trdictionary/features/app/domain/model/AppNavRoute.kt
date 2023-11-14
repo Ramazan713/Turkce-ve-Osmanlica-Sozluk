@@ -1,6 +1,8 @@
 package com.masterplus.trdictionary.features.app.domain.model
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ViewList
+import androidx.compose.material.icons.automirrored.outlined.ViewList
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.ViewList
@@ -29,8 +31,8 @@ sealed class AppNavRoute(
     data object List : AppNavRoute(
         RouteList,
         UiText.Resource(R.string.list),
-        Icons.Outlined.ViewList,
-        Icons.Default.ViewList
+        Icons.AutoMirrored.Outlined.ViewList,
+        Icons.AutoMirrored.Filled.ViewList
     )
     data object Category : AppNavRoute(
         RouteCategory,

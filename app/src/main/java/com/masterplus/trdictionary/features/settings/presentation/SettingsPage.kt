@@ -113,9 +113,9 @@ fun SettingsPage(
                 ApplicationSettingSection()
             }
             if(authState.user != null){
-                item {
+                item(span = StaggeredGridItemSpan.FullLine) {
                     TextButton(
-                        modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp),
+                        modifier = Modifier.padding(bottom = 4.dp),
                         onClick = {
                             onEvent(SettingEvent.ShowDialog(SettingDialogEvent.AskSignOut))
                         }

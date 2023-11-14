@@ -35,20 +35,17 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         MobileAds.initialize(this) {}
-        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
             val navController = rememberNavController()
 
-            Box(modifier = Modifier.safeDrawingPadding()){
-                TRDictionaryTheme {
-                    Surface(
-                        modifier = Modifier.fillMaxSize(),
-                    ) {
-                        MyApp(
-                            navController,
-                        )
-                    }
+            TRDictionaryTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                ) {
+                    MyApp(
+                        navController,
+                    )
                 }
             }
         }

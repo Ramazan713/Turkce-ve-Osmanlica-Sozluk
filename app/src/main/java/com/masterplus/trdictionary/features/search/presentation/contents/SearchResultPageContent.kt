@@ -26,6 +26,13 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridScope
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
+import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
@@ -61,7 +68,7 @@ fun SearchResultPageContent(
     onBackPressed: () -> Unit,
     state: SearchState,
     onEvent: (SearchEvent) -> Unit,
-    gridState: LazyGridState,
+    gridState: LazyStaggeredGridState,
     isFullPage: Boolean
 ) {
 
@@ -101,15 +108,15 @@ fun SearchResultPageContent(
                     )
                 }
 
-                LazyVerticalGrid(
+                LazyVerticalStaggeredGrid(
                     state = gridState,
                     contentPadding = PaddingValues(horizontal = 5.dp, vertical = 3.dp),
-                    verticalArrangement = Arrangement.spacedBy(2.dp),
-                    horizontalArrangement = Arrangement.spacedBy(2.dp),
-                    columns = GridCells.Fixed(1),
+                    columns = StaggeredGridCells.Adaptive(350.dp),
+                    horizontalArrangement = Arrangement.spacedBy(3.dp),
+                    verticalItemSpacing = 5.dp
                 ){
 
-                    item {
+                    item(span = StaggeredGridItemSpan.FullLine) {
                         SearchKeyboard(state, onEvent)
                     }
 
@@ -169,12 +176,11 @@ private fun SearchKeyboard(
 }
 
 @OptIn(ExperimentalFoundationApi::class)
-private fun LazyGridScope.searchResults(
+private fun LazyStaggeredGridScope.searchResults(
     state: SearchState,
     isFullPage: Boolean,
     onClick: (WordWithSimilar) -> Unit
 ){
-
 
     itemsIndexed(
         state.wordResults,
@@ -192,7 +198,7 @@ private fun LazyGridScope.searchResults(
 }
 
 
-private fun LazyGridScope.histories(
+private fun LazyStaggeredGridScope.histories(
     state: SearchState,
     onEvent: (SearchEvent) -> Unit
 ){
@@ -230,6 +236,6 @@ fun SearchResultPageContentPreview() {
             searchLoading = true
         ),
         isFullPage = true,
-        gridState = LazyGridState()
+        gridState = LazyStaggeredGridState()
     )
 }

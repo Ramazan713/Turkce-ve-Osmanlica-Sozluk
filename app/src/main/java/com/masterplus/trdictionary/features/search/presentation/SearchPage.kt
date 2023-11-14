@@ -3,6 +3,8 @@ package com.masterplus.trdictionary.features.search.presentation
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -37,7 +39,7 @@ fun SearchPage(
     displayFeatures: List<DisplayFeature>
 ){
 
-    val gridState = rememberLazyGridState()
+    val gridState = rememberLazyStaggeredGridState()
 
     ShareWordEventHandler(
         event = wordsState.shareResultEvent,
@@ -124,7 +126,7 @@ private fun SinglePane(
     searchState: SearchState,
     onSearchEvent: (SearchEvent) -> Unit,
     wordsState: WordsListDetailState,
-    gridState: LazyGridState,
+    gridState: LazyStaggeredGridState,
     onWordsEvent: (WordsListDetailEvent) -> Unit,
     windowWidthSizeClass: WindowWidthSizeClass,
     onNavigateToBack: ()->Unit,
