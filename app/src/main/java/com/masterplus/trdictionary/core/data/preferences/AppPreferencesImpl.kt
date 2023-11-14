@@ -1,16 +1,49 @@
 package com.masterplus.trdictionary.core.data.preferences
 
 import android.content.SharedPreferences
+import android.util.Log
 import com.masterplus.trdictionary.core.domain.constants.KPref
 import com.masterplus.trdictionary.core.domain.preferences.model.EnumPrefKey
 import com.masterplus.trdictionary.core.domain.preferences.model.IEnumPrefValue
 import com.masterplus.trdictionary.core.domain.preferences.model.PrefKey
 import com.masterplus.trdictionary.core.domain.preferences.AppPreferences
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import javax.inject.Inject
 
 class AppPreferencesImpl @Inject constructor(
     private val sharedPreferences: SharedPreferences
 ): AppPreferences {
+
+    private val mutableChangedPrefKeyFlow = MutableSharedFlow<PrefKey<Any>>(replay = 1)
+    private val mutableChangedEnumPrefKeyFlow = MutableSharedFlow<EnumPrefKey<*>>(replay = 1)
+    private val mutableChangedKeyFlow = MutableSharedFlow<String>(replay = 1)
+
+    override val changedPrefKeyFlow: SharedFlow<PrefKey<Any>>
+        get() = mutableChangedPrefKeyFlow.asSharedFlow()
+    override val changedKeyFlow: SharedFlow<String>
+        get() = mutableChangedKeyFlow.asSharedFlow()
+
+    override val changedEnumPrefKeyFlow: SharedFlow<EnumPrefKey<*>>
+        get() = mutableChangedEnumPrefKeyFlow.asSharedFlow()
+
+    private val listener =
+        SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+            if(key != null){
+                KPref.prefValues.firstOrNull { it.key == key }?.let { prefKey->
+                    mutableChangedPrefKeyFlow.tryEmit(prefKey)
+                }
+                KPref.prefEnumValues.firstOrNull { it.key == key }?.let { enumPrefKey ->
+                    mutableChangedEnumPrefKeyFlow.tryEmit(enumPrefKey)
+                }
+                mutableChangedKeyFlow.tryEmit(key)
+            }
+        }
+
+    init {
+        addListener()
+    }
 
     override fun <T>setItem(item: PrefKey<T>, value: T){
         when(value){
@@ -106,5 +139,13 @@ class AppPreferencesImpl @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun addListener(){
+        sharedPreferences.registerOnSharedPreferenceChangeListener(listener)
+    }
+
+    override fun dispose() {
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(listener)
     }
 }
