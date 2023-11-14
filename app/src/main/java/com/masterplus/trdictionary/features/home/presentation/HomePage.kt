@@ -53,11 +53,6 @@ fun HomePage(
         mutableStateOf(false)
     }
 
-    ListenEventLifecycle(
-        onStart = {
-            onEvent(HomeEvent.LoadData)
-        }
-    )
 
     Scaffold(
         topBar = {

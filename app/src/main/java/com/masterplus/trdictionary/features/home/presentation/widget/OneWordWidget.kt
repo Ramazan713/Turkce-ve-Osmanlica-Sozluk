@@ -6,7 +6,6 @@ import android.content.Intent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.stringPreferencesKey
 
 import androidx.glance.GlanceId
@@ -16,7 +15,6 @@ import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.action.actionSendBroadcast
-import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.provideContent
 import androidx.glance.currentState
 import androidx.glance.layout.fillMaxSize
@@ -26,7 +24,6 @@ import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.data.GsonParser
 import com.masterplus.trdictionary.features.home.domain.enums.ShortInfoEnum
 import com.masterplus.trdictionary.features.home.domain.models.ShortInfoModel
-import com.masterplus.trdictionary.features.home.domain.use_cases.ShortInfoUseCases
 import com.masterplus.trdictionary.features.home.domain.use_cases.widget.ShortInfoWidgetUseCases
 import com.masterplus.trdictionary.features.home.presentation.widget.components.ShortInfoGroupWidgetItem
 import dagger.hilt.android.AndroidEntryPoint

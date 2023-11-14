@@ -23,7 +23,6 @@ import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.data.GsonParser
 import com.masterplus.trdictionary.features.home.domain.enums.ShortInfoEnum
 import com.masterplus.trdictionary.features.home.domain.models.ShortInfoModel
-import com.masterplus.trdictionary.features.home.domain.use_cases.ShortInfoUseCases
 import com.masterplus.trdictionary.features.home.domain.use_cases.widget.ShortInfoWidgetUseCases
 import com.masterplus.trdictionary.features.home.presentation.widget.components.ShortInfoGroupWidgetItem
 import dagger.hilt.android.AndroidEntryPoint
