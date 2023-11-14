@@ -4,12 +4,12 @@ import java.util.Properties
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    kotlin("kapt")
     id("com.google.dagger.hilt.android")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
     id("com.google.firebase.firebase-perf")
     id("kotlin-parcelize")
+    id("com.google.devtools.ksp")
 }
 
 val keystorePropertiesFile = rootProject.file("keystore.properties")
@@ -38,12 +38,22 @@ android {
         buildConfigField("String","TTS_KEY","\"${keystoreProperties["ttsKey"]}\"")
         buildConfigField("String","INTERSTITIAL_AD_ID","\"${keystoreProperties["interstitialTestAdId"]}\"")
 
-        kapt {
-            arguments {
-                arg("room.schemaLocation", "$projectDir/schemas")
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += mapOf(
+                    "room.schemaLocation" to "$projectDir/schemas",
+                    "room.incremental" to "true"
+                )
+
             }
         }
     }
+
+    ksp {
+        arg(RoomSchemaArgProvider(File(projectDir, "schemas")))
+    }
+
 
     signingConfigs {
 
@@ -133,12 +143,12 @@ dependencies {
 
 
     implementation("com.google.dagger:hilt-android:2.48.1")
-    kapt("com.google.dagger:hilt-compiler:2.48.1")
+    ksp("com.google.dagger:hilt-compiler:2.48.1")
 
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
-    kapt("androidx.room:room-compiler:$roomVersion")
+    ksp("androidx.room:room-compiler:$roomVersion")
     testImplementation("androidx.room:room-testing:$roomVersion")
     implementation("androidx.room:room-paging:$roomVersion")
 
@@ -182,4 +192,20 @@ dependencies {
 
     implementation("androidx.glance:glance-appwidget:1.0.0")
     implementation("androidx.glance:glance-material3:1.0.0")
+}
+
+
+
+class RoomSchemaArgProvider(
+    @get:InputDirectory
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    val schemaDir: File
+) : CommandLineArgumentProvider {
+
+    override fun asArguments(): Iterable<String> {
+        return listOf(
+            "room.schemaLocation=${schemaDir.path}",
+            "room.incremental=true"
+        )
+    }
 }
