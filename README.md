@@ -19,18 +19,29 @@ The app is currently [available on the Play Store](https://play.google.com/store
 - You can read the Dictionary Categories from start to finish, in a mixed order, or alphabetically
 - In categories with a large number of words, you can create multiple bookmarks to help you remember where you left off and continue from there
 - You can add words to favorite or custom-created lists
-
-## Screenshots
-<img alt="Screenshots" src="https://github.com/Ramazan713/Assets/blob/7ce03b6ea20998d0ecd559bf44ed7fd357f618d8/images/app/tr%20dictionary/v1.0.0%20beta%201/screenshotsDictionaries.png" target="_blank">
-
+  
 ## Used Technologies and Methods
 - [Kotlin](https://kotlinlang.org/)
 - [Compose](https://developer.android.com/jetpack/compose)
+- [Material 3](https://m3.material.io/)
+- [Adaptive Layout](https://m3.material.io/foundations/layout/canonical-layouts/overview)
 - [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+- [Firebase](https://firebase.google.com/)
 - [Room](https://developer.android.com/training/data-storage/room)
 - [Dependency Injection With Hilt](https://developer.android.com/training/dependency-injection/hilt-android)
-- Paging 3
-- [Firebase](https://firebase.google.com/)
+- [Paging 3](https://developer.android.com/topic/libraries/architecture/paging/v3-overview)
+- [Widgets with Glance](https://developer.android.com/jetpack/compose/glance)
+
+## Screenshots
+### Mobile
+<img alt="Screenshots" src="https://github.com/Ramazan713/Assets/blob/c002a82cf897a5cdca4a16e42455679d6be79c6c/images/app/tr%20dictionary/v1.0.0%20beta%202/screenshotsMobile.png" target="_blank">
+
+### Tablet
+<img alt="Screenshots" src="https://github.com/Ramazan713/Assets/blob/c002a82cf897a5cdca4a16e42455679d6be79c6c/images/app/tr%20dictionary/v1.0.0%20beta%202/screenshotsTablet1.png" target="_blank">
+
+### Desktop
+<img alt="Screenshots" src="https://github.com/Ramazan713/Assets/blob/c002a82cf897a5cdca4a16e42455679d6be79c6c/images/app/tr%20dictionary/v1.0.0%20beta%202/screenshotsDesktop1.png" target="_blank">
+<img alt="Screenshots" src="https://github.com/Ramazan713/Assets/blob/c002a82cf897a5cdca4a16e42455679d6be79c6c/images/app/tr%20dictionary/v1.0.0%20beta%202/screenshotsDesktop2.png" target="_blank">
 
    
 
