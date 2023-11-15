@@ -85,10 +85,10 @@ fun ShowSettingDialog(
                 allowDismiss = false,
                 positiveTitle = stringResource(R.string.backup_v),
                 negativeTitle = stringResource(R.string.not_backup),
-                onClosed = {
-                    close()
+                onCancel = {
                     onAuthEvent(AuthEvent.SignOut(false))
                 },
+                onClosed = ::close,
             )
         }
         is SettingDialogEvent.AskDeleteAllData -> {

@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import javax.inject.Inject
+import kotlin.reflect.typeOf
 
 class AppPreferencesImpl @Inject constructor(
     private val sharedPreferences: SharedPreferences
@@ -128,7 +129,11 @@ class AppPreferencesImpl @Inject constructor(
             when(type){
                 "classic"->{
                     KPref.prefValues.find { it.key == key }?.let { pref->
-                        setItem(pref,value)
+                        var updatedValue = value
+                        if(pref.default is Int){
+                            updatedValue = (value).toString().toDoubleOrNull()?.toInt() ?: return@let
+                        }
+                        setItem(pref,updatedValue)
                     }
                 }
                 "enum"->{

@@ -34,7 +34,7 @@ fun GeneralSettingSection(
             subTitle = state.searchResult.toString(),
             onClick = {
                 onEvent(
-                    SettingEvent.ShowDialog(SettingDialogEvent.SelectSearchResult(0,99))
+                    SettingEvent.ShowDialog(SettingDialogEvent.SelectSearchResult(9,99))
                 )
             },
             resourceId = R.drawable.baseline_search_24

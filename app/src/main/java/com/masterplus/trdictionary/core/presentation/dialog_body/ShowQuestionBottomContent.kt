@@ -25,6 +25,7 @@ fun ShowQuestionDialog(
     title: String? = null,
     content: String? = null,
     onApproved: () -> Unit,
+    onCancel: (() -> Unit)? = null,
     allowDismiss: Boolean = true,
     onClosed: () -> Unit,
     negativeTitle: String = stringResource(R.string.cancel),
@@ -47,7 +48,10 @@ fun ShowQuestionDialog(
         text =  { Text(text = content ?: return@AlertDialog )},
         dismissButton = {
             TextButton(
-                onClick = { onClosed() },
+                onClick = {
+                    onClosed()
+                    onCancel?.invoke()
+                },
             ){
                 Text(negativeTitle)
             }
