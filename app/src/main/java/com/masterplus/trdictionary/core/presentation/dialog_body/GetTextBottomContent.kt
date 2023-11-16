@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import com.masterplus.trdictionary.R
+import com.masterplus.trdictionary.core.presentation.components.RotatableLaunchEffect
 import com.masterplus.trdictionary.core.util.PreviewDesktop
 
 @ExperimentalFoundationApi
@@ -49,7 +50,7 @@ fun ShowGetTextDialog(
     val context = LocalContext.current
     val shape = MaterialTheme.shapes.medium
 
-    LaunchedEffect(Unit){
+    RotatableLaunchEffect {
         focusRequester.requestFocus()
     }
 

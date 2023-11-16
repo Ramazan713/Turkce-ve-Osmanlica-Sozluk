@@ -38,7 +38,7 @@ fun SearchField(
 ) {
     val focusRequester = remember { FocusRequester() }
 
-    LaunchedEffect(focusRequester){
+    RotatableLaunchEffect {
         focusRequester.requestFocus()
     }
 

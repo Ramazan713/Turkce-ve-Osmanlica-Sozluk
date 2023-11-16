@@ -54,7 +54,10 @@ fun WordDetailItem(
     val shape = MaterialTheme.shapes.medium
 
     val selectSheetState = rememberAdaptiveSelectMenuState<ShareItemEnum>(
-        windowWidthSizeClass = windowWidthSizeClass
+        windowWidthSizeClass = windowWidthSizeClass,
+        onItemChange = { menuItem, _->
+            onShareMenuItemClicked(menuItem)
+        }
     )
 
     Card(
@@ -85,7 +88,6 @@ fun WordDetailItem(
                 AdaptiveSelectSheetMenu(
                     state = selectSheetState,
                     items = ShareItemEnum.values().toList(),
-                    onItemChange = { onShareMenuItemClicked(it) }
                 )
             }
 

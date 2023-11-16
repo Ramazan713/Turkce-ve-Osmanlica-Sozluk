@@ -1,6 +1,5 @@
 package com.masterplus.trdictionary.features.list.presentation.show_list
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -12,12 +11,9 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -26,7 +22,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.enums.SavePointDestination
@@ -68,7 +63,11 @@ fun ShowListPage(
 
     val selectSheetState = rememberAdaptiveSelectMenuState<ShowListBottomMenuEnum>(
         windowWidthSizeClass = windowWidthSizeClass,
-        hideSheetAfterMenuClick = true
+        onItemChange = { menuItem, key->
+            state.items.find { it.id?.toString() == key }?.let { item->
+                handleSelectMenuItem(menuItem,onEvent,item)
+            }
+        }
     )
 
     val defaultSnackBar = rememberDefaultSnackBar()
@@ -132,10 +131,8 @@ fun ShowListPage(
                                 AdaptiveSelectSheetMenu(
                                     state = selectSheetState,
                                     items = ShowListBottomMenuEnum.from(item.isRemovable),
+                                    key = item.id?.toString(),
                                     sheetTitle = stringResource(R.string.n_for_list_item, item.name),
-                                    onItemChange = {
-                                        handleSelectMenuItem(it,onEvent,item)
-                                    }
                                 )
                             },
                         )

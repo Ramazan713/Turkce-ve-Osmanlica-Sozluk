@@ -141,6 +141,7 @@ fun WordsPagerPosHandler(
     LaunchedEffect(pagerState,lifecycleOwner){
         snapshotFlow { pagerState.currentPage }
             .debounce(300)
+            .filter { state.isDetailOpen || listDetailContentType == ListDetailContentType.DUAL_PANE }
             .distinctUntilChanged()
             .flowWithLifecycle(lifecycleOwner.lifecycle)
             .collectLatest {pos->
@@ -154,6 +155,7 @@ fun WordsPagerPosHandler(
         snapshotFlow { lazyStaggeredState.layoutInfo }
             .debounce(500)
             .filter { it.isNumberInRange(currentPos.pos) == false }
+            .filter { !state.isDetailOpen || listDetailContentType == ListDetailContentType.DUAL_PANE }
             .map { it.visibleItemsInfo.firstOrNull()?.index ?: 0 }
             .distinctUntilChanged()
             .flowWithLifecycle(lifecycleOwner.lifecycle)

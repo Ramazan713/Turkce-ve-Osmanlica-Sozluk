@@ -44,7 +44,12 @@ fun ArchiveListPage(
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
     val selectSheetState = rememberAdaptiveSelectMenuState<ArchiveListBottomMenuEnum>(
-        windowWidthSizeClass = windowWidthSizeClass
+        windowWidthSizeClass = windowWidthSizeClass,
+        onItemChange = { menuItem, key->
+            state.items.find { it.id?.toString() == key }?.let { item->
+                handleMenu(menuItem,onEvent,item)
+            }
+        }
     )
 
 
@@ -102,7 +107,7 @@ fun ArchiveListPage(
                                     state = selectSheetState,
                                     items = ArchiveListBottomMenuEnum.values().toList(),
                                     sheetTitle = stringResource(R.string.n_for_list_item,item.name),
-                                    onItemChange = { handleMenu(it,onEvent,item) }
+                                    key = item.id?.toString()
                                 )
                             },
                         )

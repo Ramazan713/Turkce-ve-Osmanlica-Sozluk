@@ -27,8 +27,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class AdaptiveSelectMenuData<T> (
     val items: List<T>,
-    val onItemChange: ((T)->Unit)?,
-    val sheetTitle: String?
+    val sheetTitle: String?,
+    val key: String?
 ): Parcelable where T : IMenuItemEnum, T: Enum<T>
 
 
@@ -36,7 +36,8 @@ data class AdaptiveSelectMenuData<T> (
 @Composable
 fun <T> rememberAdaptiveSelectMenuState(
     windowWidthSizeClass: WindowWidthSizeClass,
-    hideSheetAfterMenuClick: Boolean = true
+    hideSheetAfterMenuClick: Boolean = true,
+    onItemChange: (T, key: String?) -> Unit
 ): AdaptiveSelectMenuState<T> where T : IMenuItemEnum, T: Enum<T>{
 
     var visibleSheet by rememberSaveable {
@@ -60,7 +61,8 @@ fun <T> rememberAdaptiveSelectMenuState(
             onVisibleSheet = { visibleSheet = it },
             data = data,
             setData = { data = it },
-            hideSheetAfterMenuClick = hideSheetAfterMenuClick
+            hideSheetAfterMenuClick = hideSheetAfterMenuClick,
+            onItemChange = onItemChange
         )
     }
     return handler
@@ -72,7 +74,8 @@ data class AdaptiveSelectMenuState<T>(
     private val visibleSheet: Boolean,
     private val onVisibleSheet: (Boolean) -> Unit,
     private val data: AdaptiveSelectMenuData<T>?,
-    private val setData: (AdaptiveSelectMenuData<T>?) -> Unit
+    private val setData: (AdaptiveSelectMenuData<T>?) -> Unit,
+    private val onItemChange: (T, key: String?) -> Unit
 ) where T : IMenuItemEnum, T: Enum<T>{
 
     fun setSheetData(
@@ -81,6 +84,11 @@ data class AdaptiveSelectMenuState<T>(
         onVisibleSheet(true)
         setData(data)
     }
+
+    fun selectItem(item: T, key: String?){
+        onItemChange.invoke(item, key)
+    }
+
 
     @OptIn(ExperimentalMaterial3Api::class)
     val showSheet: @Composable() () -> Unit  @Composable get() {
@@ -96,11 +104,9 @@ data class AdaptiveSelectMenuState<T>(
                             items = data.items,
                             onClose = { onVisibleSheet(false) },
                             onClickItem = {selected->
-                                data.onItemChange?.let {onItemChange->
-                                    onItemChange(selected)
-                                    if(hideSheetAfterMenuClick){
-                                        onVisibleSheet(false)
-                                    }
+                                onItemChange.invoke(selected, data.key)
+                                if(hideSheetAfterMenuClick){
+                                    onVisibleSheet(false)
                                 }
                             }
                         )
@@ -119,7 +125,7 @@ data class AdaptiveSelectMenuState<T>(
 fun <T> AdaptiveSelectSheetMenu(
     modifier: Modifier = Modifier,
     state: AdaptiveSelectMenuState<T>,
-    onItemChange: ((T)->Unit)? = null,
+    key: String? = null,
     items: List<T>,
     sheetTitle: String? = null,
     icon: ImageVector = Icons.Default.MoreVert,
@@ -142,7 +148,9 @@ fun <T> AdaptiveSelectSheetMenu(
             tooltip = tooltip,
             modifier = modifier,
             items = items,
-            onItemChange = onItemChange,
+            onItemChange = {
+                state.selectItem(it,key)
+            },
             expanded = visibleDropdown,
             onExpandedChange = { visibleDropdown = it },
             icon = icon,
@@ -153,11 +161,13 @@ fun <T> AdaptiveSelectSheetMenu(
             IconButton(
                 modifier = modifier,
                 onClick = {
-                    state.setSheetData(AdaptiveSelectMenuData(items,onItemChange, sheetTitle))
+                    state.setSheetData(AdaptiveSelectMenuData(items, sheetTitle,key))
                 }
             ){
                 Icon(icon, contentDescription = contentDescription)
             }
         }
     }
+
+
 }

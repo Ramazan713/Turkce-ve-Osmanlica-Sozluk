@@ -20,6 +20,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.R
+import com.masterplus.trdictionary.core.presentation.components.RotatableLaunchEffect
 import com.masterplus.trdictionary.core.util.PreviewDesktop
 
 
@@ -45,7 +46,7 @@ fun ShowSelectNumberDialog(
     val context = LocalContext.current
     val focusRequester = remember { FocusRequester() }
 
-    LaunchedEffect(Unit) {
+    RotatableLaunchEffect {
         focusRequester.requestFocus()
     }
 
