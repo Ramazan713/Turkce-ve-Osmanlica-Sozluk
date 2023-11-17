@@ -10,6 +10,7 @@ plugins {
     id("com.google.firebase.firebase-perf")
     id("kotlin-parcelize")
     id("com.google.devtools.ksp")
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 val keystorePropertiesFile = rootProject.file("keystore.properties")
@@ -192,6 +193,12 @@ dependencies {
 
     implementation("androidx.glance:glance-appwidget:1.0.0")
     implementation("androidx.glance:glance-material3:1.0.0")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("androidx.datastore:datastore:1.0.0")
+    implementation("androidx.datastore:datastore-core-android:1.1.0-alpha06")
+
 }
 
 

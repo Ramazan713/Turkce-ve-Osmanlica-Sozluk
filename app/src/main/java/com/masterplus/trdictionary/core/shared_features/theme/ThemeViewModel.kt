@@ -1,48 +1,51 @@
 package com.masterplus.trdictionary.core.shared_features.theme
 
 import android.content.SharedPreferences
+import android.os.Build
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.masterplus.trdictionary.core.domain.constants.KPref
 import com.masterplus.trdictionary.core.domain.model.ThemeModel
+import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferences
 import com.masterplus.trdictionary.core.domain.repo.ThemeRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ThemeViewModel @Inject constructor(
-    private val themeRepo: ThemeRepo,
-    private val sharedPreferences: SharedPreferences,
+    private val settingsPreferences: SettingsPreferences,
+    private val themeRepo: ThemeRepo
 ): ViewModel(){
 
     var state by mutableStateOf(ThemeModel())
         private set
 
-    private var preferenceListener: SharedPreferences.OnSharedPreferenceChangeListener? = null
-
     init {
         setListener()
-        init()
     }
 
     private fun setListener(){
-
-        preferenceListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-            if(key == KPref.themeEnum.key || key == KPref.themeDynamic.key){
-                state = themeRepo.getThemeModel()
-            }
+        viewModelScope.launch {
+            settingsPreferences.settingsDataFlow
+                .map {
+                    ThemeModel(it.themeEnum,it.themeDynamic,themeRepo.hasSupportedDynamicTheme())
+                }
+                .distinctUntilChanged()
+                .collectLatest {themeModel->
+                    state = themeModel
+                }
         }
-        sharedPreferences.registerOnSharedPreferenceChangeListener(preferenceListener)
-    }
-
-    private fun init(){
-        state = themeRepo.getThemeModel()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(preferenceListener)
     }
 }

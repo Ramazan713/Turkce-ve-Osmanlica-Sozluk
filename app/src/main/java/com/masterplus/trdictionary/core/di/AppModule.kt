@@ -3,6 +3,8 @@ package com.masterplus.trdictionary.core.di
 import android.app.Application
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import androidx.datastore.core.DataStore
+import androidx.datastore.core.ExperimentalMultiProcessDataStore
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
@@ -23,6 +25,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import javax.inject.Singleton
+import androidx.datastore.core.MultiProcessDataStoreFactory
+import com.masterplus.trdictionary.core.data.preferences.SettingsPreferencesImpl
+import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferences
+import com.masterplus.trdictionary.core.domain.preferences.model.SettingsData
+import com.masterplus.trdictionary.core.domain.preferences.model.SettingsDataSerializer
+import java.io.File
 
 @InstallIn(SingletonComponent::class)
 @Module
@@ -78,5 +86,22 @@ object AppModule {
     @Singleton
     fun provideIODispatcher(): CoroutineDispatcher = Dispatchers.IO
 
+
+
+    @OptIn(ExperimentalMultiProcessDataStore::class)
+    @Provides
+    @Singleton
+    fun provideSettingsDataStore(application: Application) =
+        MultiProcessDataStoreFactory.create(
+            SettingsDataSerializer(),
+            produceFile = {
+                File("${application.cacheDir.path}/myapp.settingsPreferences_pb")
+            }
+        )
+
+    @Provides
+    @Singleton
+    fun provideSettingsPreferenceRepo(datastore: DataStore<SettingsData>): SettingsPreferences =
+        SettingsPreferencesImpl(datastore)
 
 }

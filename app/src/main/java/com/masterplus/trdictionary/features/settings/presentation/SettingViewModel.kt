@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.constants.KPref
 import com.masterplus.trdictionary.core.domain.preferences.AppPreferences
+import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferences
 import com.masterplus.trdictionary.core.domain.repo.ThemeRepo
 import com.masterplus.trdictionary.core.util.Resource
 import com.masterplus.trdictionary.core.util.UiText
@@ -20,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingViewModel @Inject constructor(
     private val themeRepo: ThemeRepo,
-    private val appPreferences: AppPreferences,
+    private val settingsPreferences: SettingsPreferences
 ): ViewModel(){
 
     var state by mutableStateOf(SettingState())
@@ -33,14 +34,18 @@ class SettingViewModel @Inject constructor(
     fun onEvent(event: SettingEvent){
         when(event){
             is SettingEvent.SetDynamicTheme -> {
-                val updatedModel = state.themeModel.copy(useDynamicColor = event.useDynamic)
-                themeRepo.updateThemeModel(updatedModel)
-                state = state.copy(themeModel = updatedModel)
+                viewModelScope.launch {
+                    val updatedModel = state.themeModel.copy(useDynamicColor = event.useDynamic)
+                    themeRepo.updateThemeModel(updatedModel)
+                    state = state.copy(themeModel = updatedModel)
+                }
             }
             is SettingEvent.SetThemeEnum -> {
-                val updatedModel = state.themeModel.copy(themeEnum = event.themeEnum)
-                themeRepo.updateThemeModel(updatedModel)
-                state = state.copy(themeModel = updatedModel)
+                viewModelScope.launch {
+                    val updatedModel = state.themeModel.copy(themeEnum = event.themeEnum)
+                    themeRepo.updateThemeModel(updatedModel)
+                    state = state.copy(themeModel = updatedModel)
+                }
             }
             is SettingEvent.ShowDialog -> {
                 state = state.copy(
@@ -48,15 +53,19 @@ class SettingViewModel @Inject constructor(
                 )
             }
             is SettingEvent.ResetDefaultValues -> {
-                appPreferences.clear()
-                init()
-                themeRepo.updateThemeModel(state.themeModel)
+                viewModelScope.launch {
+                    settingsPreferences.clear()
+                    init()
+                    themeRepo.updateThemeModel(state.themeModel)
+                }
             }
             is SettingEvent.UseArchiveAsList -> {
-                appPreferences.setItem(KPref.useArchiveLikeList,event.useArchiveAsList)
-                state = state.copy(
-                    useArchiveAsList = event.useArchiveAsList
-                )
+                viewModelScope.launch {
+                    settingsPreferences.updateData {
+                        it.copy(useArchiveLikeList = event.useArchiveAsList)
+                    }
+                    state = state.copy(useArchiveAsList = event.useArchiveAsList)
+                }
             }
             is SettingEvent.ShowSheet -> {
                 state = state.copy(sheetEvent = event.sheetEvent)
@@ -65,11 +74,19 @@ class SettingViewModel @Inject constructor(
                 init()
             }
             is SettingEvent.NotShowBackupInitDialog -> {
-                appPreferences.setItem(KPref.showBackupSectionForLogin,false)
+                viewModelScope.launch {
+                    settingsPreferences.updateData {
+                        it.copy(showBackupSectionForLogin = false)
+                    }
+                }
             }
             is SettingEvent.SetSearchResultEnum -> {
-                appPreferences.setItem(KPref.searchResultCount,event.searchResult)
-                state = state.copy(searchResult = event.searchResult)
+                viewModelScope.launch {
+                    settingsPreferences.updateData {
+                        it.copy(searchResultCount = event.searchResult)
+                    }
+                    state = state.copy(searchResult = event.searchResult)
+                }
             }
             is SettingEvent.ClearMessage -> {
                 state = state.copy(message = null)
@@ -78,16 +95,16 @@ class SettingViewModel @Inject constructor(
     }
 
     private fun init(){
-        val themeModel = themeRepo.getThemeModel()
-        val useArchiveAsList = appPreferences.getItem(KPref.useArchiveLikeList)
-        val searchResult = appPreferences.getItem(KPref.searchResultCount)
-        state = state.copy(
-            themeModel = themeModel,
-            useArchiveAsList = useArchiveAsList,
-            searchResult = searchResult
-        )
+        viewModelScope.launch {
+            val themeModel = themeRepo.getThemeModel()
+            val settingsData = settingsPreferences.getData()
+            state = state.copy(
+                themeModel = themeModel,
+                useArchiveAsList = settingsData.useArchiveLikeList,
+                searchResult = settingsData.searchResultCount
+            )
+        }
     }
-
 }
 
 

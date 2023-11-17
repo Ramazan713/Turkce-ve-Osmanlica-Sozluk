@@ -4,6 +4,7 @@ import android.app.Application
 import com.masterplus.trdictionary.core.data.local.AppDatabase
 import com.masterplus.trdictionary.core.data.repo.*
 import com.masterplus.trdictionary.core.domain.preferences.AppPreferences
+import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferences
 import com.masterplus.trdictionary.core.domain.repo.*
 import dagger.Module
 import dagger.Provides
@@ -19,8 +20,8 @@ object RepoModule {
 
     @Provides
     @Singleton
-    fun provideThemeRepo(appPreferences: AppPreferences): ThemeRepo =
-        ThemeRepoImpl(appPreferences)
+    fun provideThemeRepo(settingsPreferences: SettingsPreferences): ThemeRepo =
+        ThemeRepoImpl(settingsPreferences)
 
 
     @Provides

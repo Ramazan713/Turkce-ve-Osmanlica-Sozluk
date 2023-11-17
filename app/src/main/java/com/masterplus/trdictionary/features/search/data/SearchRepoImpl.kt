@@ -11,17 +11,20 @@ import com.masterplus.trdictionary.core.data.local.services.SearchDao
 import com.masterplus.trdictionary.core.domain.constants.KPref
 import com.masterplus.trdictionary.core.domain.model.SimpleWordResult
 import com.masterplus.trdictionary.core.domain.preferences.AppPreferences
+import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferences
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.model.WordWithSimilar
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.use_case.word_details_completed.WordDetailsCompletedUseCases
 import com.masterplus.trdictionary.features.search.domain.constants.SearchKind
 import com.masterplus.trdictionary.features.search.domain.repo.SearchRepo
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class SearchRepoImpl @Inject constructor(
     private val searchDao: SearchDao,
-    private val appPreferences: AppPreferences,
+    private val settingsPreferences: SettingsPreferences,
     private val wordDetailsCompletedUseCases: WordDetailsCompletedUseCases
 ): SearchRepo {
 
@@ -31,16 +34,19 @@ class SearchRepoImpl @Inject constructor(
         searchKind: SearchKind,
         searchCount: Int?
     ): Flow<List<WordWithSimilar>> {
+        return flow {
+            val settings = settingsPreferences.getData()
 
-        val searchResultCount = searchCount ?:
-            appPreferences.getItem(KPref.searchResultCount)
+            val searchResultCount = searchCount ?: settings.searchResultCount
 
-        return search(
-            query,categoryEnum, searchKind,searchResultCount
-        ).map {items->
-            items.map {
-                wordDetailsCompletedUseCases.completedWordInfo(it.toWordWithSimilar())
+            val result = search(
+                query,categoryEnum, searchKind,searchResultCount
+            ).map {items->
+                items.map {
+                    wordDetailsCompletedUseCases.completedWordInfo(it.toWordWithSimilar())
+                }
             }
+            emitAll(result)
         }
     }
 

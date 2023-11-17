@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.masterplus.trdictionary.core.domain.constants.KPref
 import com.masterplus.trdictionary.core.domain.preferences.AppPreferences
+import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferences
 import com.masterplus.trdictionary.core.domain.use_cases.list_words.ListWordsUseCases
 import com.masterplus.trdictionary.core.domain.use_cases.lists.ListUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +20,7 @@ import javax.inject.Inject
 class SelectListViewModel @Inject constructor(
     private val listUseCases: ListUseCases,
     private val listWordsUseCases: ListWordsUseCases,
-    private val appPreferences: AppPreferences
+    private val settingsPreferences: SettingsPreferences
 ): ViewModel(){
 
     var state by mutableStateOf(SelectListState())
@@ -68,8 +69,8 @@ class SelectListViewModel @Inject constructor(
     private fun loadData(event: SelectListEvent.LoadData){
         loadDataJob?.cancel()
         loadDataJob = viewModelScope.launch {
-            val useArchiveAsList = appPreferences.getItem(KPref.useArchiveLikeList)
-            listWordsUseCases.getSelectableLists(useArchiveAsList,event.wordId).collectLatest { lists->
+            val prefData = settingsPreferences.getData()
+            listWordsUseCases.getSelectableLists(prefData.useArchiveLikeList,event.wordId).collectLatest { lists->
                 state = state.copy(items = lists, listIdControl = event.listIdControl)
             }
         }

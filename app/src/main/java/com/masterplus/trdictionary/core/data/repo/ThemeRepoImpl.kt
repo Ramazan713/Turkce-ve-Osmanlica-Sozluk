@@ -4,23 +4,29 @@ import android.os.Build
 import com.masterplus.trdictionary.core.domain.constants.KPref
 import com.masterplus.trdictionary.core.domain.model.ThemeModel
 import com.masterplus.trdictionary.core.domain.preferences.AppPreferences
+import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferences
 import com.masterplus.trdictionary.core.domain.repo.ThemeRepo
 import javax.inject.Inject
 
 class ThemeRepoImpl @Inject constructor(
-    private val appPreferences: AppPreferences
+    private val settingsPreferences: SettingsPreferences
 ): ThemeRepo {
-    override fun getThemeModel(): ThemeModel {
+    override suspend fun getThemeModel(): ThemeModel {
+        val prefData = settingsPreferences.getData()
         return ThemeModel(
-            themeEnum = appPreferences.getEnumItem(KPref.themeEnum),
-            useDynamicColor = appPreferences.getItem(KPref.themeDynamic),
+            themeEnum = prefData.themeEnum,
+            useDynamicColor = prefData.themeDynamic,
             enabledDynamicColor = hasSupportedDynamicTheme()
         )
     }
 
-    override fun updateThemeModel(themeModel: ThemeModel) {
-        appPreferences.setEnumItem(KPref.themeEnum,themeModel.themeEnum)
-        appPreferences.setItem(KPref.themeDynamic,themeModel.useDynamicColor)
+    override suspend fun updateThemeModel(themeModel: ThemeModel) {
+        settingsPreferences.updateData { pref->
+            pref.copy(
+                themeEnum = themeModel.themeEnum,
+                themeDynamic = themeModel.useDynamicColor
+            )
+        }
     }
 
     override fun hasSupportedDynamicTheme(): Boolean {

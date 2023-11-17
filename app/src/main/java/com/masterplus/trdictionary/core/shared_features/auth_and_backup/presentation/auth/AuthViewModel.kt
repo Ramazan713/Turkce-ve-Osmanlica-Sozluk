@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.constants.KPref
 import com.masterplus.trdictionary.core.domain.preferences.AppPreferences
+import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferences
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.manager.AuthManager
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.manager.BackupManager
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.use_cases.ValidateEmailUseCase
@@ -24,7 +25,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val appPreferences: AppPreferences,
+    private val settingsPreferences: SettingsPreferences,
     private val authManager: AuthManager,
     private val backupManager: BackupManager,
     private val validateEmailUseCase: ValidateEmailUseCase,
@@ -155,7 +156,8 @@ class AuthViewModel @Inject constructor(
                 is Resource.Success->{
                     state = state.copy(isLoading = false, message = result.data)
                     val hasBackupMetas = authManager.hasBackupMetas()
-                    if(hasBackupMetas && appPreferences.getItem(KPref.showBackupSectionForLogin)){
+                    val showBackupSectionForLogin = settingsPreferences.getData().showBackupSectionForLogin
+                    if(hasBackupMetas && showBackupSectionForLogin){
                         state = state.copy(
                             uiAction = AuthUiAction.ShowBackupSectionForLogin
                         )
