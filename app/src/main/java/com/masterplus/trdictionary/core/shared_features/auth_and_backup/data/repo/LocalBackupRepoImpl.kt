@@ -34,14 +34,14 @@ class LocalBackupRepoImpl @Inject constructor(
         val listWords = backupDao.getListWords().map { it.toListWordsBackup() }
         val savePoints = backupDao.getSavePoints().map { it.toSavePointBackup() }
 
-        val preferencesDict = appPreferences.toDict()
+//        val preferencesDict = appPreferences.toDict()
 
         val resultMap = mapOf(
             "histories" to jsonParser.toJson(histories),
             "lists" to jsonParser.toJson(lists),
             "listWords" to jsonParser.toJson(listWords),
             "savePoints" to jsonParser.toJson(savePoints),
-            "appPreferences" to jsonParser.toJson(preferencesDict),
+            //"appPreferences" to jsonParser.toJson(preferencesDict),
         )
         return jsonParser.toJson(resultMap)
     }
@@ -84,7 +84,7 @@ class LocalBackupRepoImpl @Inject constructor(
             }
             backupDao.insertSavePoints(savePoints.map { it.toSavePointEntity() })
         }
-        appPreferences.fromDict(appPreferencesMap)
+        //appPreferences.fromDict(appPreferencesMap)
     }
 
     override suspend fun deleteAllLocalUserData() {

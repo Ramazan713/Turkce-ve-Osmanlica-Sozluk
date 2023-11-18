@@ -1,6 +1,7 @@
 package com.masterplus.trdictionary.core.di
 
 import android.app.Application
+import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
@@ -12,7 +13,6 @@ import com.masterplus.trdictionary.core.data.ConnectivityProviderImpl
 import com.masterplus.trdictionary.core.data.GsonParser
 import com.masterplus.trdictionary.core.data.local.AppDatabase
 import com.masterplus.trdictionary.core.data.local.TransactionProvider
-import com.masterplus.trdictionary.core.data.preferences.AppPreferencesImpl
 import com.masterplus.trdictionary.core.domain.ConnectivityProvider
 import com.masterplus.trdictionary.core.domain.JsonParser
 import com.masterplus.trdictionary.core.domain.preferences.AppPreferences
@@ -26,6 +26,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import javax.inject.Singleton
 import androidx.datastore.core.MultiProcessDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
+import com.masterplus.trdictionary.core.data.preferences.DefaultAppPreferencesImpl
 import com.masterplus.trdictionary.core.data.preferences.SettingsPreferencesImpl
 import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferences
 import com.masterplus.trdictionary.core.domain.preferences.model.SettingsData
@@ -61,8 +64,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAppPreferences(sharedPreferences: SharedPreferences): AppPreferences =
-        AppPreferencesImpl(sharedPreferences)
+    fun provideAppPreferences(datastore: DataStore<Preferences>): AppPreferences =
+        DefaultAppPreferencesImpl(datastore)
 
 
     @Provides
@@ -104,4 +107,11 @@ object AppModule {
     fun provideSettingsPreferenceRepo(datastore: DataStore<SettingsData>): SettingsPreferences =
         SettingsPreferencesImpl(datastore)
 
+    @Provides
+    @Singleton
+    fun provideAppDataStore(application: Application): DataStore<Preferences> =
+        application.dataStore
+
 }
+
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("appPreferences")

@@ -9,6 +9,4 @@ object KPref {
     val backupMetaCounter = PrefKey("backupMetaCounter",0L)
     val inAppReviewDay = PrefKey("inAppReviewDay",0L)
 
-    val prefValues = listOf<PrefKey<Any>>()
-    val prefEnumValues = listOf<EnumPrefKey<*>>()
 }

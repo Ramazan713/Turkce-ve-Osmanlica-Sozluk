@@ -74,7 +74,9 @@ class InAppFeaturesViewModel @Inject constructor(
                 reviewInfoFlow.value = task.result
             }
         }
-        appPreferences.setItem(KPref.inAppReviewDay, DateFormatHelper.toDateMillis(Date().time))
+        viewModelScope.launch {
+            appPreferences.setItem(KPref.inAppReviewDay, DateFormatHelper.toDateMillis(Date().time))
+        }
     }
 
     private fun showReviewApi(){
@@ -88,13 +90,15 @@ class InAppFeaturesViewModel @Inject constructor(
     }
 
     private fun checkEnabledApis(){
-        val prefDayMillis = appPreferences.getItem(KPref.inAppReviewDay)
-        val currentDayMillis = DateFormatHelper.toDateMillis(Date().time)
-        val inAppReviewEnabled = prefDayMillis != currentDayMillis
+        viewModelScope.launch {
+            val prefDayMillis = appPreferences.getItem(KPref.inAppReviewDay)
+            val currentDayMillis = DateFormatHelper.toDateMillis(Date().time)
+            val inAppReviewEnabled = prefDayMillis != currentDayMillis
 
-        state = state.copy(
-            enabledReviewApi = inAppReviewEnabled
-        )
+            state = state.copy(
+                enabledReviewApi = inAppReviewEnabled
+            )
+        }
     }
 
 }

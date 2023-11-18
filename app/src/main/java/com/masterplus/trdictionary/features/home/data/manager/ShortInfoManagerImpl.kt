@@ -12,6 +12,7 @@ import com.masterplus.trdictionary.features.home.domain.repo.ShortInfoRepo
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapLatest
 import java.util.Calendar
 import javax.inject.Inject
@@ -43,11 +44,12 @@ class ShortInfoManagerImpl @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getWordsFlow(): Flow<ShortInfoCollectionResult>{
-        return appPreferences.changedKeyFlow.filter { key->
-            shortInfoKeys.contains(key)
-        }.mapLatest {_->
-            getWords(false)
-        }
+//        return appPreferences.changedKeyFlow.filter { key->
+//            shortInfoKeys.contains(key)
+//        }.mapLatest {_->
+//            getWords(false)
+//        }
+        return flow {  }
     }
 
 

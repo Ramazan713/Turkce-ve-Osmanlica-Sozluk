@@ -109,22 +109,24 @@ class CloudSelectBackupViewModel @Inject constructor(
     }
 
     private fun checkRefreshButtonEnabled(){
-        val currentTime = Date().time
-        val pastTime = appPreferences.getItem(KPref.backupMetaCounter)
-        val diffInMill = (pastTime + K.backupMetaRefreshMilliSeconds) - currentTime
-        if(diffInMill < 0){
-            state = state.copy(isRefreshEnabled = true)
-            return
-        }
-        state = state.copy(isRefreshEnabled = false)
-        object : CountDownTimer(diffInMill,1000){
-            override fun onTick(millisUntilFinished: Long) {
-                state = state.copy(refreshSeconds = (millisUntilFinished / 1000).toInt())
-            }
-            override fun onFinish() {
+        viewModelScope.launch {
+            val currentTime = Date().time
+            val pastTime = appPreferences.getItem(KPref.backupMetaCounter)
+            val diffInMill = (pastTime + K.backupMetaRefreshMilliSeconds) - currentTime
+            if(diffInMill < 0){
                 state = state.copy(isRefreshEnabled = true)
+                return@launch
             }
-        }.start()
+            state = state.copy(isRefreshEnabled = false)
+            object : CountDownTimer(diffInMill,1000){
+                override fun onTick(millisUntilFinished: Long) {
+                    state = state.copy(refreshSeconds = (millisUntilFinished / 1000).toInt())
+                }
+                override fun onFinish() {
+                    state = state.copy(isRefreshEnabled = true)
+                }
+            }.start()
+        }
     }
 
 
