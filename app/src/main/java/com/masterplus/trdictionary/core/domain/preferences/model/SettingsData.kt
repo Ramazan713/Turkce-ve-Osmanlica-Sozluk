@@ -15,7 +15,7 @@ import javax.inject.Singleton
 @Serializable
 data class SettingsData(
     val themeEnum: ThemeEnum = ThemeEnum.defaultValue,
-    val themeDynamic: Boolean = false,
+    val useThemeDynamic: Boolean = false,
     val useArchiveLikeList: Boolean = false,
     val showBackupSectionForLogin: Boolean = false,
     val searchResultCount: Int = 10

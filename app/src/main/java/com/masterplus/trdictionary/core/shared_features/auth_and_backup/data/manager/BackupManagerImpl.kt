@@ -27,7 +27,7 @@ class BackupManagerImpl @Inject constructor(
         cutExtraBackupFiles(user)
         val fileName = UUID.randomUUID().toString()
         val timeStamp = Date().time
-        val data = localBackupRepo.getJsonData().toByteArray(charset = Charsets.UTF_8)
+        val data = localBackupRepo.getJsonData()?.toByteArray(charset = Charsets.UTF_8) ?: return Resource.Error(UiText.Resource(R.string.error))
         return storageService.uploadData(user,fileName,data).let {
             if(it is Resource.Success){
                 backupMetaRepo.insertBackupMeta(

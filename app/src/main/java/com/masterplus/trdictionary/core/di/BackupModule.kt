@@ -10,8 +10,11 @@ import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.rep
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.manager.BackupManagerImpl
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.repo.StorageServiceImpl
 import com.masterplus.trdictionary.core.domain.JsonParser
+import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferences
+import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.repo.BackupParserRepoImpl
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.manager.BackupManager
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.repo.BackupMetaRepo
+import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.repo.BackupParserRepo
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.repo.LocalBackupRepo
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.repo.StorageService
 import dagger.Module
@@ -38,16 +41,23 @@ object BackupModule {
 
     @Provides
     @Singleton
-    fun provideLocalBackupRepo(db: AppDatabase,
-                               jsonParser: JsonParser,
-                               appPreferences: AppPreferences,
-                               transactionProvider: TransactionProvider
+    fun provideBackupParser(): BackupParserRepo =
+        BackupParserRepoImpl()
+
+
+    @Provides
+    @Singleton
+    fun provideLocalBackupRepo(
+        db: AppDatabase,
+        transactionProvider: TransactionProvider,
+        backupParserRepo: BackupParserRepo,
+        settingsPreferences: SettingsPreferences
     ): LocalBackupRepo =
         LocalBackupRepoImpl(
             backupDao = db.localBackupDao(),
-            jsonParser = jsonParser,
-            appPreferences = appPreferences,
-            transactionProvider = transactionProvider
+            transactionProvider = transactionProvider,
+            backupParserRepo = backupParserRepo,
+            settingsPreferences = settingsPreferences
         )
 
     @Provides

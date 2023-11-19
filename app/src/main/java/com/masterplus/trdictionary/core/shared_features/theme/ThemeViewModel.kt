@@ -1,24 +1,16 @@
 package com.masterplus.trdictionary.core.shared_features.theme
 
-import android.content.SharedPreferences
-import android.os.Build
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.masterplus.trdictionary.core.domain.constants.KPref
 import com.masterplus.trdictionary.core.domain.model.ThemeModel
 import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferences
 import com.masterplus.trdictionary.core.domain.repo.ThemeRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.distinctUntilChangedBy
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -40,7 +32,7 @@ class ThemeViewModel @Inject constructor(
         viewModelScope.launch {
             settingsPreferences.settingsDataFlow
                 .map {
-                    ThemeModel(it.themeEnum,it.themeDynamic,themeRepo.hasSupportedDynamicTheme())
+                    ThemeModel(it.themeEnum,it.useThemeDynamic,themeRepo.hasSupportedDynamicTheme())
                 }
                 .distinctUntilChanged()
                 .collectLatest {themeModel->

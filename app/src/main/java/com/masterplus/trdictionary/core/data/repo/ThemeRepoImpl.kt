@@ -1,9 +1,7 @@
 package com.masterplus.trdictionary.core.data.repo
 
 import android.os.Build
-import com.masterplus.trdictionary.core.domain.constants.KPref
 import com.masterplus.trdictionary.core.domain.model.ThemeModel
-import com.masterplus.trdictionary.core.domain.preferences.AppPreferences
 import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferences
 import com.masterplus.trdictionary.core.domain.repo.ThemeRepo
 import javax.inject.Inject
@@ -15,7 +13,7 @@ class ThemeRepoImpl @Inject constructor(
         val prefData = settingsPreferences.getData()
         return ThemeModel(
             themeEnum = prefData.themeEnum,
-            useDynamicColor = prefData.themeDynamic,
+            useDynamicColor = prefData.useThemeDynamic,
             enabledDynamicColor = hasSupportedDynamicTheme()
         )
     }
@@ -24,7 +22,7 @@ class ThemeRepoImpl @Inject constructor(
         settingsPreferences.updateData { pref->
             pref.copy(
                 themeEnum = themeModel.themeEnum,
-                themeDynamic = themeModel.useDynamicColor
+                useThemeDynamic = themeModel.useDynamicColor
             )
         }
     }
