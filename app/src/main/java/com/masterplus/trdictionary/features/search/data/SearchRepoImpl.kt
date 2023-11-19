@@ -1,17 +1,12 @@
 package com.masterplus.trdictionary.features.search.data
 
-import com.masterplus.trdictionary.core.data.local.entities.relations.SimpleWordResultRelation
 import com.masterplus.trdictionary.core.data.local.entities.relations.WordWithSimilarRelation
-import com.masterplus.trdictionary.core.data.local.mapper.toSimpleResult
 import com.masterplus.trdictionary.core.data.local.mapper.toWordWithSimilar
 import com.masterplus.trdictionary.core.domain.enums.CategoryEnum
 import com.masterplus.trdictionary.core.domain.enums.ProverbIdiomEnum
 import com.masterplus.trdictionary.core.domain.enums.DictType
 import com.masterplus.trdictionary.core.data.local.services.SearchDao
-import com.masterplus.trdictionary.core.domain.constants.KPref
-import com.masterplus.trdictionary.core.domain.model.SimpleWordResult
-import com.masterplus.trdictionary.core.domain.preferences.AppPreferences
-import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferences
+import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferencesApp
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.model.WordWithSimilar
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.use_case.word_details_completed.WordDetailsCompletedUseCases
 import com.masterplus.trdictionary.features.search.domain.constants.SearchKind
@@ -24,7 +19,7 @@ import javax.inject.Inject
 
 class SearchRepoImpl @Inject constructor(
     private val searchDao: SearchDao,
-    private val settingsPreferences: SettingsPreferences,
+    private val settingsPreferences: SettingsPreferencesApp,
     private val wordDetailsCompletedUseCases: WordDetailsCompletedUseCases
 ): SearchRepo {
 

@@ -1,33 +1,41 @@
 package com.masterplus.trdictionary.features.home.data.manager
 
-import android.content.SharedPreferences
-import android.util.Log
 import com.masterplus.trdictionary.core.domain.enums.ProverbIdiomEnum
 import com.masterplus.trdictionary.core.domain.model.SimpleWordResult
-import com.masterplus.trdictionary.core.domain.preferences.AppPreferences
 import com.masterplus.trdictionary.features.home.domain.enums.ShortInfoEnum
 import com.masterplus.trdictionary.features.home.domain.manager.ShortInfoManager
 import com.masterplus.trdictionary.features.home.domain.models.ShortInfoCollectionResult
+import com.masterplus.trdictionary.features.home.domain.repo.ShortInfoPreference
 import com.masterplus.trdictionary.features.home.domain.repo.ShortInfoRepo
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.map
 import java.util.Calendar
 import javax.inject.Inject
 
 class ShortInfoManagerImpl @Inject constructor(
     private val shortInfoRepo: ShortInfoRepo,
-    private val sharedPreferences: SharedPreferences,
-    private val appPreferences: AppPreferences
+    private val preference: ShortInfoPreference
 ): ShortInfoManager {
-    private val keyForDayRefreshing = "shortInfoDay"
-    private val shortInfoKeys = ShortInfoEnum.values().map { it.saveKey }
 
     override suspend fun getWord(shortInfoEnum: ShortInfoEnum, refresh: Boolean): SimpleWordResult?{
         val randomNumber = getRandomNumber(shortInfoEnum,refresh)
         return getWord(shortInfoEnum,randomNumber)
+    }
+
+    override suspend fun getWord(shortInfo: ShortInfoEnum, randomNumber: Int): SimpleWordResult?{
+        return when(shortInfo){
+            ShortInfoEnum.Proverb -> {
+                shortInfoRepo.getWordByTypeId(ProverbIdiomEnum.Proverb,randomNumber)
+            }
+            ShortInfoEnum.Idiom -> {
+                shortInfoRepo.getWordByTypeId(ProverbIdiomEnum.Idiom,randomNumber)
+            }
+            ShortInfoEnum.Word -> {
+                shortInfoRepo.getWord(randomNumber)
+            }
+        }
     }
 
     override suspend fun getWords(refresh: Boolean): ShortInfoCollectionResult{
@@ -42,14 +50,18 @@ class ShortInfoManagerImpl @Inject constructor(
         )
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     override fun getWordsFlow(): Flow<ShortInfoCollectionResult>{
-//        return appPreferences.changedKeyFlow.filter { key->
-//            shortInfoKeys.contains(key)
-//        }.mapLatest {_->
-//            getWords(false)
-//        }
-        return flow {  }
+        return preference.dataFlow.map {
+            val word = getWord(ShortInfoEnum.Word, it.wordRandomNumber)
+            val idiom = getWord(ShortInfoEnum.Idiom, it.idiomRandomNumber)
+            val proverb = getWord(ShortInfoEnum.Proverb, it.proverbRandomNumber)
+
+            ShortInfoCollectionResult(
+                word = word,
+                idiom = idiom,
+                proverb = proverb
+            )
+        }
     }
 
 
@@ -64,13 +76,13 @@ class ShortInfoManagerImpl @Inject constructor(
     }
 
     override suspend fun checkDayForRefresh(): Boolean{
-        val dayOfMonth = sharedPreferences.getInt(keyForDayRefreshing,0)
+        val dayOfMonth = preference.getData().dayForDayRefreshing
         val currentDayOfMonth = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
 
         val refresh = currentDayOfMonth != dayOfMonth
 
         if(refresh){
-            sharedPreferences.edit().putInt(keyForDayRefreshing,currentDayOfMonth).apply()
+            preference.updateData { it.copy(dayForDayRefreshing = currentDayOfMonth) }
             refreshWords()
         }
         return refresh
@@ -80,39 +92,30 @@ class ShortInfoManagerImpl @Inject constructor(
     private suspend fun getRandomNumber(shortInfo: ShortInfoEnum,refresh: Boolean): Int {
         if(refresh)
             return refreshNumber(shortInfo)
-        return sharedPreferences.getInt(shortInfo.saveKey,0)
+        return preference.getData().getRandomNumber(shortInfo)
     }
 
     private suspend fun refreshNumber(shortInfo: ShortInfoEnum): Int{
         val randomNumber: Int = when(shortInfo){
             ShortInfoEnum.Proverb -> {
                 val proverbCount = shortInfoRepo.countWordsByTypeId(ProverbIdiomEnum.Proverb)
-                (0..proverbCount).random()
+                val random = (0..proverbCount).random()
+                preference.updateData { it.copy(proverbRandomNumber = random) }
+                random
             }
             ShortInfoEnum.Idiom -> {
                 val idiomCount = shortInfoRepo.countWordsByTypeId(ProverbIdiomEnum.Idiom)
-                (0..idiomCount).random()
+                val random = (0..idiomCount).random()
+                preference.updateData { it.copy(idiomRandomNumber = random) }
+                random
             }
             ShortInfoEnum.Word -> {
                 val wordCount = shortInfoRepo.countWordsByTypeId(ProverbIdiomEnum.Idiom)
-                (0..wordCount).random()
+                val random = (0..wordCount).random()
+                preference.updateData { it.copy(wordRandomNumber = random) }
+                random
             }
         }
-        sharedPreferences.edit().putInt(shortInfo.saveKey,randomNumber).apply()
         return randomNumber
-    }
-
-    private suspend fun getWord(shortInfo: ShortInfoEnum, randomNumber: Int): SimpleWordResult?{
-        return when(shortInfo){
-            ShortInfoEnum.Proverb -> {
-                shortInfoRepo.getWordByTypeId(ProverbIdiomEnum.Proverb,randomNumber)
-            }
-            ShortInfoEnum.Idiom -> {
-                shortInfoRepo.getWordByTypeId(ProverbIdiomEnum.Idiom,randomNumber)
-            }
-            ShortInfoEnum.Word -> {
-                shortInfoRepo.getWord(randomNumber)
-            }
-        }
     }
 }

@@ -1,11 +1,8 @@
 package com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.repo
 
-import com.google.gson.reflect.TypeToken
 import com.masterplus.trdictionary.core.data.local.TransactionProvider
-import com.masterplus.trdictionary.core.domain.preferences.AppPreferences
 import com.masterplus.trdictionary.core.data.local.services.LocalBackupDao
-import com.masterplus.trdictionary.core.domain.JsonParser
-import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferences
+import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferencesApp
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.mapper.toBackupData
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.mapper.toData
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.mapper.toHistoryBackup
@@ -17,19 +14,14 @@ import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.map
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.mapper.toSavePointBackup
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.mapper.toSavePointEntity
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.model.AllBackupData
-import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.model.HistoryBackup
-import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.model.ListBackup
-import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.model.ListWordsBackup
-import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.model.SavePointBackup
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.repo.BackupParserRepo
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.repo.LocalBackupRepo
-import java.lang.reflect.Type
 import javax.inject.Inject
 
 class LocalBackupRepoImpl @Inject constructor(
     private val backupDao: LocalBackupDao,
     private val backupParserRepo: BackupParserRepo,
-    private val settingsPreferences: SettingsPreferences,
+    private val settingsPreferences: SettingsPreferencesApp,
     private val transactionProvider: TransactionProvider
 ): LocalBackupRepo {
 

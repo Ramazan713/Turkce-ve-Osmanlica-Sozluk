@@ -39,8 +39,6 @@
             android:value="${adMobAppId}"/>
 
 
-        <receiver android:name=".features.home.presentation.widget.ShortInfoWidgetBroadcast"/>
-
         <receiver android:name=".features.home.presentation.widget.OneWordWidgetReceiver"
             android:exported="true">
             <intent-filter>

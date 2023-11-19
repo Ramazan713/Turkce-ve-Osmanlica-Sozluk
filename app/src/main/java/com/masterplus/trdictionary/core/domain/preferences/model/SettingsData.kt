@@ -1,15 +1,9 @@
 package com.masterplus.trdictionary.core.domain.preferences.model
 
-import androidx.datastore.core.CorruptionException
-import androidx.datastore.core.Serializer
-import androidx.datastore.preferences.protobuf.InvalidProtocolBufferException
 import com.masterplus.trdictionary.core.domain.enums.ThemeEnum
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import com.masterplus.trdictionary.core.domain.BaseAppSerializer
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
-import java.io.InputStream
-import java.io.OutputStream
 import javax.inject.Singleton
 
 @Serializable
@@ -23,33 +17,9 @@ data class SettingsData(
 
 
 @Singleton
-class SettingsDataSerializer: Serializer<SettingsData> {
-    override val defaultValue: SettingsData = SettingsData()
-
-    private val json = Json {
-        ignoreUnknownKeys = true
-    }
-
-    override suspend fun readFrom(input: InputStream): SettingsData {
-        try {
-            return withContext(Dispatchers.IO){
-                json.decodeFromString(SettingsData.serializer(),input.readBytes().decodeToString())
-            }
-        } catch (exception: InvalidProtocolBufferException) {
-            throw CorruptionException("Cannot read proto.", exception)
-        }
-    }
-
-
-    override suspend fun writeTo(
-        t: SettingsData,
-        output: OutputStream
-    ){
-        withContext(Dispatchers.IO) {
-            output.write(
-                json.encodeToString(SettingsData.serializer(), t).encodeToByteArray()
-            )
-        }
-    }
-
+class SettingsDataSerializer: BaseAppSerializer<SettingsData>() {
+    override val serializer: KSerializer<SettingsData>
+        get() = SettingsData.serializer()
+    override val defaultValue: SettingsData
+        get() = SettingsData()
 }

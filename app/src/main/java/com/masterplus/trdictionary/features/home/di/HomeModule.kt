@@ -1,22 +1,23 @@
 package com.masterplus.trdictionary.features.home.di
 
 import android.app.Application
-import android.content.SharedPreferences
+import androidx.datastore.core.DataStore
+import androidx.datastore.core.ExperimentalMultiProcessDataStore
+import androidx.datastore.core.MultiProcessDataStoreFactory
 import com.masterplus.trdictionary.core.data.local.AppDatabase
-import com.masterplus.trdictionary.core.domain.JsonParser
-import com.masterplus.trdictionary.core.domain.preferences.AppPreferences
 import com.masterplus.trdictionary.features.home.data.manager.ShortInfoManagerImpl
+import com.masterplus.trdictionary.features.home.data.repo.ShortInfoPreferenceImpl
 import com.masterplus.trdictionary.features.home.data.repo.ShortInfoRepoImpl
 import com.masterplus.trdictionary.features.home.domain.manager.ShortInfoManager
+import com.masterplus.trdictionary.features.home.domain.models.ShortInfoPreferenceData
+import com.masterplus.trdictionary.features.home.domain.models.ShortInfoPreferenceDataSerializer
+import com.masterplus.trdictionary.features.home.domain.repo.ShortInfoPreference
 import com.masterplus.trdictionary.features.home.domain.repo.ShortInfoRepo
-import com.masterplus.trdictionary.features.home.domain.use_cases.widget.LoadShortInfoWidget
-import com.masterplus.trdictionary.features.home.domain.use_cases.widget.SendShortInfoToWidget
-import com.masterplus.trdictionary.features.home.domain.use_cases.widget.RefreshShortInfoWidget
-import com.masterplus.trdictionary.features.home.domain.use_cases.widget.ShortInfoWidgetUseCases
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import java.io.File
 import javax.inject.Singleton
 
 @Module
@@ -29,46 +30,33 @@ object HomeModule {
         ShortInfoRepoImpl(db.shortInfoDao())
 
 
+    @OptIn(ExperimentalMultiProcessDataStore::class)
     @Provides
-    fun provideSendShortInfoToWidget(
-        application: Application,
-        jsonParser: JsonParser
-    ) = SendShortInfoToWidget(application, jsonParser)
-
-
-    @Provides
-    fun provideLoadShortInfoWidget(
-        shortInfoManager: ShortInfoManager,
-        sendShortInfoToWidget: SendShortInfoToWidget,
-    ) = LoadShortInfoWidget(
-        sendShortInfoToWidget = sendShortInfoToWidget,
-        shortInfoManager = shortInfoManager
-    )
-
-
+    @Singleton
+    fun provideShortInfoDataStore(application: Application): DataStore<ShortInfoPreferenceData> =
+        MultiProcessDataStoreFactory.create(
+            ShortInfoPreferenceDataSerializer(),
+            produceFile = {
+                File(application.cacheDir.path,"my_app/shortInfo_pb")
+            }
+        )
 
     @Provides
     @Singleton
-    fun provideShortInfoWidgetUseCases(
-        loadShortInfoWidget: LoadShortInfoWidget,
-        sendShortInfoToWidget: SendShortInfoToWidget,
-        application: Application
-    ) = ShortInfoWidgetUseCases(
-        loadInfoModel = loadShortInfoWidget,
-        sendInfoModel = sendShortInfoToWidget,
-        refreshInfoModel = RefreshShortInfoWidget(
-            loadShortInfoWidget, application
-        )
-    )
+    fun provideShortInfoPreferences(
+        dataStore: DataStore<ShortInfoPreferenceData>
+    ): ShortInfoPreference =
+        ShortInfoPreferenceImpl(dataStore)
+
 
     @Provides
     @Singleton
     fun provideShortInfoManager(
-        sharedPreferences: SharedPreferences,
-        appPreferences: AppPreferences,
+        preferences: ShortInfoPreference,
         shortInfoRepo: ShortInfoRepo
     ): ShortInfoManager =
         ShortInfoManagerImpl(
-            shortInfoRepo, sharedPreferences, appPreferences
+            shortInfoRepo,
+            preferences
         )
 }

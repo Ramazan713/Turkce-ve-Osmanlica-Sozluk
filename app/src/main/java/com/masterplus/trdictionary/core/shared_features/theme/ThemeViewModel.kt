@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.masterplus.trdictionary.core.domain.model.ThemeModel
-import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferences
+import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferencesApp
 import com.masterplus.trdictionary.core.domain.repo.ThemeRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ThemeViewModel @Inject constructor(
-    private val settingsPreferences: SettingsPreferences,
+    private val settingsPreferences: SettingsPreferencesApp,
     private val themeRepo: ThemeRepo
 ): ViewModel(){
 
@@ -30,7 +30,7 @@ class ThemeViewModel @Inject constructor(
 
     private fun setListener(){
         viewModelScope.launch {
-            settingsPreferences.settingsDataFlow
+            settingsPreferences.dataFlow
                 .map {
                     ThemeModel(it.themeEnum,it.useThemeDynamic,themeRepo.hasSupportedDynamicTheme())
                 }

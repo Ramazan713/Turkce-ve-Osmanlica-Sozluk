@@ -9,6 +9,8 @@ interface ShortInfoManager {
 
     suspend fun getWord(shortInfoEnum: ShortInfoEnum, refresh: Boolean): SimpleWordResult?
 
+    suspend fun getWord(shortInfo: ShortInfoEnum, randomNumber: Int): SimpleWordResult?
+
     suspend fun getWords(refresh: Boolean): ShortInfoCollectionResult
 
     fun getWordsFlow(): Flow<ShortInfoCollectionResult>

@@ -29,8 +29,8 @@ import androidx.datastore.core.MultiProcessDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.masterplus.trdictionary.core.data.preferences.DefaultAppPreferencesImpl
-import com.masterplus.trdictionary.core.data.preferences.SettingsPreferencesImpl
-import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferences
+import com.masterplus.trdictionary.core.data.preferences.SettingsPreferencesImplApp
+import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferencesApp
 import com.masterplus.trdictionary.core.domain.preferences.model.SettingsData
 import com.masterplus.trdictionary.core.domain.preferences.model.SettingsDataSerializer
 import java.io.File
@@ -104,8 +104,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideSettingsPreferenceRepo(datastore: DataStore<SettingsData>): SettingsPreferences =
-        SettingsPreferencesImpl(datastore)
+    fun provideSettingsPreferenceRepo(datastore: DataStore<SettingsData>): SettingsPreferencesApp =
+        SettingsPreferencesImplApp(datastore)
 
     @Provides
     @Singleton

@@ -4,13 +4,11 @@ import com.google.firebase.storage.FirebaseStorage
 import com.masterplus.trdictionary.core.data.local.AppDatabase
 import com.masterplus.trdictionary.core.data.local.TransactionProvider
 import com.masterplus.trdictionary.core.domain.ConnectivityProvider
-import com.masterplus.trdictionary.core.domain.preferences.AppPreferences
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.repo.BackupMetaImpl
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.repo.LocalBackupRepoImpl
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.manager.BackupManagerImpl
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.repo.StorageServiceImpl
-import com.masterplus.trdictionary.core.domain.JsonParser
-import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferences
+import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferencesApp
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.repo.BackupParserRepoImpl
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.manager.BackupManager
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.repo.BackupMetaRepo
@@ -51,7 +49,7 @@ object BackupModule {
         db: AppDatabase,
         transactionProvider: TransactionProvider,
         backupParserRepo: BackupParserRepo,
-        settingsPreferences: SettingsPreferences
+        settingsPreferences: SettingsPreferencesApp
     ): LocalBackupRepo =
         LocalBackupRepoImpl(
             backupDao = db.localBackupDao(),

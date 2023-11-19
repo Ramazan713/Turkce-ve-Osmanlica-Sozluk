@@ -2,12 +2,12 @@ package com.masterplus.trdictionary.core.data.repo
 
 import android.os.Build
 import com.masterplus.trdictionary.core.domain.model.ThemeModel
-import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferences
+import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferencesApp
 import com.masterplus.trdictionary.core.domain.repo.ThemeRepo
 import javax.inject.Inject
 
 class ThemeRepoImpl @Inject constructor(
-    private val settingsPreferences: SettingsPreferences
+    private val settingsPreferences: SettingsPreferencesApp
 ): ThemeRepo {
     override suspend fun getThemeModel(): ThemeModel {
         val prefData = settingsPreferences.getData()

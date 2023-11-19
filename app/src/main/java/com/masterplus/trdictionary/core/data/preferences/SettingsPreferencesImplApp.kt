@@ -1,18 +1,17 @@
 package com.masterplus.trdictionary.core.data.preferences
 
 import androidx.datastore.core.DataStore
-import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferences
+import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferencesApp
 import com.masterplus.trdictionary.core.domain.preferences.model.SettingsData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.single
 import javax.inject.Inject
 
-class SettingsPreferencesImpl @Inject constructor(
+class SettingsPreferencesImplApp @Inject constructor(
     private val pref: DataStore<SettingsData>
-): SettingsPreferences {
+): SettingsPreferencesApp {
 
-    override val settingsDataFlow: Flow<SettingsData>
+    override val dataFlow: Flow<SettingsData>
         get() = pref.data
 
 

@@ -5,15 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.masterplus.trdictionary.R
-import com.masterplus.trdictionary.core.domain.constants.KPref
-import com.masterplus.trdictionary.core.domain.preferences.AppPreferences
-import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferences
+import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferencesApp
 import com.masterplus.trdictionary.core.domain.repo.ThemeRepo
-import com.masterplus.trdictionary.core.util.Resource
-import com.masterplus.trdictionary.core.util.UiText
-import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.manager.AuthManager
-import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.manager.BackupManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingViewModel @Inject constructor(
     private val themeRepo: ThemeRepo,
-    private val settingsPreferences: SettingsPreferences
+    private val settingsPreferences: SettingsPreferencesApp
 ): ViewModel(){
 
     var state by mutableStateOf(SettingState())
