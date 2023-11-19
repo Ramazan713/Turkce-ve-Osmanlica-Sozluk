@@ -16,8 +16,11 @@ import com.masterplus.trdictionary.features.savepoint.presentation.navigation.Se
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,8 +32,8 @@ class SelectSavePointViewModel @Inject constructor(
 
     private val args = SelectSavePointArgs(savedStateHandle)
 
-    var state by mutableStateOf(SelectSavePointState())
-        private set
+    private val _state = MutableStateFlow(SelectSavePointState())
+    val state: StateFlow<SelectSavePointState> = _state.asStateFlow()
 
     private val filterFlow = MutableStateFlow(SelectSavePointMenuItem.All)
 
@@ -45,46 +48,48 @@ class SelectSavePointViewModel @Inject constructor(
             is SelectSavePointEvent.Delete -> {
                 viewModelScope.launch {
                     savePointsUseCases.deleteSavePoint(event.savePoint)
+                    _state.update { state->
+                        val updatedSelectedSavePoint = if(event.savePoint == state.currentSelectedSavePoint) null else
+                            state.currentSelectedSavePoint
+                        state.copy(
+                            message = UiText.Resource(R.string.successfully_deleted),
+                            selectedSavePoint = updatedSelectedSavePoint
+                        )
+                    }
 
-                    val updatedSelectedSavePoint = if(event.savePoint == state.currentSelectedSavePoint) null else
-                        state.currentSelectedSavePoint
-                    state = state.copy(
-                        message = UiText.Resource(R.string.successfully_deleted),
-                        selectedSavePoint = updatedSelectedSavePoint
-                    )
                 }
             }
             is SelectSavePointEvent.EditTitle -> {
                 viewModelScope.launch {
                     savePointsUseCases.updateSavePoint(event.savePoint.copy(title = event.title))
-                    state = state.copy(message = UiText.Resource(R.string.successfully_updated))
+                    _state.update { it.copy(
+                        message = UiText.Resource(R.string.successfully_updated)
+                    )}
                 }
             }
             is SelectSavePointEvent.LoadSavePoint -> {
                 loadSavePoint()
             }
             is SelectSavePointEvent.Select -> {
-                state = state.copy(selectedSavePoint = event.savePoint)
+                _state.update { it.copy(selectedSavePoint = event.savePoint)}
             }
             is SelectSavePointEvent.ShowDialog -> {
-                state = state.copy(
+                _state.update { it.copy(
                     showDialog = event.showDialog,
                     modalDialog = event.dialogEvent
-                )
+                )}
             }
             is SelectSavePointEvent.SelectDropdownMenuItem -> {
                 viewModelScope.launch {
-                    state = state.copy(
-                        selectedDropdownItem = event.item
-                    )
+                    _state.update { it.copy( selectedDropdownItem = event.item)}
                     filterFlow.emit(event.item)
                 }
             }
             is SelectSavePointEvent.ClearMessage -> {
-                state = state.copy(message = null)
+                _state.update { it.copy(message = null)}
             }
             is SelectSavePointEvent.ClearUiEvent -> {
-                state = state.copy(uiEvent = null)
+                _state.update { it.copy(uiEvent = null)}
             }
         }
     }
@@ -93,40 +98,39 @@ class SelectSavePointViewModel @Inject constructor(
         viewModelScope.launch {
             val menuItems = SelectSavePointMenuItem.fromDestinationIds(destinationIds,addAll = true)
             val useMenu = menuItems.size > 1
-
-            state = state.copy(
-                dropdownItems = menuItems,
-                showDropdownMenu = useMenu,
-                selectedDropdownItem = menuItems.firstOrNull()
-            )
+            _state.update { state->
+                state.copy(
+                    dropdownItems = menuItems,
+                    showDropdownMenu = useMenu,
+                    selectedDropdownItem = menuItems.firstOrNull()
+                )
+            }
             menuItems.firstOrNull()?.let { filterFlow.emit(it) }
         }
     }
 
     private fun loadData(){
         initDropdownState(args.destinationFilters)
-        state = state.copy(title = args.title)
+        _state.update { it.copy(title = args.title)}
 
         loadDataJob?.cancel()
         loadDataJob = viewModelScope.launch {
 
             combine(filterFlow,savePointsUseCases.getSavePoints(listOf(args.typeId))){ filter, savePoints->
-                if(!state.showDropdownMenu) return@combine savePoints
+                if(!_state.value.showDropdownMenu) return@combine savePoints
 
                 if(filter == SelectSavePointMenuItem.All)
                     return@combine savePoints
                 savePoints.filter { filter.destinationId == it.savePointDestination.destinationId }
             }.collectLatest {items->
-                state = state.copy(
-                    savePoints = items
-                )
+                _state.update { it.copy(savePoints = items)}
             }
         }
     }
 
     private fun loadSavePoint(){
         viewModelScope.launch {
-            state.currentSelectedSavePoint?.let { savePoint ->
+            _state.value.currentSelectedSavePoint?.let { savePoint ->
                 val catEnum = savePoint.savePointDestination.type.toCategoryEnum() ?: CategoryEnum.AllDict
                 val uiEvent = when(val destination = savePoint.savePointDestination){
                     is SavePointDestination.CategoryAll->{
@@ -150,7 +154,7 @@ class SelectSavePointViewModel @Inject constructor(
                         )
                     }
                 }
-                state = state.copy(uiEvent = uiEvent)
+                _state.update { it.copy(uiEvent = uiEvent)}
             }
         }
     }

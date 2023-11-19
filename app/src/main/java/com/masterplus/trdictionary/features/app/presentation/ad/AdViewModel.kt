@@ -48,8 +48,9 @@ class AdViewModel @Inject constructor(
         .distinctUntilChanged()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AdState())
 
-    var uiEventState by mutableStateOf<AdUiEvent?>(null)
-        private set
+
+    private val _uiEventState = MutableStateFlow<AdUiEvent?>(null)
+    val uiEventState: StateFlow<AdUiEvent?> = _uiEventState.asStateFlow()
 
 
     init {
@@ -71,7 +72,7 @@ class AdViewModel @Inject constructor(
                     }else{
                         stop()
                     }
-                    uiEventState = AdUiEvent.CheckAdShowState
+                    _uiEventState.update { AdUiEvent.CheckAdShowState }
                 }
 
             }
@@ -83,7 +84,7 @@ class AdViewModel @Inject constructor(
                 }
             }
             is AdEvent.ClearUiEvent -> {
-               uiEventState = null
+                _uiEventState.update { null }
             }
         }
     }
@@ -110,7 +111,9 @@ class AdViewModel @Inject constructor(
         loadAdJob?.cancel()
         loadAdJob = viewModelScope.launch {
             loadAdState.collectLatest {loadAd->
-                if(loadAd) uiEventState = AdUiEvent.LoadAd
+                if(loadAd){
+                    _uiEventState.update { AdUiEvent.LoadAd}
+                }
             }
         }
 

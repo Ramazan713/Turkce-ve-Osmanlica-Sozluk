@@ -8,6 +8,10 @@ import androidx.lifecycle.viewModelScope
 import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferencesApp
 import com.masterplus.trdictionary.core.domain.repo.ThemeRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,8 +21,8 @@ class SettingViewModel @Inject constructor(
     private val settingsPreferences: SettingsPreferencesApp
 ): ViewModel(){
 
-    var state by mutableStateOf(SettingState())
-        private set
+    private val _state = MutableStateFlow(SettingState())
+    val state: StateFlow<SettingState> = _state.asStateFlow()
 
     init {
         init()
@@ -28,28 +32,26 @@ class SettingViewModel @Inject constructor(
         when(event){
             is SettingEvent.SetDynamicTheme -> {
                 viewModelScope.launch {
-                    val updatedModel = state.themeModel.copy(useDynamicColor = event.useDynamic)
+                    val updatedModel = _state.value.themeModel.copy(useDynamicColor = event.useDynamic)
                     themeRepo.updateThemeModel(updatedModel)
-                    state = state.copy(themeModel = updatedModel)
+                    _state.update { it.copy(themeModel = updatedModel)}
                 }
             }
             is SettingEvent.SetThemeEnum -> {
                 viewModelScope.launch {
-                    val updatedModel = state.themeModel.copy(themeEnum = event.themeEnum)
+                    val updatedModel = _state.value.themeModel.copy(themeEnum = event.themeEnum)
                     themeRepo.updateThemeModel(updatedModel)
-                    state = state.copy(themeModel = updatedModel)
+                    _state.update { it.copy(themeModel = updatedModel)}
                 }
             }
             is SettingEvent.ShowDialog -> {
-                state = state.copy(
-                    dialogEvent = event.dialogEvent
-                )
+                _state.update { it.copy(dialogEvent = event.dialogEvent)}
             }
             is SettingEvent.ResetDefaultValues -> {
                 viewModelScope.launch {
                     settingsPreferences.clear()
                     init()
-                    themeRepo.updateThemeModel(state.themeModel)
+                    themeRepo.updateThemeModel(_state.value.themeModel)
                 }
             }
             is SettingEvent.UseArchiveAsList -> {
@@ -57,11 +59,11 @@ class SettingViewModel @Inject constructor(
                     settingsPreferences.updateData {
                         it.copy(useArchiveLikeList = event.useArchiveAsList)
                     }
-                    state = state.copy(useArchiveAsList = event.useArchiveAsList)
+                    _state.update { it.copy(useArchiveAsList = event.useArchiveAsList)}
                 }
             }
             is SettingEvent.ShowSheet -> {
-                state = state.copy(sheetEvent = event.sheetEvent)
+                _state.update { it.copy(sheetEvent = event.sheetEvent)}
             }
             is SettingEvent.LoadData -> {
                 init()
@@ -78,11 +80,11 @@ class SettingViewModel @Inject constructor(
                     settingsPreferences.updateData {
                         it.copy(searchResultCount = event.searchResult)
                     }
-                    state = state.copy(searchResult = event.searchResult)
+                    _state.update { it.copy(searchResult = event.searchResult)}
                 }
             }
             is SettingEvent.ClearMessage -> {
-                state = state.copy(message = null)
+                _state.update { it.copy(message = null)}
             }
         }
     }
@@ -91,11 +93,13 @@ class SettingViewModel @Inject constructor(
         viewModelScope.launch {
             val themeModel = themeRepo.getThemeModel()
             val settingsData = settingsPreferences.getData()
-            state = state.copy(
-                themeModel = themeModel,
-                useArchiveAsList = settingsData.useArchiveLikeList,
-                searchResult = settingsData.searchResultCount
-            )
+            _state.update { state->
+                state.copy(
+                    themeModel = themeModel,
+                    useArchiveAsList = settingsData.useArchiveLikeList,
+                    searchResult = settingsData.searchResultCount
+                )
+            }
         }
     }
 }

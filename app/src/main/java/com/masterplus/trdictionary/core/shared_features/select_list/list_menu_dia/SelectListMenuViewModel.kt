@@ -12,8 +12,12 @@ import com.masterplus.trdictionary.core.domain.use_cases.list_words.ListWordsUse
 import com.masterplus.trdictionary.core.shared_features.select_list.constants.SelectListMenuEnum
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,8 +28,8 @@ class SelectListMenuViewModel @Inject constructor(
     private val listInFavoriteUseCase: ListInFavoriteControlForDeletionUseCase
 ): ViewModel(){
 
-    var state by mutableStateOf(SelectListMenuState())
-        private set
+    private val _state = MutableStateFlow(SelectListMenuState())
+    val state: StateFlow<SelectListMenuState> = _state.asStateFlow()
 
     private var loadDataJob: Job? = null
 
@@ -40,16 +44,18 @@ class SelectListMenuViewModel @Inject constructor(
                 }
             }
             is SelectListMenuEvent.ShowDialog -> {
-                state = state.copy(showDialog = event.showDialog, dialogEvent = event.dialogEvent)
+                _state.update { it.copy(showDialog = event.showDialog, dialogEvent = event.dialogEvent)}
             }
             is SelectListMenuEvent.AddOrAskFavorite -> {
                 viewModelScope.launch {
-                    listInFavoriteUseCase(state.listIdControl,true).let { showDia->
+                    listInFavoriteUseCase(_state.value.listIdControl,true).let { showDia->
                         if(showDia){
-                            state = state.copy(
-                                showDialog = true,
-                                dialogEvent = SelectListMenuDialogEvent.AskFavoriteDelete(event.wordId)
-                            )
+                            _state.update { state->
+                                state.copy(
+                                    showDialog = true,
+                                    dialogEvent = SelectListMenuDialogEvent.AskFavoriteDelete(event.wordId)
+                                )
+                            }
                         }else{
                             addFavoriteWord(event.wordId)
                         }
@@ -73,23 +79,34 @@ class SelectListMenuViewModel @Inject constructor(
     }
 
     private fun loadData(event: SelectListMenuEvent.LoadData){
-        state = state.copy(listIdControl = event.listId)
+        _state.update { it.copy(listIdControl = event.listId)}
         loadDataJob?.cancel()
         loadDataJob = viewModelScope.launch {
             val hasInFavoriteListFlow = listWordsRepo.hasWordInFavoriteListFlow(event.wordId)
             val hasInRemovableListFlow = listWordsRepo.hasWordInRemovableListFlow(event.wordId)
 
             combine(hasInFavoriteListFlow,hasInRemovableListFlow){inFavorite,inLists->{
-                state.copy(
+                CombineResult(
                     isFavorite = inFavorite,
                     isAddedToList = inLists,
                     listMenuItems = getListMenuItems(inFavorite,inLists),
-              )
-            }}.collectLatest {
-                state = it()
+                )
+            }}.collectLatest {resultFunc->
+                val result = resultFunc()
+                _state.update { state->
+                    state.copy(
+                        isFavorite = result.isFavorite,
+                        isAddedToList = result.isAddedToList,
+                        listMenuItems = result.listMenuItems,
+                    )
+                }
             }
-
         }
     }
-
 }
+
+private data class CombineResult(
+    val isFavorite: Boolean,
+    val isAddedToList: Boolean,
+    val listMenuItems: List<SelectListMenuEnum>
+)

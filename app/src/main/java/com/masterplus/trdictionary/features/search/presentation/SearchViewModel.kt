@@ -20,12 +20,16 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,8 +40,8 @@ class SearchViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ): ViewModel(){
 
-    var state by mutableStateOf(SearchState())
-        private set
+    private val _state = MutableStateFlow(SearchState())
+    val state: StateFlow<SearchState> = _state.asStateFlow()
 
     private val searchArgs = SearchArgs(savedStateHandle)
 
@@ -84,19 +88,19 @@ class SearchViewModel @Inject constructor(
                 changeFilter(event)
             }
             is SearchEvent.ShowDialog -> {
-                state = state.copy(dialogEvent = event.dialogEvent)
+                _state.update { it.copy(dialogEvent = event.dialogEvent)}
             }
             SearchEvent.HideDetail -> {
-                state = state.copy(
+                _state.update { state-> state.copy(
                     isDetailOpen = false,
                     selectedWordId = null
-                )
+                )}
             }
             is SearchEvent.ShowDetail -> {
-                state = state.copy(
+                _state.update { state-> state.copy(
                     isDetailOpen = true,
                     selectedWordId = event.wordWithSimilar.wordId
-                )
+                )}
             }
         }
     }
@@ -104,24 +108,24 @@ class SearchViewModel @Inject constructor(
     private fun setDefaultFilter(){
         viewModelScope.launch {
             val cat = CategoryEnum.fromCatId(searchArgs.catId)
-            state = state.copy(
+            _state.update { state-> state.copy(
                 defaultCategory = cat,
                 categoryFilter = cat
-            )
-            searchKindFilterFlow.emit(state.searchKind)
+            )}
+            searchKindFilterFlow.emit(_state.value.searchKind)
             categoryFilterFlow.emit(cat)
         }
     }
 
     private fun search(query: String){
-        search(state.query.copy(text = query, selection = TextRange(query.length)))
+        search(_state.value.query.copy(text = query, selection = TextRange(query.length)))
     }
 
     private fun search(query: TextFieldValue){
         viewModelScope.launch {
             val text = query.text
-            if(text != state.query.text){
-                state = state.copy(query = query, selectedWordId = null)
+            if(text != _state.value.query.text){
+                _state.update { it.copy(query = query, selectedWordId = null)}
                 queryFilterFlow.emit(text)
             }
         }
@@ -129,11 +133,13 @@ class SearchViewModel @Inject constructor(
 
     private fun changeFilter(event: SearchEvent.ChangeFilter){
         viewModelScope.launch {
-            state = state.copy(
-                categoryFilter = event.catEnum,
-                searchKind = event.searchKind,
-                badge = findBadgeCount(event.catEnum,event.searchKind)
-            )
+            _state.update { state->
+                state.copy(
+                    categoryFilter = event.catEnum,
+                    searchKind = event.searchKind,
+                    badge = findBadgeCount(event.catEnum,event.searchKind)
+                )
+            }
             searchKindFilterFlow.emit(event.searchKind)
             categoryFilterFlow.emit(event.catEnum)
         }
@@ -147,28 +153,32 @@ class SearchViewModel @Inject constructor(
             combinedDataFlow
             .distinctUntilChanged()
             .debounce {
-                state = state.copy(searchLoading = true)
+                _state.update { it.copy(searchLoading = true)}
                 K.searchDelayMilliSeconds
             }.flatMapLatest { searchModel->
 
                 val query = searchModel.query
                 if (query.isBlank() || query.length == 1){
-                    state = state.copy(
-                        wordResults = emptyList(),
-                        selectedWordId = null,
-                        searchLoading = false
-                    )
+                    _state.update { state->
+                        state.copy(
+                            wordResults = emptyList(),
+                            selectedWordId = null,
+                            searchLoading = false
+                        )
+                    }
                     return@flatMapLatest emptyFlow<List<WordWithSimilar>>()
                 }
                 historyRepo.insertOrUpdateHistory(query)
 
                 searchRepo.search(query,searchModel.categoryEnum,searchModel.searchKind)
             }.collectLatest { searchResults->
-                state = state.copy(
-                    wordResults = searchResults,
-                    searchLoading = false,
-                    selectedWordId = state.selectedWordId ?: searchResults.firstOrNull()?.wordId
-                )
+                _state.update { state->
+                    state.copy(
+                        wordResults = searchResults,
+                        searchLoading = false,
+                        selectedWordId = state.selectedWordId ?: searchResults.firstOrNull()?.wordId
+                    )
+                }
             }
         }
     }
@@ -177,7 +187,7 @@ class SearchViewModel @Inject constructor(
         historyLoadJob?.cancel()
         historyLoadJob = viewModelScope.launch {
             historyRepo.getFlowHistories().collectLatest { histories->
-                state = state.copy(histories = histories)
+                _state.update { it.copy(histories = histories)}
             }
         }
     }
@@ -189,7 +199,7 @@ class SearchViewModel @Inject constructor(
             badgeCount += 1
         }
 
-        if(categoryEnum != state.defaultCategory){
+        if(categoryEnum != _state.value.defaultCategory){
             badgeCount += 1
         }
 

@@ -5,11 +5,13 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.masterplus.trdictionary.core.domain.model.ThemeModel
 import com.masterplus.trdictionary.core.shared_features.theme.ThemeViewModel
 
@@ -85,9 +87,11 @@ fun TRDictionaryTheme(
     themeViewModel: ThemeViewModel = hiltViewModel(),
     content: @Composable () -> Unit
 ){
+    val state by themeViewModel.state.collectAsStateWithLifecycle()
+
     TRDictionaryTheme(
         useDarkTheme = useDarkTheme,
-        state = themeViewModel.state,
+        state = state,
         content = content
     )
 }

@@ -23,10 +23,6 @@ class WordCategoryViewModel @Inject constructor(
 
     val args = WordCategoryArgs(savedStateHandle)
 
-    var state by mutableStateOf(WordsListDetailState())
-        private set
-
-
     val savePointInfo = savePointCategoryInfoUseCases(
         args.catId,
         args.subCatId,

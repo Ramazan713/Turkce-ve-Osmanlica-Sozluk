@@ -15,6 +15,9 @@ import com.masterplus.trdictionary.core.util.DateFormatHelper
 import com.masterplus.trdictionary.features.word_detail.single_word_detail.navigation.RouteSingleWordDetail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -27,8 +30,9 @@ class InAppFeaturesViewModel @Inject constructor(
 
     private val reviewManager = ReviewManagerFactory.create(application)
 
-    var state by mutableStateOf(InAppFeaturesState())
-        private set
+
+    private val _state = MutableStateFlow(InAppFeaturesState())
+    val state: StateFlow<InAppFeaturesState> = _state.asStateFlow()
 
     private var reviewInfoFlow = MutableStateFlow<ReviewInfo?>(null)
 
@@ -46,20 +50,20 @@ class InAppFeaturesViewModel @Inject constructor(
                 checkReviewApi(event.routeId)
             }
             is InAppEvent.ClearUiEvent -> {
-                state = state.copy(uiEvent = null)
+                _state.update { it.copy(uiEvent = null)}
             }
         }
     }
 
 
     private fun checkReviewApi(routeId: String?){
-        if(!state.enabledReviewApi) return
+        if(!_state.value.enabledReviewApi) return
 
         if(destinations.contains(routeId)){
-            state = state.copy(reviewApiDestCount = state.reviewApiDestCount + 1)
-            if(state.reviewApiDestCount >= K.ReviewApi.reviewApiDestinationThreshold){
+            _state.update {state -> state.copy(reviewApiDestCount = state.reviewApiDestCount + 1)}
+            if(_state.value.reviewApiDestCount >= K.ReviewApi.reviewApiDestinationThreshold){
                 loadReviewInfo()
-                state = state.copy(reviewApiDestCount = 0)
+                _state.update { it.copy(reviewApiDestCount = 0)}
             }
         }else{
             showReviewApi()
@@ -71,7 +75,7 @@ class InAppFeaturesViewModel @Inject constructor(
         val request = reviewManager.requestReviewFlow()
         request.addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                reviewInfoFlow.value = task.result
+                reviewInfoFlow.update { task.result }
             }
         }
         viewModelScope.launch {
@@ -82,9 +86,9 @@ class InAppFeaturesViewModel @Inject constructor(
     private fun showReviewApi(){
         viewModelScope.launch {
             reviewInfoFlow.value?.let { reviewInfo ->
-                state = state.copy(uiEvent = InAppUiEvent.ShowReviewApi(reviewManager,reviewInfo))
-                reviewInfoFlow.value = null
-                state = state.copy(enabledReviewApi = false)
+                _state.update { it.copy(uiEvent = InAppUiEvent.ShowReviewApi(reviewManager,reviewInfo))}
+                reviewInfoFlow.update {null}
+                _state.update { it.copy(enabledReviewApi = false)}
             }
         }
     }
@@ -94,10 +98,7 @@ class InAppFeaturesViewModel @Inject constructor(
             val prefDayMillis = appPreferences.getItem(KPref.inAppReviewDay)
             val currentDayMillis = DateFormatHelper.toDateMillis(Date().time)
             val inAppReviewEnabled = prefDayMillis != currentDayMillis
-
-            state = state.copy(
-                enabledReviewApi = inAppReviewEnabled
-            )
+            _state.update { it.copy(enabledReviewApi = inAppReviewEnabled)}
         }
     }
 

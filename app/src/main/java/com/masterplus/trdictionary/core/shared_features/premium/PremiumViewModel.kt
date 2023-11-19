@@ -24,8 +24,9 @@ class PremiumViewModel @Inject constructor(
         .distinctUntilChanged()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000),null)
 
-    var state by mutableStateOf(PremiumState())
-        private set
+
+    private val _state = MutableStateFlow(PremiumState())
+    val state: StateFlow<PremiumState> = _state.asStateFlow()
 
     private var premiumJob: Job? = null
     private var messageJob: Job? = null
@@ -39,20 +40,21 @@ class PremiumViewModel @Inject constructor(
     fun onEvent(event: PremiumEvent){
         when(event){
             is PremiumEvent.ClearMessage -> {
-                state = state.copy(message = null)
+                _state.update { it.copy(message = null)}
             }
             is PremiumEvent.ClearUiEvent -> {
-                state = state.copy(uiEvent = null)
+                _state.update { it.copy(uiEvent = null)}
             }
             is PremiumEvent.Purchase -> {
                 viewModelScope.launch {
                     val billingClient = premiumRepo.billingClient
                     val billingFlowParams = premiumRepo.getBillingFlowParams(event.premiumProduct.product ?: return@launch,event.offerToken)
-                    state = state.copy(uiEvent = PremiumUiEvent.LaunchBillingFlow(
-                        billingFlowParams,
-                        billingClient
-                    )
-                    )
+                    _state.update { state-> state.copy(
+                        uiEvent = PremiumUiEvent.LaunchBillingFlow(
+                            billingFlowParams,
+                            billingClient
+                        )
+                    )}
                 }
             }
             is PremiumEvent.CheckPremium -> {
@@ -66,8 +68,8 @@ class PremiumViewModel @Inject constructor(
     private fun premiumListener(){
         premiumJob?.cancel()
         premiumJob = viewModelScope.launch {
-            premiumRepo.premiumActive.collectLatest {
-                state = state.copy(isPremium = it)
+            premiumRepo.premiumActive.collectLatest {isPremium->
+                _state.update { it.copy(isPremium = isPremium)}
             }
         }
     }
@@ -76,7 +78,7 @@ class PremiumViewModel @Inject constructor(
         messageJob?.cancel()
         messageJob = viewModelScope.launch {
             premiumRepo.messages.collectLatest { message->
-                state = state.copy(message = message)
+                _state.update { it.copy(message = message)}
             }
         }
     }

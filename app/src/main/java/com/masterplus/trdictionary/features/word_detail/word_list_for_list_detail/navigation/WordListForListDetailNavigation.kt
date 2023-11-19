@@ -1,9 +1,11 @@
 package com.masterplus.trdictionary.features.word_detail.word_list_for_list_detail.navigation
 
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -55,9 +57,11 @@ fun NavGraphBuilder.wordListForListDetail(
         val args = wordListViewModel.args
 
         val words = wordListViewModel.pagingWords.collectAsLazyPagingItems()
+        val state by listDetailViewModel.state.collectAsStateWithLifecycle()
+        val listName by wordListViewModel.listName.collectAsStateWithLifecycle()
 
         WordListForListDetailPage(
-            state = listDetailViewModel.state,
+            state = state,
             onEvent = listDetailViewModel::onEvent,
             listDetailContentType = listDetailContentType,
             windowWidthSizeClass = windowWidthSizeClass,
@@ -67,7 +71,7 @@ fun NavGraphBuilder.wordListForListDetail(
             initPos = args.pos,
             onRelatedWordClicked = onRelatedWordClicked,
             listId = args.listId,
-            listName = wordListViewModel.listName,
+            listName = listName,
             savePointDestination = wordListViewModel.savePointDestination
         )
     }

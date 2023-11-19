@@ -11,6 +11,10 @@ import com.masterplus.trdictionary.core.util.UiText
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.repo.AuthRepo
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.manager.BackupManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,29 +24,32 @@ class CloudBackupViewModel @Inject constructor(
     private val authRepo: AuthRepo
 ): ViewModel(){
 
-    var state by mutableStateOf(CloudBackupState())
-        private set
+    private val _state = MutableStateFlow(CloudBackupState())
+    val state: StateFlow<CloudBackupState> = _state.asStateFlow()
+
 
     fun makeBackup(){
         viewModelScope.launch {
             authRepo.currentUser()?.let { user->
-                state = state.copy(isLoading = true)
-                state = when(val result = backupManager.uploadBackup(user)){
-                    is Resource.Error -> {
-                        state.copy(message = result.error)
-                    }
-                    is Resource.Success -> {
-                        state.copy(message = UiText.Resource(R.string.success))
+                _state.update { state-> state.copy(isLoading = true)}
+                _state.update { state->
+                    when(val result = backupManager.uploadBackup(user)){
+                        is Resource.Error -> {
+                            state.copy(message = result.error)
+                        }
+                        is Resource.Success -> {
+                            state.copy(message = UiText.Resource(R.string.success))
+                        }
                     }
                 }
-                state = state.copy(isLoading = false)
+                _state.update { it.copy(isLoading = false)}
             }
         }
     }
 
 
     fun clearMessage(){
-        state = state.copy(message = null)
+        _state.update { it.copy(message = null)}
     }
 
 }

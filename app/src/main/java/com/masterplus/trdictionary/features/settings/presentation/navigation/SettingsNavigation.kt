@@ -35,15 +35,20 @@ fun NavGraphBuilder.settingsPage(
 
         val premiumProduct by premiumViewModel.firstPremiumProduct.collectAsStateWithLifecycle()
 
+        val authState by authViewModel.state.collectAsStateWithLifecycle()
+        val state by settingViewModel.state.collectAsStateWithLifecycle()
+        val premiumState by premiumViewModel.state.collectAsStateWithLifecycle()
+
+
         SettingsPage(
             onNavigateBack = onNavigateBack,
-            state = settingViewModel.state,
+            state = state,
             onEvent = settingViewModel::onEvent,
-            premiumState = premiumViewModel.state,
+            premiumState = premiumState,
             onPremiumEvent = premiumViewModel::onEvent,
             premiumProduct = premiumProduct,
             windowWidthSizeClass = windowWidthSizeClass,
-            authState = authViewModel.state,
+            authState = authState,
             onAuthEvent = authViewModel::onEvent
         )
     }

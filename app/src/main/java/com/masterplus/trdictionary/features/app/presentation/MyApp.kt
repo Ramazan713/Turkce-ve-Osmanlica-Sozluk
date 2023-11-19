@@ -64,6 +64,10 @@ fun MyApp(
     inAppFeaturesViewModel: InAppFeaturesViewModel = hiltViewModel(),
 ){
 
+    val adUiEvent by adViewModel.uiEventState.collectAsStateWithLifecycle()
+    val premiumState by premiumViewModel.state.collectAsStateWithLifecycle()
+    val inAppFeaturesState by inAppFeaturesViewModel.state.collectAsStateWithLifecycle()
+
     val stackEntry = navHostController.currentBackStackEntryAsState()
     val currentRoute by remember(stackEntry) {
         derivedStateOf {
@@ -90,13 +94,13 @@ fun MyApp(
 
     AdPremiumControl(
         onAdEvent = adViewModel::onEvent,
-        adUiEvent = adViewModel.uiEventState,
-        premiumState = premiumViewModel.state,
+        adUiEvent = adUiEvent,
+        premiumState = premiumState,
         onPremiumEvent = premiumViewModel::onEvent
     )
 
     InAppFeaturesControl(
-        state = inAppFeaturesViewModel.state,
+        state = inAppFeaturesState,
         onEvent = inAppFeaturesViewModel::onEvent
     )
 

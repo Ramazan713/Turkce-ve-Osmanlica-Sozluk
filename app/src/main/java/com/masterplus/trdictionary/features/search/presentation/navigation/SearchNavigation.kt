@@ -1,8 +1,10 @@
 package com.masterplus.trdictionary.features.search.presentation.navigation
 
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -41,11 +43,14 @@ fun NavGraphBuilder.searchPage(
         val searchViewModel = hiltViewModel<SearchViewModel>()
         val sharedWordDetailViewModel = hiltViewModel<WordsListDetailViewModel>()
 
+        val searchState by searchViewModel.state.collectAsStateWithLifecycle()
+        val wordsState by sharedWordDetailViewModel.state.collectAsStateWithLifecycle()
+
         SearchPage(
             onNavigateToBack = onBackPressed,
-            searchState = searchViewModel.state,
+            searchState = searchState,
             onSearchEvent = searchViewModel::onEvent,
-            wordsState = sharedWordDetailViewModel.state,
+            wordsState = wordsState,
             onWordsEvent = sharedWordDetailViewModel::onEvent,
             onRelatedWordClicked = onRelatedWordClicked,
             listDetailContentType = listDetailContentType,

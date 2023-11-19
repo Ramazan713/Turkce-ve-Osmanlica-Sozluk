@@ -8,6 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -20,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.presentation.dialog_body.CustomDialog
@@ -39,9 +41,10 @@ fun ShowCloudSelectBackup(
     selectBackupViewModel: CloudSelectBackupViewModel = hiltViewModel(),
     windowWidthSizeClass: WindowWidthSizeClass
 ){
+    val state by selectBackupViewModel.state.collectAsStateWithLifecycle()
     ShowCloudSelectBackup(
         onClosed = onClosed,
-        state = selectBackupViewModel.state,
+        state = state,
         onEvent = selectBackupViewModel::onEvent,
         windowWidthSizeClass = windowWidthSizeClass
     )

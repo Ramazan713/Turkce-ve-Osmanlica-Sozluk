@@ -9,6 +9,10 @@ import com.masterplus.trdictionary.core.domain.enums.CategoryEnum
 import com.masterplus.trdictionary.core.util.UiText
 import com.masterplus.trdictionary.features.category.domain.models.Category
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
@@ -16,8 +20,8 @@ class CategoryViewModel @Inject constructor(
 
 ): ViewModel() {
 
-    var state by mutableStateOf<CategoryState>(CategoryState())
-        private set
+    private val _state = MutableStateFlow(CategoryState())
+    val state: StateFlow<CategoryState> = _state.asStateFlow()
 
     init {
         loadData()
@@ -26,15 +30,13 @@ class CategoryViewModel @Inject constructor(
     fun onEvent(event: CategoryEvent){
         when(event){
             CategoryEvent.CloseDetail -> {
-                state = state.copy(
-                    isDetailOpen = false
-                )
+                _state.update { it.copy(isDetailOpen = false)}
             }
             is CategoryEvent.OpenDetail -> {
-                state = state.copy(
+                _state.update { state-> state.copy(
                     selectedCategory = event.category,
                     isDetailOpen = true
-                )
+                )}
             }
         }
     }
@@ -71,9 +73,9 @@ class CategoryViewModel @Inject constructor(
         )
 
         val categories = listOf(allDict,trDict,osmDict,proverbDict,idiomDict)
-        state = state.copy(
+        _state.update { state-> state.copy(
             categories = categories,
             selectedCategory = categories.first()
-        )
+        )}
     }
 }

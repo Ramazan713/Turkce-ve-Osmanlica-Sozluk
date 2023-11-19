@@ -2,9 +2,11 @@ package com.masterplus.trdictionary.features.savepoint.presentation.navigation
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.*
 import androidx.navigation.compose.composable
 import com.google.gson.Gson
@@ -53,8 +55,9 @@ fun NavGraphBuilder.selectSavePoint(
             navArgument("typeId"){type = NavType.IntType}
         )
     ){
-
         val savePointViewModel: SelectSavePointViewModel = hiltViewModel()
+
+        val state by savePointViewModel.state.collectAsStateWithLifecycle()
 
         SelectSavePointPage(
             onNavigateBack = onNavigateBack,
@@ -62,7 +65,7 @@ fun NavGraphBuilder.selectSavePoint(
             onNavigateToCatAll = onNavigateToCatAll,
             onNavigateToCatRandom = onNavigateToCatRandom,
             onNavigateToCatAlphabetic = onNavigateToCatAlphabetic,
-            state = savePointViewModel.state,
+            state = state,
             onEvent = savePointViewModel::onEvent
         )
     }

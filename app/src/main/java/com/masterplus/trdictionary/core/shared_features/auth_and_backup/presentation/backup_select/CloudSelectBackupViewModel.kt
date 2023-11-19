@@ -17,7 +17,11 @@ import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.m
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.repo.BackupMetaRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -30,8 +34,9 @@ class CloudSelectBackupViewModel @Inject constructor(
     private val appPreferences: AppPreferences
 ): ViewModel() {
 
-    var state by mutableStateOf(SelectBackupState())
-        private set
+    private val _state = MutableStateFlow(SelectBackupState())
+    val state: StateFlow<SelectBackupState> = _state.asStateFlow()
+
 
     private var loadDataJob: Job? = null
 
@@ -53,19 +58,21 @@ class CloudSelectBackupViewModel @Inject constructor(
                 downloadBackup(true, addOnLocalData = false)
             }
             is SelectBackupEvent.SelectItem -> {
-                state = state.copy(selectedItem = event.backupMeta)
+                _state.update { state-> state.copy(selectedItem = event.backupMeta)}
             }
             is SelectBackupEvent.ShowDialog -> {
-                state = state.copy(
-                    showDialog = event.showDialog,
-                    dialogEvent = event.dialogEvent
-                )
+                _state.update { state->
+                    state.copy(
+                        showDialog = event.showDialog,
+                        dialogEvent = event.dialogEvent
+                    )
+                }
             }
             is SelectBackupEvent.ClearMessage -> {
-               state = state.copy(message = null)
+                _state.update { it.copy(message = null)}
             }
             is SelectBackupEvent.ClearUiEvent -> {
-                state = state.copy(uiEvent = null)
+                _state.update { it.copy(uiEvent = null)}
             }
         }
     }
@@ -73,36 +80,38 @@ class CloudSelectBackupViewModel @Inject constructor(
     private fun downloadBackup(deleteAllData: Boolean, addOnLocalData: Boolean){
         viewModelScope.launch {
             val user = authRepo.currentUser() ?: return@launch
-            val selectedBackup = state.selectedItem ?: return@launch
-            state = state.copy(isLoading = true)
-            state = when(val result = backupManager.downloadBackup(user,selectedBackup.fileName,deleteAllData,addOnLocalData)){
+            val selectedBackup = _state.value.selectedItem ?: return@launch
+            _state.update { state-> state.copy(isLoading = true)}
+            when(val result = backupManager.downloadBackup(user,selectedBackup.fileName,deleteAllData,addOnLocalData)){
                 is Resource.Error -> {
-                    state.copy(message = result.error)
+                    _state.update { it.copy(message = result.error)}
                 }
                 is Resource.Success -> {
-                    state.copy(message = UiText.Resource(R.string.success), uiEvent = BackupSelectUiEvent.RestartApp)
+                    _state.update { state-> state.copy(
+                        message = UiText.Resource(R.string.success), uiEvent = BackupSelectUiEvent.RestartApp
+                    )}
                 }
             }
-            state = state.copy(isLoading = false)
+            _state.update { it.copy(isLoading = false)}
         }
     }
 
     private fun refreshBackupMetas(){
         viewModelScope.launch {
             authRepo.currentUser()?.let { user->
-                state = state.copy(isLoading = true)
+                _state.update { state-> state.copy(isLoading = true)}
                 when(val result = backupManager.refreshBackupMetas(user)){
                     is Resource.Error -> {
-                        state = state.copy(message = result.error)
+                        _state.update { it.copy(message = result.error)}
                     }
                     is Resource.Success -> {
                         val time = Date().time
                         appPreferences.setItem(KPref.backupMetaCounter,time)
-                        state = state.copy(isRefreshEnabled = false)
+                        _state.update { it.copy(isRefreshEnabled = false)}
                         checkRefreshButtonEnabled()
                     }
                 }.let {
-                    state = state.copy(isLoading = false)
+                    _state.update { it.copy(isLoading = false)}
                 }
             }
         }
@@ -114,16 +123,18 @@ class CloudSelectBackupViewModel @Inject constructor(
             val pastTime = appPreferences.getItem(KPref.backupMetaCounter)
             val diffInMill = (pastTime + K.backupMetaRefreshMilliSeconds) - currentTime
             if(diffInMill < 0){
-                state = state.copy(isRefreshEnabled = true)
+                _state.update { it.copy(isRefreshEnabled = true)}
                 return@launch
             }
-            state = state.copy(isRefreshEnabled = false)
+            _state.update { state-> state.copy(isRefreshEnabled = false)}
             object : CountDownTimer(diffInMill,1000){
                 override fun onTick(millisUntilFinished: Long) {
-                    state = state.copy(refreshSeconds = (millisUntilFinished / 1000).toInt())
+                    _state.update { it.copy(
+                        refreshSeconds = (millisUntilFinished / 1000).toInt()
+                    )}
                 }
                 override fun onFinish() {
-                    state = state.copy(isRefreshEnabled = true)
+                    _state.update { it.copy(isRefreshEnabled = true)}
                 }
             }.start()
         }
@@ -134,7 +145,7 @@ class CloudSelectBackupViewModel @Inject constructor(
         loadDataJob?.cancel()
         loadDataJob = viewModelScope.launch {
             backupMetaRepo.getBackupMetasFlow().collectLatest { items->
-                state = state.copy(items = items)
+                _state.update { it.copy(items = items)}
             }
         }
     }

@@ -10,7 +10,11 @@ import com.masterplus.trdictionary.core.util.UiText
 import com.masterplus.trdictionary.core.domain.use_cases.lists.ListUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,8 +23,8 @@ class ArchiveListViewModel @Inject constructor(
     private val listUseCases: ListUseCases
 ): ViewModel(){
 
-    var state by mutableStateOf(ArchiveListState())
-        private set
+    private val _state = MutableStateFlow(ArchiveListState())
+    val state: StateFlow<ArchiveListState> = _state.asStateFlow()
 
     private var loadDataJob: Job? = null
 
@@ -31,32 +35,38 @@ class ArchiveListViewModel @Inject constructor(
     fun onEvent(event: ArchiveListEvent){
         when(event){
             is ArchiveListEvent.ShowDialog -> {
-                state = state.copy(
+                _state.update { it.copy(
                     showDialog = event.showDialog,
                     dialogEvent = event.dialogEvent
-                )
+                )}
             }
             is ArchiveListEvent.UnArchive -> {
                 viewModelScope.launch {
                     listUseCases.updateList.invoke(event.listView, newIsArchive = false)
-                    state = state.copy(message = UiText.Resource(R.string.successfully_unarchive))
+                    _state.update { it.copy(
+                        message = UiText.Resource(R.string.successfully_unarchive)
+                    )}
                 }
             }
 
             is ArchiveListEvent.Delete -> {
                 viewModelScope.launch {
                     listUseCases.deleteList.invoke(event.listView)
-                    state = state.copy(message = UiText.Resource(R.string.successfully_deleted))
+                    _state.update { it.copy(
+                        message = UiText.Resource(R.string.successfully_deleted)
+                    )}
                 }
             }
             is ArchiveListEvent.Rename -> {
                 viewModelScope.launch {
                     listUseCases.updateList.invoke(event.listView, newName = event.newName)
-                    state = state.copy(message = UiText.Resource(R.string.success))
+                    _state.update { it.copy(
+                        message = UiText.Resource(R.string.success)
+                    )}
                 }
             }
             is ArchiveListEvent.ClearMessage -> {
-               state = state.copy(message = null)
+                _state.update { it.copy(message = null)}
             }
         }
     }
@@ -66,9 +76,7 @@ class ArchiveListViewModel @Inject constructor(
         loadDataJob?.cancel()
         loadDataJob = viewModelScope.launch {
             listUseCases.getLists.invoke(true).collectLatest {items->
-                state = state.copy(
-                    items = items
-                )
+                _state.update { it.copy(items = items)}
             }
         }
     }

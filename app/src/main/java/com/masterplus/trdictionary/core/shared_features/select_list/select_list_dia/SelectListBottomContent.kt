@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.presentation.components.DialogHeader
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowGetTextDialog
@@ -35,12 +36,14 @@ fun SelectListBottomContent(
     title: String = stringResource(id = R.string.add_to_list),
     listViewModel: SelectListViewModel = hiltViewModel()
 ){
+    val state by listViewModel.state.collectAsStateWithLifecycle()
+
     SelectListBottomContent(
         wordId = wordId,
         listIdControl = listIdControl,
         onClosed = onClosed,
         title = title,
-        state = listViewModel.state,
+        state = state,
         onEvent = listViewModel::onEvent
     )
 }

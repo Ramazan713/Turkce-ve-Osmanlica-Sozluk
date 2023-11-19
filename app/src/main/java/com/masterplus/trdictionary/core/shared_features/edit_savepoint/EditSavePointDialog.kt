@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -17,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.masterplus.trdictionary.core.domain.model.SavePoint
 import com.masterplus.trdictionary.core.presentation.components.SavePointItem
 import com.masterplus.trdictionary.R
@@ -41,6 +43,7 @@ fun EditSavePointDialog(
     windowWidthSizeClass: WindowWidthSizeClass,
     editViewModel: EditSavePointViewModel = hiltViewModel()
 ){
+    val state by editViewModel.state.collectAsStateWithLifecycle()
     EditSavePointDialog(
         destinationId = destinationId,
         saveKey = saveKey,
@@ -49,7 +52,7 @@ fun EditSavePointDialog(
         onClosed = onClosed,
         onNavigateLoad = onNavigateLoad,
         windowWidthSizeClass = windowWidthSizeClass,
-        state = editViewModel.state,
+        state = state,
         onEvent = editViewModel::onEvent
     )
 }

@@ -12,7 +12,11 @@ import com.masterplus.trdictionary.core.shared_features.share.domain.use_cases.S
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.repo.TTSRepo
 import com.masterplus.trdictionary.core.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,8 +28,9 @@ class WordsListDetailViewModel @Inject constructor(
     private val listInFavoriteControlForDeletionUseCase: ListInFavoriteControlForDeletionUseCase
 ): ViewModel() {
 
-    var state by mutableStateOf(WordsListDetailState())
-        private set
+
+    private val _state = MutableStateFlow(WordsListDetailState())
+    val state: StateFlow<WordsListDetailState> = _state.asStateFlow()
 
     init {
         listenTTSNetworkState()
@@ -34,37 +39,37 @@ class WordsListDetailViewModel @Inject constructor(
     fun onEvent(event: WordsListDetailEvent){
         when(event){
             WordsListDetailEvent.ClearMessage -> {
-                state = state.copy(message = null)
+                _state.update { it.copy(message = null)}
             }
             is WordsListDetailEvent.HideSelectedWords -> {
-                state = state.copy(
+                _state.update { state-> state.copy(
                     isDetailOpen = false,
                     navigateToListPos = event.lastPos
-                )
+                )}
             }
             is WordsListDetailEvent.ShowSelectedWords -> {
-                state = state.copy(
+                _state.update { state-> state.copy(
                     selectedDetailPos = event.pos,
                     isDetailOpen = true
-                )
+                )}
             }
             is WordsListDetailEvent.NavigateToPos -> {
-                state = state.copy(navigateToPos = event.pos)
+                _state.update { it.copy(navigateToPos = event.pos)}
             }
             WordsListDetailEvent.ClearNavigateToPos -> {
-                state = state.copy(
+                _state.update { state-> state.copy(
                     navigateToPos = null,
                     selectedDetailPos = null,
                     navigateToListPos = null
-                )
+                )}
             }
             is WordsListDetailEvent.AddFavorite -> {
                 viewModelScope.launch {
                     listInFavoriteControlForDeletionUseCase(event.listIdControl,event.inFavorite).let { showDia->
                         if(showDia){
-                            state = state.copy(
+                            _state.update { state-> state.copy(
                                 dialogEvent = WordsListDetailDialogEvent.AskFavoriteDelete(event.wordId)
-                            )
+                            )}
                         }else{
                             listWordsUseCases.addFavoriteListWords(event.wordId)
                         }
@@ -83,27 +88,19 @@ class WordsListDetailViewModel @Inject constructor(
                         text = event.word.word
                     )
                     if(result is Resource.Error){
-                        state = state.copy(
-                            message = result.error
-                        )
+                        _state.update { it.copy(message = result.error)}
                     }
                 }
             }
             is WordsListDetailEvent.ShowDialog -> {
-                state = state.copy(
-                    dialogEvent = event.dialogEvent
-                )
+                _state.update { it.copy(dialogEvent = event.dialogEvent)}
             }
             is WordsListDetailEvent.ShowSheet -> {
-                state = state.copy(
-                    sheetEvent = event.sheetEvent
-                )
+                _state.update { it.copy(sheetEvent = event.sheetEvent)}
             }
 
             WordsListDetailEvent.ClearShareResult -> {
-                state = state.copy(
-                    shareResultEvent = null
-                )
+                _state.update { it.copy(shareResultEvent = null)}
             }
             is WordsListDetailEvent.ShareWord -> {
                 viewModelScope.launch {
@@ -111,7 +108,7 @@ class WordsListDetailViewModel @Inject constructor(
                         word = event.wordDetail.toWord(),
                         shareItemEnum = event.shareItem
                     )
-                    state = state.copy(shareResultEvent = result)
+                    _state.update { it.copy(shareResultEvent = result)}
                 }
             }
         }
@@ -120,7 +117,7 @@ class WordsListDetailViewModel @Inject constructor(
     private fun listenTTSNetworkState(){
         viewModelScope.launch {
             ttsRepo.audioState.collectLatest {audioState->
-                state = state.copy(audioState = audioState)
+                _state.update { it.copy(audioState = audioState)}
             }
         }
     }

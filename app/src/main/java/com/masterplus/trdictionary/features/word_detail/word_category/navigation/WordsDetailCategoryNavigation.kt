@@ -4,9 +4,11 @@ import android.content.Intent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.*
 import androidx.navigation.compose.composable
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -77,10 +79,10 @@ fun NavGraphBuilder.listDetailCategoryWords(
         val wordListViewModel = hiltViewModel<WordsListDetailViewModel>()
 
         val words = wordCategoryViewModel.words.collectAsLazyPagingItems()
-
+        val state by wordListViewModel.state.collectAsStateWithLifecycle()
 
         WordCategoryPage(
-            state = wordListViewModel.state,
+            state = state,
             onEvent = wordListViewModel::onEvent,
             listDetailContentType = listDetailContentType,
             windowWidthSizeClass = windowWidthSizeClass,

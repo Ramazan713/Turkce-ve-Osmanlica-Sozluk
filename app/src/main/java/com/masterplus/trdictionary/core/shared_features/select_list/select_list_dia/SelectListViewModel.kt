@@ -10,7 +10,11 @@ import com.masterplus.trdictionary.core.domain.use_cases.list_words.ListWordsUse
 import com.masterplus.trdictionary.core.domain.use_cases.lists.ListUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,8 +25,8 @@ class SelectListViewModel @Inject constructor(
     private val settingsPreferences: SettingsPreferencesApp
 ): ViewModel(){
 
-    var state by mutableStateOf(SelectListState())
-        private set
+    private val _state = MutableStateFlow(SelectListState())
+    val state: StateFlow<SelectListState> = _state.asStateFlow()
 
     private var loadDataJob: Job? = null
 
@@ -46,17 +50,19 @@ class SelectListViewModel @Inject constructor(
                 viewModelScope.launch {
                     val listViewId = event.selectableListView.listView.id ?: return@launch
                     if(!event.selectableListView.isSelected) return@launch addToList(event)
-                    if(state.listIdControl != listViewId) return@launch addToList(event)
-                    state = state.copy(
+                    if(_state.value.listIdControl != listViewId) return@launch addToList(event)
+                    _state.update { state-> state.copy(
                         showDialog = true, dialogEvent = SelectListDialogEvent.AskListDelete(
                             event.wordId,
                             event.selectableListView.listView
                         )
-                    )
+                    )}
                 }
             }
             is SelectListEvent.ShowDialog -> {
-                state = state.copy(showDialog = event.showDialog, dialogEvent = event.dialogEvent)
+                _state.update { state-> state.copy(
+                    showDialog = event.showDialog, dialogEvent = event.dialogEvent
+                )}
             }
         }
     }
@@ -69,7 +75,9 @@ class SelectListViewModel @Inject constructor(
         loadDataJob = viewModelScope.launch {
             val prefData = settingsPreferences.getData()
             listWordsUseCases.getSelectableLists(prefData.useArchiveLikeList,event.wordId).collectLatest { lists->
-                state = state.copy(items = lists, listIdControl = event.listIdControl)
+                _state.update { state-> state.copy(
+                    items = lists, listIdControl = event.listIdControl
+                )}
             }
         }
     }

@@ -15,7 +15,12 @@ import com.masterplus.trdictionary.core.util.Resource
 import com.masterplus.trdictionary.core.util.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.getAndUpdate
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,8 +33,10 @@ class AuthViewModel @Inject constructor(
     private val validatePasswordUseCase: ValidatePasswordUseCase
 ): ViewModel() {
 
-    var state by mutableStateOf(AuthState())
-        private set
+
+    private val _state = MutableStateFlow(AuthState())
+    val state: StateFlow<AuthState> = _state.asStateFlow()
+
 
     private var userListenerJob: Job? = null
 
@@ -42,7 +49,7 @@ class AuthViewModel @Inject constructor(
             AuthEvent.DeleteAllUserData -> {
                 viewModelScope.launch {
                     backupManager.deleteAllLocalUserData(false)
-                    state = state.copy(message = UiText.Resource(R.string.successfully_deleted))
+                    _state.update { it.copy(message = UiText.Resource(R.string.successfully_deleted)) }
                 }
             }
             AuthEvent.LoadLastBackup -> {
@@ -75,30 +82,32 @@ class AuthViewModel @Inject constructor(
             }
             is AuthEvent.SignOut -> {
                 viewModelScope.launch {
-                    state = state.copy(isLoading = true)
-                    state = when(val result = authManager.signOut(event.backupBeforeSignOut)){
-                        is Resource.Success->{
-                            state.copy(message = UiText.Resource(R.string.successfully_log_out))
-                        }
-                        is Resource.Error->{
-                            state.copy(message = result.error)
+                    _state.update { it.copy(isLoading = true) }
+                    _state.update { state->
+                        when(val result = authManager.signOut(event.backupBeforeSignOut)){
+                            is Resource.Success->{
+                                state.copy(message = UiText.Resource(R.string.successfully_log_out))
+                            }
+                            is Resource.Error->{
+                                state.copy(message = result.error)
+                            }
                         }
                     }
-                    state = state.copy(isLoading = false)
+                    _state.update { state-> state.copy(isLoading = false) }
                 }
             }
 
             AuthEvent.ClearMessage -> {
-                state = state.copy(message = null)
+                _state.update { it.copy(message = null) }
             }
             is AuthEvent.ShowMessage -> {
-                state = state.copy(message = event.message)
+                _state.update { it.copy(message = event.message) }
             }
             is AuthEvent.ShowDialog -> {
-                state = state.copy(dialogEvent = event.dialogEvent)
+                _state.update { it.copy(dialogEvent = event.dialogEvent) }
             }
             AuthEvent.ClearUiAction -> {
-                state = state.copy(uiAction = null)
+                _state.update { it.copy(uiAction = null) }
             }
         }
     }
@@ -106,19 +115,21 @@ class AuthViewModel @Inject constructor(
     private fun loadLastBackup(){
         val user = authManager.currentUser() ?: return
         viewModelScope.launch {
-            state = state.copy(isLoading = true)
-            state = when(val result = backupManager.downloadLastBackup(user)){
-                is Resource.Error -> {
-                    state.copy(message = result.error)
-                }
-                is Resource.Success -> {
-                    state.copy(
-                        uiAction = AuthUiAction.RefreshApp,
-                        message = UiText.Resource(R.string.success)
-                    )
+            _state.update { it.copy(isLoading = true) }
+            _state.update { state->
+                when(val result = backupManager.downloadLastBackup(user)){
+                    is Resource.Error -> {
+                        state.copy(message = result.error)
+                    }
+                    is Resource.Success -> {
+                        state.copy(
+                            uiAction = AuthUiAction.RefreshApp,
+                            message = UiText.Resource(R.string.success)
+                        )
+                    }
                 }
             }
-            state = state.copy(isLoading = false)
+            _state.update { it.copy(isLoading = false) }
         }
     }
 
@@ -126,41 +137,45 @@ class AuthViewModel @Inject constructor(
         userListenerJob?.cancel()
         userListenerJob = viewModelScope.launch {
             authManager.userFlow().collectLatest { user->
-                state = state.copy(
-                    user = user
-                )
+                _state.update { it.copy(user = user) }
             }
         }
     }
 
 
     private fun handleResourceUiText(resource: Resource<UiText>){
-        state = when(resource){
-            is Resource.Error -> {
-                state.copy(message = resource.data)
-            }
-            is Resource.Success -> {
-                state.copy(message = resource.data)
+        _state.update { state->
+            when(resource){
+                is Resource.Error -> {
+                    state.copy(message = resource.data)
+                }
+                is Resource.Success -> {
+                    state.copy(message = resource.data)
+                }
             }
         }
     }
 
     private fun handleSignIn(call: suspend () -> Resource<UiText>){
         viewModelScope.launch {
-            state = state.copy(isLoading = true)
+            _state.update { it.copy(isLoading = true) }
             when(val result = call()){
                 is Resource.Success->{
-                    state = state.copy(isLoading = false, message = result.data)
+                    _state.update { state->
+                        state.copy(isLoading = false, message = result.data)
+                    }
                     val hasBackupMetas = authManager.hasBackupMetas()
                     val showBackupSectionForLogin = settingsPreferences.getData().showBackupSectionForLogin
                     if(hasBackupMetas && showBackupSectionForLogin){
-                        state = state.copy(
-                            uiAction = AuthUiAction.ShowBackupSectionForLogin
-                        )
+                        _state.update { state->
+                            state.copy(uiAction = AuthUiAction.ShowBackupSectionForLogin)
+                        }
                     }
                 }
                 is Resource.Error->{
-                    state = state.copy(isLoading = false, message = result.error)
+                    _state.update { state->
+                        state.copy(isLoading = false, message = result.error)
+                    }
                 }
             }
         }
@@ -177,7 +192,9 @@ class AuthViewModel @Inject constructor(
             val passwordError = validatePasswordUseCase(password)
             val emailError = validateEmailUseCase(email)
             if(passwordError != null || emailError != null){
-                state = state.copy(message = emailError ?: passwordError)
+                _state.update { state->
+                    state.copy(message = emailError ?: passwordError)
+                }
                 return@launch
             }
             call()

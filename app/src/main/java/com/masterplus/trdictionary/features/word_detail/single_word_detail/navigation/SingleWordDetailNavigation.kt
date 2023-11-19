@@ -42,11 +42,12 @@ fun NavGraphBuilder.singleWordDetail(
         val wordDetailViewModel = hiltViewModel<SingleWordDetailViewModel>()
 
         val word by wordDetailViewModel.word.collectAsStateWithLifecycle(initialValue = null)
+        val sharedState by sharedViewModel.state.collectAsStateWithLifecycle()
 
         SingleWordDetailPage(
             onNavigateBack = onNavigateBack,
             onRelatedWordClicked = onRelatedWordClicked,
-            state = sharedViewModel.state,
+            state = sharedState,
             onEvent = sharedViewModel::onEvent,
             wordWithSimilar = word,
             windowWidthSizeClass = windowWidthSizeClass
