@@ -2,6 +2,7 @@ package com.masterplus.trdictionary.core.data.repo
 
 import android.app.Application
 import android.util.Log
+import com.masterplus.trdictionary.core.domain.DispatcherProvider
 import com.masterplus.trdictionary.core.domain.repo.AppFileRepo
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -12,13 +13,13 @@ import javax.inject.Inject
 
 class AppFileRepoImpl @Inject constructor(
     private val application: Application,
-    private val ioDispatcher: CoroutineDispatcher
+    private val dispatcherProvider: DispatcherProvider
 ): AppFileRepo {
 
     private val filesDir = application.filesDir
 
     override suspend fun insertFile(fileName: String, data: ByteArray): File {
-        return withContext(ioDispatcher){
+        return withContext(dispatcherProvider.io){
             val file = File(filesDir,fileName)
 
             file.parentFile?.let { parentFile->
@@ -35,7 +36,7 @@ class AppFileRepoImpl @Inject constructor(
     }
 
     override suspend fun deleteFile(fileName: String) {
-        withContext(ioDispatcher){
+        withContext(dispatcherProvider.io){
             File(filesDir,fileName).let { file->
                 if(file.exists()){
                     file.delete()
@@ -45,7 +46,7 @@ class AppFileRepoImpl @Inject constructor(
     }
 
     override suspend fun getFile(fileName: String): File? {
-        return withContext(ioDispatcher){
+        return withContext(dispatcherProvider.io){
             val file = File(filesDir,fileName)
             if(file.exists()) return@withContext file
             return@withContext null
@@ -53,7 +54,7 @@ class AppFileRepoImpl @Inject constructor(
     }
 
     override suspend fun getFileData(fileName: String): ByteArray? {
-        return withContext(ioDispatcher){
+        return withContext(dispatcherProvider.io){
             getFile(fileName)?.readBytes()
         }
     }

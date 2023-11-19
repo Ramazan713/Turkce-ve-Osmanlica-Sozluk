@@ -3,6 +3,7 @@ package com.masterplus.trdictionary.core.di
 import android.app.Application
 import com.masterplus.trdictionary.core.data.local.AppDatabase
 import com.masterplus.trdictionary.core.data.repo.*
+import com.masterplus.trdictionary.core.domain.DispatcherProvider
 import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferencesApp
 import com.masterplus.trdictionary.core.domain.repo.*
 import dagger.Module
@@ -53,7 +54,10 @@ object RepoModule {
 
     @Provides
     @Singleton
-    fun provideAppFileRepo(application: Application,ioDispatcher: CoroutineDispatcher): AppFileRepo =
-        AppFileRepoImpl(application,ioDispatcher)
+    fun provideAppFileRepo(
+        application: Application,
+        dispatcherProvider: DispatcherProvider
+    ): AppFileRepo =
+        AppFileRepoImpl(application,dispatcherProvider)
 
 }

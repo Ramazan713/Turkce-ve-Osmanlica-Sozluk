@@ -28,8 +28,10 @@ import javax.inject.Singleton
 import androidx.datastore.core.MultiProcessDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import com.masterplus.trdictionary.core.data.DefaultDispatcherProvider
 import com.masterplus.trdictionary.core.data.preferences.DefaultAppPreferencesImpl
 import com.masterplus.trdictionary.core.data.preferences.SettingsPreferencesImplApp
+import com.masterplus.trdictionary.core.domain.DispatcherProvider
 import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferencesApp
 import com.masterplus.trdictionary.core.domain.preferences.model.SettingsData
 import com.masterplus.trdictionary.core.domain.preferences.model.SettingsDataSerializer
@@ -83,12 +85,11 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideCoroutineScope(ioDispatcher: CoroutineDispatcher) = CoroutineScope( ioDispatcher + SupervisorJob())
+    fun provideDispatcherProvider(): DispatcherProvider = DefaultDispatcherProvider()
 
     @Provides
     @Singleton
-    fun provideIODispatcher(): CoroutineDispatcher = Dispatchers.IO
-
+    fun provideCoroutineScope(provider: DispatcherProvider) = CoroutineScope( provider.io + SupervisorJob())
 
 
     @OptIn(ExperimentalMultiProcessDataStore::class)
