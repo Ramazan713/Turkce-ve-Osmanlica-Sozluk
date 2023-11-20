@@ -3,8 +3,8 @@ package com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.ma
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.constants.K
 import com.masterplus.trdictionary.core.domain.ConnectivityProvider
-import com.masterplus.trdictionary.core.util.Resource
-import com.masterplus.trdictionary.core.util.UiText
+import com.masterplus.trdictionary.core.domain.utils.Resource
+import com.masterplus.trdictionary.core.domain.utils.UiText
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.model.User
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.manager.BackupManager
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.repo.StorageService
@@ -27,7 +27,8 @@ class BackupManagerImpl @Inject constructor(
         cutExtraBackupFiles(user)
         val fileName = UUID.randomUUID().toString()
         val timeStamp = Date().time
-        val data = localBackupRepo.getJsonData()?.toByteArray(charset = Charsets.UTF_8) ?: return Resource.Error(UiText.Resource(R.string.error))
+        val data = localBackupRepo.getJsonData()?.toByteArray(charset = Charsets.UTF_8) ?: return Resource.Error(
+            UiText.Resource(R.string.error))
         return storageService.uploadData(user,fileName,data).let {
             if(it is Resource.Success){
                 backupMetaRepo.insertBackupMeta(

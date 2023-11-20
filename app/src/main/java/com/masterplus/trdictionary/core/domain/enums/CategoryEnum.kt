@@ -1,7 +1,7 @@
 package com.masterplus.trdictionary.core.domain.enums
 
 import com.masterplus.trdictionary.R
-import com.masterplus.trdictionary.core.util.UiText
+import com.masterplus.trdictionary.core.domain.utils.UiText
 
 enum class CategoryEnum(val catId: Int, override val title: UiText): IMenuItemEnum {
 

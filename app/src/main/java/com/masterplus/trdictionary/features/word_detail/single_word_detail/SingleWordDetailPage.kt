@@ -26,9 +26,9 @@ import com.masterplus.trdictionary.core.shared_features.word_list_detail.present
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.contents.WordsDetailAdaptiveContent
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.handlers.WordsDetailModalEventsHandler
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.handlers.WordsDetailSheetEventsHandler
-import com.masterplus.trdictionary.core.util.PreviewDesktop
-import com.masterplus.trdictionary.core.util.SampleDatas
-import com.masterplus.trdictionary.core.util.ShowLifecycleToastMessage
+import com.masterplus.trdictionary.core.presentation.utils.PreviewDesktop
+import com.masterplus.trdictionary.core.presentation.utils.SampleDatas
+import com.masterplus.trdictionary.core.presentation.utils.ShowLifecycleToastMessage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

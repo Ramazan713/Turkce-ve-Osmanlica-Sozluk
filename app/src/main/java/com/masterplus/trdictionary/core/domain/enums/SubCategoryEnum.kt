@@ -1,7 +1,7 @@
 package com.masterplus.trdictionary.core.domain.enums
 
 import com.masterplus.trdictionary.R
-import com.masterplus.trdictionary.core.util.UiText
+import com.masterplus.trdictionary.core.domain.utils.UiText
 
 enum class SubCategoryEnum(val subCatId: Int,val description: UiText) {
     All(1, UiText.Resource(R.string.all_subCat)),

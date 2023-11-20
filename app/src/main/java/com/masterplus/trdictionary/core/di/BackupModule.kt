@@ -12,7 +12,7 @@ import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferencesAp
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.repo.BackupParserRepoImpl
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.manager.BackupManager
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.repo.BackupMetaRepo
-import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.repo.BackupParserRepo
+import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.repo.BackupParserRepo
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.repo.LocalBackupRepo
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.repo.StorageService
 import dagger.Module

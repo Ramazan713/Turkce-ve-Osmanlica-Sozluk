@@ -1,8 +1,6 @@
 package com.masterplus.trdictionary.features.settings.presentation.sections
 
 import android.app.Activity
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.*
@@ -10,9 +8,8 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
-import com.masterplus.trdictionary.core.util.ToastHelper
+import com.masterplus.trdictionary.core.presentation.utils.ToastHelper
 import com.masterplus.trdictionary.core.extensions.refreshApp
-import com.masterplus.trdictionary.core.presentation.dialog_body.LoadingDialog
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.presentation.auth.AuthEvent
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.presentation.auth.AuthState
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.presentation.auth.AuthUiAction
@@ -20,13 +17,12 @@ import com.masterplus.trdictionary.core.shared_features.auth_and_backup.presenta
 import com.masterplus.trdictionary.core.shared_features.premium.PremiumEvent
 import com.masterplus.trdictionary.core.shared_features.premium.PremiumState
 import com.masterplus.trdictionary.core.shared_features.premium.PremiumUiEvent
-import com.masterplus.trdictionary.core.util.ShowLifecycleToastMessage
+import com.masterplus.trdictionary.core.presentation.utils.ShowLifecycleToastMessage
 import com.masterplus.trdictionary.features.settings.presentation.SettingDialogEvent
 import com.masterplus.trdictionary.features.settings.presentation.SettingEvent
 import com.masterplus.trdictionary.features.settings.presentation.SettingSheetEvent
 import com.masterplus.trdictionary.features.settings.presentation.SettingState
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.filter
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class,
     ExperimentalFoundationApi::class

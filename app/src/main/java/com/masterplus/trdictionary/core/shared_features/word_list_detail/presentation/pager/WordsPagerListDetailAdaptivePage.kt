@@ -4,8 +4,6 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.pager.PagerState
@@ -28,7 +26,7 @@ import com.masterplus.trdictionary.core.shared_features.word_list_detail.present
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.handlers.WordsDetailSheetEventsHandler
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.WordsListDetailEvent
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.WordsListDetailState
-import com.masterplus.trdictionary.core.util.ShowLifecycleToastMessage
+import com.masterplus.trdictionary.core.presentation.utils.ShowLifecycleToastMessage
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

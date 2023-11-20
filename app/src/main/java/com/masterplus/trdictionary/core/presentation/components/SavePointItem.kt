@@ -1,8 +1,6 @@
 package com.masterplus.trdictionary.core.presentation.components
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -23,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.core.domain.model.SavePoint
 import com.masterplus.trdictionary.R
-import com.masterplus.trdictionary.core.util.SampleDatas
+import com.masterplus.trdictionary.core.presentation.utils.SampleDatas
 
 @Composable
 fun SavePointItem(

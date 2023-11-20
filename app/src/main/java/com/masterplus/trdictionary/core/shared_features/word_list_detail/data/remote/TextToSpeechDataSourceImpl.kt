@@ -2,12 +2,11 @@ package com.masterplus.trdictionary.core.shared_features.word_list_detail.data.r
 
 import android.app.Application
 import android.util.Base64
-import android.util.Log
 import com.masterplus.trdictionary.BuildConfig
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.use_cases.GetAppSha1UseCase
-import com.masterplus.trdictionary.core.util.Resource
-import com.masterplus.trdictionary.core.util.UiText
+import com.masterplus.trdictionary.core.domain.utils.Resource
+import com.masterplus.trdictionary.core.domain.utils.UiText
 import javax.inject.Inject
 
 

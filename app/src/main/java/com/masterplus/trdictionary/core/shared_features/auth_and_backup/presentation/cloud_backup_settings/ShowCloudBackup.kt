@@ -22,7 +22,7 @@ import com.masterplus.trdictionary.core.presentation.components.DialogHeader
 import com.masterplus.trdictionary.core.presentation.dialog_body.CustomDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.LoadingDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDialog
-import com.masterplus.trdictionary.core.util.ShowLifecycleToastMessage
+import com.masterplus.trdictionary.core.presentation.utils.ShowLifecycleToastMessage
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.presentation.backup_select.ShowCloudSelectBackup
 import com.masterplus.trdictionary.features.settings.presentation.components.TextIcon
 

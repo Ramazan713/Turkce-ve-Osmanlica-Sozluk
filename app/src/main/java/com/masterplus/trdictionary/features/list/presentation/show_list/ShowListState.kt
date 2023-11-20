@@ -1,7 +1,7 @@
 package com.masterplus.trdictionary.features.list.presentation.show_list
 
 import com.masterplus.trdictionary.core.domain.model.ListView
-import com.masterplus.trdictionary.core.util.UiText
+import com.masterplus.trdictionary.core.domain.utils.UiText
 
 
 data class ShowListState(

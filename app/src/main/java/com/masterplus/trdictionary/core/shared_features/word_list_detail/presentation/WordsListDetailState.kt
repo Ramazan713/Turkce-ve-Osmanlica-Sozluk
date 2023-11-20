@@ -4,7 +4,7 @@ import androidx.paging.PagingData
 import com.masterplus.trdictionary.core.shared_features.share.domain.use_cases.ShareWordUseCases
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.model.AudioState
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.model.WordWithSimilar
-import com.masterplus.trdictionary.core.util.UiText
+import com.masterplus.trdictionary.core.domain.utils.UiText
 
 data class WordsListDetailState(
     val message: UiText? = null,

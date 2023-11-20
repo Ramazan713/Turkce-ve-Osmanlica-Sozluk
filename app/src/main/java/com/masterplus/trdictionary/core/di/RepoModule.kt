@@ -48,8 +48,12 @@ object RepoModule {
 
     @Provides
     @Singleton
-    fun providePremiumRepo(scope: CoroutineScope, application: Application) =
-        PremiumRepo(application,scope)
+    fun providePremiumRepo(
+        scope: CoroutineScope,
+        application: Application,
+        dispatcherProvider: DispatcherProvider
+    ) =
+        PremiumRepo(application,scope,dispatcherProvider)
 
 
     @Provides

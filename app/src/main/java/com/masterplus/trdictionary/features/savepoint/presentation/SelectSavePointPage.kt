@@ -24,10 +24,10 @@ import com.masterplus.trdictionary.core.presentation.components.SavePointItem
 import com.masterplus.trdictionary.core.presentation.components.navigation.CustomTopAppBar
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowGetTextDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDialog
-import com.masterplus.trdictionary.core.util.PreviewDesktop
-import com.masterplus.trdictionary.core.util.SampleDatas
-import com.masterplus.trdictionary.core.util.ShowLifecycleSnackBarMessage
-import com.masterplus.trdictionary.core.util.rememberDefaultSnackBar
+import com.masterplus.trdictionary.core.presentation.utils.PreviewDesktop
+import com.masterplus.trdictionary.core.presentation.utils.SampleDatas
+import com.masterplus.trdictionary.core.presentation.utils.ShowLifecycleSnackBarMessage
+import com.masterplus.trdictionary.core.presentation.utils.rememberDefaultSnackBar
 import kotlinx.coroutines.flow.collectLatest
 
 @ExperimentalFoundationApi

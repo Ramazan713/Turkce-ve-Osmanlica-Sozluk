@@ -1,7 +1,7 @@
 package com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.use_cases
 
 import com.masterplus.trdictionary.R
-import com.masterplus.trdictionary.core.util.UiText
+import com.masterplus.trdictionary.core.domain.utils.UiText
 
 class ValidatePasswordUseCase {
 

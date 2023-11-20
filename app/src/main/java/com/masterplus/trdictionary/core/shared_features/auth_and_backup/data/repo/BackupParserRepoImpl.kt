@@ -1,11 +1,10 @@
 package com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.repo
 
-import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.model.AllBackupData
-import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.model.HistoryBackup
-import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.model.ListBackup
-import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.model.ListWordsBackup
-import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.model.SavePointBackup
-import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.repo.BackupParserRepo
+import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.dtos.AllBackupData
+import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.dtos.HistoryBackup
+import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.dtos.ListBackup
+import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.dtos.ListWordsBackup
+import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.dtos.SavePointBackup
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer

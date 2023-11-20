@@ -14,8 +14,8 @@ import com.masterplus.trdictionary.core.extensions.copyClipboardText
 import com.masterplus.trdictionary.core.extensions.share
 import com.masterplus.trdictionary.core.extensions.shareText
 import com.masterplus.trdictionary.core.shared_features.share.domain.use_cases.ShareWordUseCases
-import com.masterplus.trdictionary.core.util.ToastHelper
-import com.masterplus.trdictionary.core.util.UiText
+import com.masterplus.trdictionary.core.presentation.utils.ToastHelper
+import com.masterplus.trdictionary.core.domain.utils.UiText
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
 

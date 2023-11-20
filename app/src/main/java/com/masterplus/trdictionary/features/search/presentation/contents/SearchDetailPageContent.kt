@@ -2,7 +2,6 @@ package com.masterplus.trdictionary.features.search.presentation.contents
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,7 +24,7 @@ import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.model.WordWithSimilar
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.WordsListDetailEvent
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.contents.WordsDetailAdaptiveContent
-import com.masterplus.trdictionary.core.util.SampleDatas
+import com.masterplus.trdictionary.core.presentation.utils.SampleDatas
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

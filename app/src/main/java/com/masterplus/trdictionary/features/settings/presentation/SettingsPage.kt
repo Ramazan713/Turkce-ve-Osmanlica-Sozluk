@@ -2,9 +2,6 @@ package com.masterplus.trdictionary.features.settings.presentation
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
@@ -23,9 +20,8 @@ import com.masterplus.trdictionary.core.presentation.components.navigation.Custo
 import com.masterplus.trdictionary.core.presentation.dialog_body.LoadingDialog
 import com.masterplus.trdictionary.core.shared_features.premium.PremiumEvent
 import com.masterplus.trdictionary.core.shared_features.premium.PremiumState
-import com.masterplus.trdictionary.core.util.PreviewDesktop
-import com.masterplus.trdictionary.core.util.PreviewTablet
-import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.model.User
+import com.masterplus.trdictionary.core.presentation.utils.PreviewDesktop
+import com.masterplus.trdictionary.core.presentation.utils.PreviewTablet
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.presentation.auth.AuthEvent
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.presentation.auth.AuthState
 import com.masterplus.trdictionary.features.settings.presentation.sections.*

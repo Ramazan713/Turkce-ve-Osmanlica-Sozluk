@@ -27,8 +27,8 @@ import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.model.ListView
 import com.masterplus.trdictionary.core.presentation.selections.AdaptiveSelectSheetMenu
 import com.masterplus.trdictionary.core.presentation.selections.rememberAdaptiveSelectMenuState
-import com.masterplus.trdictionary.core.util.ShowLifecycleSnackBarMessage
-import com.masterplus.trdictionary.core.util.rememberDefaultSnackBar
+import com.masterplus.trdictionary.core.presentation.utils.ShowLifecycleSnackBarMessage
+import com.masterplus.trdictionary.core.presentation.utils.rememberDefaultSnackBar
 
 @ExperimentalMaterial3Api
 @ExperimentalFoundationApi

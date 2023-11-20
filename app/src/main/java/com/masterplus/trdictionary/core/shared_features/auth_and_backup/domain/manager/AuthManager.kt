@@ -1,10 +1,8 @@
 package com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.manager
 
-import android.content.Intent
-import androidx.activity.result.ActivityResult
 import com.google.firebase.auth.AuthCredential
-import com.masterplus.trdictionary.core.util.Resource
-import com.masterplus.trdictionary.core.util.UiText
+import com.masterplus.trdictionary.core.domain.utils.Resource
+import com.masterplus.trdictionary.core.domain.utils.UiText
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.model.User
 import kotlinx.coroutines.flow.Flow
 

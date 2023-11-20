@@ -13,8 +13,7 @@ import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.map
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.mapper.toListWordsEntity
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.mapper.toSavePointBackup
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.mapper.toSavePointEntity
-import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.model.AllBackupData
-import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.repo.BackupParserRepo
+import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.dtos.AllBackupData
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.repo.LocalBackupRepo
 import javax.inject.Inject
 

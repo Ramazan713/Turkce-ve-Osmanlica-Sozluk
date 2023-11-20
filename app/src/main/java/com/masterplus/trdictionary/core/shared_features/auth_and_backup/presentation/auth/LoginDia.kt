@@ -1,7 +1,6 @@
 package com.masterplus.trdictionary.core.shared_features.auth_and_backup.presentation.auth
 
 import android.app.Activity
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -41,7 +40,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.flowWithLifecycle
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
@@ -58,12 +56,10 @@ import com.masterplus.trdictionary.core.presentation.dialog_body.LoadingDialog
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.presentation.auth.components.AuthButton
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.presentation.auth.components.AuthProviderRow
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.presentation.auth.handlers.AuthDialogEventHandler
-import com.masterplus.trdictionary.core.util.ShowLifecycleToastMessage
-import com.masterplus.trdictionary.core.util.UiText
+import com.masterplus.trdictionary.core.domain.utils.UiText
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.firstOrNull
 
 @Composable
 fun LoginDia(

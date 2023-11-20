@@ -26,8 +26,8 @@ import com.masterplus.trdictionary.core.presentation.components.DialogHeader
 import com.masterplus.trdictionary.core.presentation.dialog_body.CustomDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowGetTextDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDialog
-import com.masterplus.trdictionary.core.util.SampleDatas
-import com.masterplus.trdictionary.core.util.ShowLifecycleToastMessage
+import com.masterplus.trdictionary.core.presentation.utils.SampleDatas
+import com.masterplus.trdictionary.core.presentation.utils.ShowLifecycleToastMessage
 
 
 @ExperimentalFoundationApi

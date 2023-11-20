@@ -1,4 +1,4 @@
-package com.masterplus.trdictionary.core.util
+package com.masterplus.trdictionary.core.presentation.utils
 
 import android.content.Context
 import android.widget.Toast
@@ -10,6 +10,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
+import com.masterplus.trdictionary.core.domain.utils.UiText
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
 
@@ -47,7 +48,7 @@ fun ShowLifecycleToastMessage(
             .filterNotNull()
             .flowWithLifecycle(lifecycleOwner.lifecycle)
             .collectLatest {message->
-                ToastHelper.showMessage(message,context)
+                ToastHelper.showMessage(message, context)
                 currentOnDismiss()
             }
     }

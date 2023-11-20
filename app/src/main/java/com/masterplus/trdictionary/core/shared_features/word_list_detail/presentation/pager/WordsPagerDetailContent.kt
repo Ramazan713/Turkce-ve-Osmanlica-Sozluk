@@ -42,7 +42,7 @@ import com.masterplus.trdictionary.core.extensions.isLoading
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.constants.WordsPagerTopBarMenu
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.contents.WordsDetailAdaptiveContent
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.pager.components.WordsDetailTopBar
-import com.masterplus.trdictionary.core.util.SampleDatas
+import com.masterplus.trdictionary.core.presentation.utils.SampleDatas
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.WordsListDetailDialogEvent
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.WordsListDetailEvent
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.model.AudioState

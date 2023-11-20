@@ -1,7 +1,7 @@
 package com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.mapper
 
 import com.masterplus.trdictionary.core.domain.preferences.model.SettingsData
-import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.model.SettingsDataBackup
+import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.dtos.SettingsDataBackup
 
 
 fun SettingsData.toBackupData(): SettingsDataBackup {

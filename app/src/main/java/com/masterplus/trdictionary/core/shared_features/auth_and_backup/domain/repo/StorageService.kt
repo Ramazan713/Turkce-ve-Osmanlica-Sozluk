@@ -1,6 +1,6 @@
 package com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.repo
 
-import com.masterplus.trdictionary.core.util.Resource
+import com.masterplus.trdictionary.core.domain.utils.Resource
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.model.User
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.model.BackupMeta
 

@@ -36,8 +36,8 @@ import com.masterplus.trdictionary.core.presentation.components.navigation.Custo
 import com.masterplus.trdictionary.core.presentation.selections.rememberAdaptiveSelectMenuState
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowGetTextDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDialog
-import com.masterplus.trdictionary.core.util.ShowLifecycleSnackBarMessage
-import com.masterplus.trdictionary.core.util.rememberDefaultSnackBar
+import com.masterplus.trdictionary.core.presentation.utils.ShowLifecycleSnackBarMessage
+import com.masterplus.trdictionary.core.presentation.utils.rememberDefaultSnackBar
 
 import com.masterplus.trdictionary.features.list.presentation.components.ListViewItem
 import com.masterplus.trdictionary.features.list.presentation.show_list.constants.ShowListBarMenuEnum

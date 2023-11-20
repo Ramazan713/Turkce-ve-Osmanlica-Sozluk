@@ -1,13 +1,10 @@
 package com.masterplus.trdictionary.core.shared_features.auth_and_backup.presentation.cloud_backup_settings
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.masterplus.trdictionary.R
-import com.masterplus.trdictionary.core.util.Resource
-import com.masterplus.trdictionary.core.util.UiText
+import com.masterplus.trdictionary.core.domain.utils.Resource
+import com.masterplus.trdictionary.core.domain.utils.UiText
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.repo.AuthRepo
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.manager.BackupManager
 import dagger.hilt.android.lifecycle.HiltViewModel

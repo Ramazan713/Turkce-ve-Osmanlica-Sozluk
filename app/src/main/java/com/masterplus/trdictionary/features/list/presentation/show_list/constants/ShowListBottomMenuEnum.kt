@@ -3,13 +3,12 @@ package com.masterplus.trdictionary.features.list.presentation.show_list.constan
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Archive
 import androidx.compose.material.icons.filled.ContentCopy
-import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.FolderDelete
 import androidx.compose.material.icons.outlined.DriveFileRenameOutline
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.enums.IMenuItemEnum
 import com.masterplus.trdictionary.core.domain.enums.IconInfo
-import com.masterplus.trdictionary.core.util.UiText
+import com.masterplus.trdictionary.core.domain.utils.UiText
 
 enum class ShowListBottomMenuEnum: IMenuItemEnum {
     Rename {

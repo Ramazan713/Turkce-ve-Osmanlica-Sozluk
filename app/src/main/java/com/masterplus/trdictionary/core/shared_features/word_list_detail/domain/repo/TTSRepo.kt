@@ -1,7 +1,7 @@
 package com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.repo
 
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.model.AudioState
-import com.masterplus.trdictionary.core.util.Resource
+import com.masterplus.trdictionary.core.domain.utils.Resource
 import kotlinx.coroutines.flow.Flow
 
 interface TTSRepo {

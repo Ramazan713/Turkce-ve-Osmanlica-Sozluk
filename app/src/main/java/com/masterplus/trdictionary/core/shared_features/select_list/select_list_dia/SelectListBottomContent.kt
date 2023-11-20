@@ -24,7 +24,7 @@ import com.masterplus.trdictionary.core.presentation.components.DialogHeader
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowGetTextDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDialog
 import com.masterplus.trdictionary.core.shared_features.select_list.components.SelectListItem
-import com.masterplus.trdictionary.core.util.SampleDatas
+import com.masterplus.trdictionary.core.presentation.utils.SampleDatas
 
 
 @ExperimentalFoundationApi

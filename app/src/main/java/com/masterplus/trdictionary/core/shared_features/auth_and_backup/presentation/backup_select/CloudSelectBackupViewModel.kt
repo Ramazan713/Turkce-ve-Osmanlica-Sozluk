@@ -1,17 +1,14 @@
 package com.masterplus.trdictionary.core.shared_features.auth_and_backup.presentation.backup_select
 
 import android.os.CountDownTimer
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.constants.K
 import com.masterplus.trdictionary.core.domain.constants.KPref
 import com.masterplus.trdictionary.core.domain.preferences.AppPreferences
-import com.masterplus.trdictionary.core.util.Resource
-import com.masterplus.trdictionary.core.util.UiText
+import com.masterplus.trdictionary.core.domain.utils.Resource
+import com.masterplus.trdictionary.core.domain.utils.UiText
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.repo.AuthRepo
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.manager.BackupManager
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.repo.BackupMetaRepo

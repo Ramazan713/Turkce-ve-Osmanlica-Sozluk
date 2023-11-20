@@ -1,8 +1,5 @@
 package com.masterplus.trdictionary.features.savepoint.presentation
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,7 +7,7 @@ import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.enums.CategoryEnum
 import com.masterplus.trdictionary.core.domain.enums.SavePointDestination
 import com.masterplus.trdictionary.core.domain.use_cases.savepoint.SavePointsUseCases
-import com.masterplus.trdictionary.core.util.UiText
+import com.masterplus.trdictionary.core.domain.utils.UiText
 import com.masterplus.trdictionary.features.savepoint.presentation.constants.SelectSavePointMenuItem
 import com.masterplus.trdictionary.features.savepoint.presentation.navigation.SelectSavePointArgs
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -1,12 +1,9 @@
 package com.masterplus.trdictionary.features.category.presentation.category
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.enums.CategoryEnum
-import com.masterplus.trdictionary.core.util.UiText
+import com.masterplus.trdictionary.core.domain.utils.UiText
 import com.masterplus.trdictionary.features.category.domain.models.Category
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

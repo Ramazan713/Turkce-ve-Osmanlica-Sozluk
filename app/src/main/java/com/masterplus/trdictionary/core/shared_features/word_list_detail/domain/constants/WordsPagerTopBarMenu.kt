@@ -5,7 +5,7 @@ import androidx.compose.material.icons.filled.Save
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.enums.IMenuItemEnum
 import com.masterplus.trdictionary.core.domain.enums.IconInfo
-import com.masterplus.trdictionary.core.util.UiText
+import com.masterplus.trdictionary.core.domain.utils.UiText
 
 enum class WordsPagerTopBarMenu(override val title: UiText): IMenuItemEnum {
 

@@ -1,7 +1,6 @@
 package com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.pager
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -19,7 +18,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.masterplus.trdictionary.core.extensions.visibleMiddlePosition
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.contents.WordListContent
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.pager.components.WordsDetailTopBar
-import com.masterplus.trdictionary.core.util.SampleDatas
+import com.masterplus.trdictionary.core.presentation.utils.SampleDatas
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.WordsListDetailDialogEvent
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.WordsListDetailEvent
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.constants.WordsPagerTopBarMenu

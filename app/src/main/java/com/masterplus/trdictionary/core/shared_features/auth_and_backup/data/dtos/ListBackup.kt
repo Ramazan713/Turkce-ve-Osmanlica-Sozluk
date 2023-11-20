@@ -1,4 +1,4 @@
-package com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.model
+package com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.dtos
 
 import kotlinx.serialization.Serializable
 

@@ -3,8 +3,8 @@ package com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.re
 import com.google.firebase.storage.FirebaseStorage
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.constants.K
-import com.masterplus.trdictionary.core.util.Resource
-import com.masterplus.trdictionary.core.util.UiText
+import com.masterplus.trdictionary.core.domain.utils.Resource
+import com.masterplus.trdictionary.core.domain.utils.UiText
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.model.User
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.mapper.toBackupMeta
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.repo.StorageService

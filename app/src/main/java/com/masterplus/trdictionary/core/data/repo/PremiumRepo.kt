@@ -3,9 +3,9 @@ package com.masterplus.trdictionary.core.data.repo
 import android.content.Context
 import com.android.billingclient.api.*
 import com.masterplus.trdictionary.R
-import com.masterplus.trdictionary.core.util.UiText
+import com.masterplus.trdictionary.core.domain.DispatcherProvider
+import com.masterplus.trdictionary.core.domain.utils.UiText
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
@@ -14,7 +14,8 @@ import javax.inject.Inject
 
 class PremiumRepo @Inject constructor(
     context: Context,
-    private val scope: CoroutineScope
+    private val scope: CoroutineScope,
+    private val dispatcherProvider: DispatcherProvider
 ) {
 
     private var mutableProducts = MutableSharedFlow<List<ProductDetails>>(replay = 1)
@@ -70,7 +71,7 @@ class PremiumRepo @Inject constructor(
         val params = QueryProductDetailsParams.newBuilder()
         params.setProductList(productList)
 
-        val productDetailsResult = withContext(Dispatchers.IO) {
+        val productDetailsResult = withContext(dispatcherProvider.io) {
             billingClient.queryProductDetails(params.build())
         }
         mutableProducts.emit(productDetailsResult.productDetailsList?.toList() ?: emptyList())
@@ -120,7 +121,7 @@ class PremiumRepo @Inject constructor(
     private suspend fun acknowledgedPurchase(purchase: Purchase){
         val acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
             .setPurchaseToken(purchase.purchaseToken)
-        withContext(Dispatchers.IO) {
+        withContext(dispatcherProvider.io) {
             billingClient.acknowledgePurchase(acknowledgePurchaseParams.build())
         }
     }

@@ -2,7 +2,7 @@ package com.masterplus.trdictionary.core.domain.model
 import com.masterplus.trdictionary.core.domain.enums.AutoType
 import com.masterplus.trdictionary.core.domain.enums.DateFormatEnum
 import com.masterplus.trdictionary.core.domain.enums.SavePointDestination
-import com.masterplus.trdictionary.core.util.DateFormatHelper
+import com.masterplus.trdictionary.core.domain.utils.DateFormatHelper
 import java.util.*
 
 data class SavePoint(

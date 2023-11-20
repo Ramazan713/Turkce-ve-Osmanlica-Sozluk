@@ -29,7 +29,7 @@ import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.presentation.components.DefaultIconToggleButton
 import com.masterplus.trdictionary.core.presentation.selections.AdaptiveSelectSheetMenu
 import com.masterplus.trdictionary.core.presentation.selections.rememberAdaptiveSelectMenuState
-import com.masterplus.trdictionary.core.util.SampleDatas
+import com.masterplus.trdictionary.core.presentation.utils.SampleDatas
 import com.masterplus.trdictionary.core.shared_features.share.domain.enums.ShareItemEnum
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.model.AudioState
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.model.WordDetail

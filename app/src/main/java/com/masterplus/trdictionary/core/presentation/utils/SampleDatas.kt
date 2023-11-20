@@ -1,4 +1,4 @@
-package com.masterplus.trdictionary.core.util
+package com.masterplus.trdictionary.core.presentation.utils
 
 import com.masterplus.trdictionary.core.domain.enums.AutoType
 import com.masterplus.trdictionary.core.domain.enums.DictType

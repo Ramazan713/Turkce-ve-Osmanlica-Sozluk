@@ -1,16 +1,12 @@
 package com.masterplus.trdictionary.features.search.presentation
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.*
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.window.layout.DisplayFeature
 import com.google.accompanist.adaptive.HorizontalTwoPaneStrategy
 import com.google.accompanist.adaptive.TwoPane
@@ -21,7 +17,7 @@ import com.masterplus.trdictionary.core.shared_features.word_list_detail.present
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.WordsListDetailState
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.handlers.WordsDetailModalEventsHandler
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.handlers.WordsDetailSheetEventsHandler
-import com.masterplus.trdictionary.core.util.ShowLifecycleToastMessage
+import com.masterplus.trdictionary.core.presentation.utils.ShowLifecycleToastMessage
 import com.masterplus.trdictionary.features.search.presentation.components.SearchFilterDialog
 import com.masterplus.trdictionary.features.search.presentation.contents.SearchDetailPageContent
 import com.masterplus.trdictionary.features.search.presentation.contents.SearchResultPageContent

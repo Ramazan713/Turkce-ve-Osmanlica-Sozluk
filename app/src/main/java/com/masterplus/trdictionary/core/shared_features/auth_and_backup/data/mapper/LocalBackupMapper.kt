@@ -1,13 +1,13 @@
 package com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.mapper
 
 import com.masterplus.trdictionary.core.data.local.entities.HistoryEntity
-import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.model.ListBackup
+import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.dtos.ListBackup
 import com.masterplus.trdictionary.core.data.local.entities.ListEntity
 import com.masterplus.trdictionary.core.data.local.entities.ListWordsEntity
 import com.masterplus.trdictionary.core.data.local.entities.SavePointEntity
-import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.model.HistoryBackup
-import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.model.ListWordsBackup
-import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.model.SavePointBackup
+import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.dtos.HistoryBackup
+import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.dtos.ListWordsBackup
+import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.dtos.SavePointBackup
 
 
 fun HistoryEntity.toHistoryBackup(): HistoryBackup {

@@ -1,7 +1,6 @@
 package com.masterplus.trdictionary.core.shared_features.word_list_detail.data.repo
 
 import android.app.Application
-import android.util.Log
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
@@ -11,8 +10,8 @@ import com.masterplus.trdictionary.core.domain.repo.AppFileRepo
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.data.remote.TextToSpeechDataSource
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.model.AudioState
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.repo.TTSRepo
-import com.masterplus.trdictionary.core.util.Resource
-import com.masterplus.trdictionary.core.util.UiText
+import com.masterplus.trdictionary.core.domain.utils.Resource
+import com.masterplus.trdictionary.core.domain.utils.UiText
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import java.io.File

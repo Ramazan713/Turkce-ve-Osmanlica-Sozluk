@@ -10,19 +10,15 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.masterplus.trdictionary.core.data.ConnectivityProviderImpl
-import com.masterplus.trdictionary.core.data.GsonParser
 import com.masterplus.trdictionary.core.data.local.AppDatabase
 import com.masterplus.trdictionary.core.data.local.TransactionProvider
 import com.masterplus.trdictionary.core.domain.ConnectivityProvider
-import com.masterplus.trdictionary.core.domain.JsonParser
 import com.masterplus.trdictionary.core.domain.preferences.AppPreferences
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import javax.inject.Singleton
 import androidx.datastore.core.MultiProcessDataStoreFactory
@@ -69,10 +65,6 @@ object AppModule {
     fun provideAppPreferences(datastore: DataStore<Preferences>): AppPreferences =
         DefaultAppPreferencesImpl(datastore)
 
-
-    @Provides
-    @Singleton
-    fun provideJsonParser(): JsonParser = GsonParser()
 
     @Provides
     @Singleton

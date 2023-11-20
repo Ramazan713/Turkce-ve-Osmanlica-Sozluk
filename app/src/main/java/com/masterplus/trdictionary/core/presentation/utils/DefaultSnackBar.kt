@@ -1,6 +1,5 @@
-package com.masterplus.trdictionary.core.util
+package com.masterplus.trdictionary.core.presentation.utils
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -30,6 +29,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.flowWithLifecycle
 import com.masterplus.trdictionary.R
+import com.masterplus.trdictionary.core.domain.utils.UiText
 import com.masterplus.trdictionary.core.presentation.components.DefaultToolTip
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged

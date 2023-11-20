@@ -1,4 +1,4 @@
-package com.masterplus.trdictionary.core.util
+package com.masterplus.trdictionary.core.presentation.utils
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect

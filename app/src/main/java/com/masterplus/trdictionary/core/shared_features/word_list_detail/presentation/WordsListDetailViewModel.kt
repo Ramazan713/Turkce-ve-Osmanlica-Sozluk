@@ -1,8 +1,5 @@
 package com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.masterplus.trdictionary.core.data.local.mapper.toWord
@@ -10,7 +7,7 @@ import com.masterplus.trdictionary.core.domain.use_cases.ListInFavoriteControlFo
 import com.masterplus.trdictionary.core.domain.use_cases.list_words.ListWordsUseCases
 import com.masterplus.trdictionary.core.shared_features.share.domain.use_cases.ShareWordUseCases
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.repo.TTSRepo
-import com.masterplus.trdictionary.core.util.Resource
+import com.masterplus.trdictionary.core.domain.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

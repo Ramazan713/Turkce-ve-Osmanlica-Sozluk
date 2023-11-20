@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.core.presentation.components.DefaultCheckBoxRow
-import com.masterplus.trdictionary.core.util.SampleDatas
+import com.masterplus.trdictionary.core.presentation.utils.SampleDatas
 import com.masterplus.trdictionary.features.list.domain.model.SelectableListView
 
 

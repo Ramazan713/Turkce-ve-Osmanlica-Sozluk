@@ -1,23 +1,15 @@
 package com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.repo
 
-import android.content.Intent
-import android.util.Log
-import androidx.activity.result.ActivityResult
-
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuth.AuthStateListener
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.model.User
 import com.masterplus.trdictionary.R
-import com.masterplus.trdictionary.core.util.Resource
-import com.masterplus.trdictionary.core.util.UiText
+import com.masterplus.trdictionary.core.domain.utils.Resource
+import com.masterplus.trdictionary.core.domain.utils.UiText
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.mapper.toUser
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.repo.AuthRepo
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -98,7 +90,7 @@ class FirebaseAuthRepo @Inject constructor(
         }
     }
 
-    private suspend fun <T> handleException(onTry: suspend () -> Resource<T>): Resource<T>{
+    private suspend fun <T> handleException(onTry: suspend () -> Resource<T>): Resource<T> {
         return try {
             onTry()
         }catch (e: Exception){

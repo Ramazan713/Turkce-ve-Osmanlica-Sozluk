@@ -1,8 +1,5 @@
 package com.masterplus.trdictionary.core.shared_features.auth_and_backup.presentation.auth
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.masterplus.trdictionary.R
@@ -11,15 +8,14 @@ import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.m
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.manager.BackupManager
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.use_cases.ValidateEmailUseCase
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.use_cases.ValidatePasswordUseCase
-import com.masterplus.trdictionary.core.util.Resource
-import com.masterplus.trdictionary.core.util.UiText
+import com.masterplus.trdictionary.core.domain.utils.Resource
+import com.masterplus.trdictionary.core.domain.utils.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
