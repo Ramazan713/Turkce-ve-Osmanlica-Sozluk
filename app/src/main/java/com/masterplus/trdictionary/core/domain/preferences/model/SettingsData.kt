@@ -11,7 +11,7 @@ data class SettingsData(
     val themeEnum: ThemeEnum = ThemeEnum.defaultValue,
     val useThemeDynamic: Boolean = false,
     val useArchiveLikeList: Boolean = false,
-    val showBackupSectionForLogin: Boolean = false,
+    val showBackupSectionForLogin: Boolean = true,
     val searchResultCount: Int = 10
 )
 

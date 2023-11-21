@@ -68,13 +68,11 @@ class EditSavePointViewModel @Inject constructor(
             }
             is EditSavePointEvent.OverrideSavePoint -> {
                 viewModelScope.launch {
-                    _state.update { state->
-                        state.selectedSavePoint?.let { savePoint ->
-                            savePointsUseCases.updateSavePoint(
-                                savePoint.copy(itemPosIndex = event.pos)
-                            )
-                            state.copy(message = UiText.Resource(R.string.successfully_updated))
-                        } ?: state
+                    _state.value.selectedSavePoint?.let { savePoint ->
+                        savePointsUseCases.updateSavePoint(
+                            savePoint.copy(itemPosIndex = event.pos)
+                        )
+                        _state.update{ it.copy(message = UiText.Resource(R.string.successfully_updated)) }
                     }
                 }
             }

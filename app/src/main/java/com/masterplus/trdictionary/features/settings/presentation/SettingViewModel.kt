@@ -51,7 +51,6 @@ class SettingViewModel @Inject constructor(
                 viewModelScope.launch {
                     settingsPreferences.clear()
                     init()
-                    themeRepo.updateThemeModel(_state.value.themeModel)
                 }
             }
             is SettingEvent.UseArchiveAsList -> {

@@ -79,14 +79,12 @@ class AuthViewModel @Inject constructor(
             is AuthEvent.SignOut -> {
                 viewModelScope.launch {
                     _state.update { it.copy(isLoading = true) }
-                    _state.update { state->
-                        when(val result = authManager.signOut(event.backupBeforeSignOut)){
-                            is Resource.Success->{
-                                state.copy(message = UiText.Resource(R.string.successfully_log_out))
-                            }
-                            is Resource.Error->{
-                                state.copy(message = result.error)
-                            }
+                    when(val result = authManager.signOut(event.backupBeforeSignOut)){
+                        is Resource.Success->{
+                            _state.update { it.copy(message = UiText.Resource(R.string.successfully_log_out)) }
+                        }
+                        is Resource.Error->{
+                            _state.update { it.copy(message = result.error) }
                         }
                     }
                     _state.update { state-> state.copy(isLoading = false) }
@@ -112,17 +110,15 @@ class AuthViewModel @Inject constructor(
         val user = authManager.currentUser() ?: return
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            _state.update { state->
-                when(val result = backupManager.downloadLastBackup(user)){
-                    is Resource.Error -> {
-                        state.copy(message = result.error)
-                    }
-                    is Resource.Success -> {
-                        state.copy(
-                            uiAction = AuthUiAction.RefreshApp,
-                            message = UiText.Resource(R.string.success)
-                        )
-                    }
+            when(val result = backupManager.downloadLastBackup(user)){
+                is Resource.Error -> {
+                    _state.update { it.copy(message = result.error) }
+                }
+                is Resource.Success -> {
+                    _state.update { it.copy(
+                        uiAction = AuthUiAction.RefreshApp,
+                        message = UiText.Resource(R.string.success)
+                    ) }
                 }
             }
             _state.update { it.copy(isLoading = false) }
