@@ -25,7 +25,7 @@ android {
         applicationId = "com.masterplus.trdictionary"
         minSdk = 24
         targetSdk = 34
-        versionCode = 2
+        versionCode = 3
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -164,13 +164,14 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:$navVersion")
     implementation("com.google.code.gson:gson:2.10.1")
 
-    implementation(platform("com.google.firebase:firebase-bom:31.2.3"))
-    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
+    implementation("com.google.firebase:firebase-auth")
     implementation("com.google.android.gms:play-services-auth:20.7.0")
-    implementation("com.google.firebase:firebase-storage-ktx")
-    implementation("com.google.firebase:firebase-crashlytics-ktx")
-    implementation("com.google.firebase:firebase-analytics-ktx")
-    implementation("com.google.firebase:firebase-perf-ktx")
+    implementation("com.google.firebase:firebase-storage")
+    implementation("com.google.firebase:firebase-crashlytics")
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-config")
+    implementation("com.google.firebase:firebase-perf")
 
     implementation("io.coil-kt:coil-compose:2.4.0")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")

@@ -1,6 +1,7 @@
 package com.masterplus.trdictionary.features.app.presentation.in_app
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.play.core.review.ReviewInfo
@@ -9,6 +10,7 @@ import com.masterplus.trdictionary.core.domain.constants.K
 import com.masterplus.trdictionary.core.domain.constants.KPref
 import com.masterplus.trdictionary.core.domain.preferences.AppPreferences
 import com.masterplus.trdictionary.core.domain.utils.DateFormatHelper
+import com.masterplus.trdictionary.features.search.presentation.navigation.RouteSearch
 import com.masterplus.trdictionary.features.word_detail.single_word_detail.navigation.RouteSingleWordDetail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,7 +36,8 @@ class InAppFeaturesViewModel @Inject constructor(
     private var reviewInfoFlow = MutableStateFlow<ReviewInfo?>(null)
 
     private val destinations = listOf(
-        RouteSingleWordDetail
+        RouteSingleWordDetail,
+        RouteSearch
     )
 
     init {
@@ -54,7 +57,8 @@ class InAppFeaturesViewModel @Inject constructor(
 
 
     private fun checkReviewApi(routeId: String?){
-        if(!_state.value.enabledReviewApi) return
+        if(!_state.value.enabledReviewApi || _state.value.currentDestination == routeId) return
+        _state.update { it.copy(currentDestination = routeId)}
 
         if(destinations.contains(routeId)){
             _state.update {state -> state.copy(reviewApiDestCount = state.reviewApiDestCount + 1)}

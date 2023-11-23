@@ -66,12 +66,6 @@ fun NavGraphBuilder.listDetailCategoryWords(
             navArgument("subCatId"){type = NavType.StringType},
             navArgument("c"){type = NavType.StringType},
             navArgument("pos"){type = NavType.StringType},
-        ),
-        deepLinks = listOf(
-            navDeepLink {
-                action = Intent.ACTION_VIEW
-                uriPattern = "${K.DeepLink.categoryDetailBaseUrl}/{catId}/{subCatId}/{c}/{pos}"
-            }
         )
     ){
         val wordCategoryViewModel = hiltViewModel<WordCategoryViewModel>()

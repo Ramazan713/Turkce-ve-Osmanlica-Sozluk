@@ -23,20 +23,4 @@ object K {
     object ReviewApi{
         const val reviewApiDestinationThreshold = 5
     }
-
-    object Ad{
-        const val thresholdOpeningCount = 19
-
-        const val consumeIntervalSeconds = 5
-        const val thresholdConsumeSeconds = 120
-    }
-
-    object DeepLink{
-        const val baseUrl = "https://www.tr-osm-dictionary.masterplus.com"
-        const val categoryBaseUrl = "$baseUrl/category"
-        const val categoryDetailBaseUrl = "$baseUrl/categoryDetail"
-        const val singleWordBaseUrl = "$baseUrl/detail"
-
-        const val numberZerosLength = 6
-    }
 }

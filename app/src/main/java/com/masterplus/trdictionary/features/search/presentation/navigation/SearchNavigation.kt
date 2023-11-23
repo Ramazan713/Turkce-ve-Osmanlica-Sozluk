@@ -16,7 +16,7 @@ import com.masterplus.trdictionary.core.shared_features.word_list_detail.present
 import com.masterplus.trdictionary.features.search.presentation.SearchPage
 import com.masterplus.trdictionary.features.search.presentation.SearchViewModel
 
-private const val routeName = "search/{catId}"
+const val RouteSearch = "search/{catId}"
 
 class SearchArgs(val catId: Int) {
     constructor(savedStateHandle: SavedStateHandle) :
@@ -35,7 +35,7 @@ fun NavGraphBuilder.searchPage(
     displayFeatures: List<DisplayFeature>
 ){
     composable(
-        routeName,
+        RouteSearch,
         arguments = listOf(
             navArgument("catId"){type = NavType.IntType},
         )

@@ -12,14 +12,14 @@ fun AdMobInterstitialView(
     onAdEvent: (AdEvent)->Unit
 ){
     val context = LocalContext.current
-    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    val lifecycleOwner = LocalLifecycleOwner.current
     val adMobInterstitial = remember { AdMobInterstitial(context) }
 
 
     adUiEventState?.let { uiEvent->
-        LaunchedEffect(uiEvent,lifecycle){
+        LaunchedEffect(uiEvent,lifecycleOwner.lifecycle){
             snapshotFlow { uiEvent }
-                .flowWithLifecycle(lifecycle)
+                .flowWithLifecycle(lifecycleOwner.lifecycle)
                 .collectLatest { event->
                     when(event){
                         is AdUiEvent.CheckAdShowState -> {

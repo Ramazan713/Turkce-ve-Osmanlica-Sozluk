@@ -1,7 +1,7 @@
 package com.masterplus.trdictionary.features.app.presentation.ad
 
 sealed class AdUiEvent{
-    object LoadAd: AdUiEvent()
+    data object LoadAd: AdUiEvent()
 
-    object CheckAdShowState: AdUiEvent()
+    data object CheckAdShowState: AdUiEvent()
 }

@@ -1,6 +1,7 @@
 package com.masterplus.trdictionary.features.app.presentation
 
 import android.app.Activity
+import android.util.Log
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandIn
 import androidx.compose.animation.fadeIn
@@ -21,6 +22,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -51,6 +53,10 @@ import com.masterplus.trdictionary.features.app.presentation.in_app.InAppEvent
 import com.masterplus.trdictionary.features.app.presentation.in_app.InAppFeaturesViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.ObsoleteCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNotNull
 
 @ObsoleteCoroutinesApi
 @ExperimentalFoundationApi
@@ -87,9 +93,9 @@ fun MyApp(
         }
     }
 
-    LaunchedEffect(currentNavRoute){
-        adViewModel.onEvent(AdEvent.CheckFromDestination(currentNavRoute?.route))
-        inAppFeaturesViewModel.onEvent(InAppEvent.CheckDestination(currentNavRoute?.route))
+    LaunchedEffect(currentRoute){
+        adViewModel.onEvent(AdEvent.CheckFromDestination(currentRoute))
+        inAppFeaturesViewModel.onEvent(InAppEvent.CheckDestination(currentRoute))
     }
 
     AdPremiumControl(
@@ -103,8 +109,6 @@ fun MyApp(
         state = inAppFeaturesState,
         onEvent = inAppFeaturesViewModel::onEvent
     )
-
-    val adState by adViewModel.state.collectAsStateWithLifecycle()
 
     MyApp(
         navigationVisible = navigationVisible,

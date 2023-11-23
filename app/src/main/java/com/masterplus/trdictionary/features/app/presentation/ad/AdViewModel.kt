@@ -1,11 +1,12 @@
 package com.masterplus.trdictionary.features.app.presentation.ad
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.masterplus.trdictionary.core.domain.constants.K
+import com.masterplus.trdictionary.core.data.preferences.get
+import com.masterplus.trdictionary.core.domain.constants.KPref
+import com.masterplus.trdictionary.core.domain.preferences.AppPreferences
+import com.masterplus.trdictionary.features.search.presentation.navigation.RouteSearch
 import com.masterplus.trdictionary.features.word_detail.single_word_detail.navigation.RouteSingleWordDetail
 import com.masterplus.trdictionary.features.word_detail.word_category.navigation.RouteListDetailCategoryWords
 import com.masterplus.trdictionary.features.word_detail.word_list_for_list_detail.navigation.RouteWordListForListDetail
@@ -21,54 +22,47 @@ import javax.inject.Inject
 @ObsoleteCoroutinesApi
 @HiltViewModel
 class AdViewModel @Inject constructor(
-
+    private val appPreferences: AppPreferences
 ): ViewModel() {
 
-    private var openingCountFlow = MutableStateFlow(0)
-    private var consumeSecondsFlow = MutableStateFlow(0)
+    private var thresholdOpeningCount = KPref.thresholdOpeningCount.default
+    private var consumeIntervalSeconds = KPref.consumeIntervalSeconds.default
+    private var thresholdConsumeSeconds = KPref.thresholdConsumeSeconds.default
+
     private var premiumActiveFlow = MutableStateFlow(false)
-    private val loadAdState = MutableStateFlow(false)
 
     private var timerJob: Job? = null
     private var loadAdJob: Job? = null
 
-    private val adDestinations = listOf(
-        RouteSingleWordDetail,
-        RouteWordListForListDetail,
-        RouteListDetailCategoryWords
-    )
 
-    val state = combine(openingCountFlow,consumeSecondsFlow){openingCount,consumeSeconds->
-        loadAdState.value = openingCount >= K.Ad.thresholdOpeningCount || consumeSeconds >= K.Ad.thresholdConsumeSeconds
-        AdState(
-            openingCount = openingCount,
-            consumeSeconds = consumeSeconds,
-        )
-    }
-        .distinctUntilChanged()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AdState())
 
+
+    private val _state = MutableStateFlow(AdState())
 
     private val _uiEventState = MutableStateFlow<AdUiEvent?>(null)
     val uiEventState: StateFlow<AdUiEvent?> = _uiEventState.asStateFlow()
 
-
     init {
         listenAdShowState()
+        listenPrefValues()
     }
 
     fun onEvent(event: AdEvent){
         when(event){
             AdEvent.Reset -> {
-                openingCountFlow.value = 0
-                consumeSecondsFlow.value = 0
+                _state.update { AdState() }
             }
             is AdEvent.CheckFromDestination -> {
+                val destination = event.routeId
                 if(premiumActiveFlow.value) return
+                if(destination == _state.value.currentDestination){
+                    checkAdIfNotLoaded()
+                    return
+                }
                 viewModelScope.launch {
-                    val isAdDestination = adDestinations.contains(event.routeId)
-                    if(isAdDestination){
-                        start()
+                    val isAdDestination = adFactors.keys.contains(destination)
+                    if(isAdDestination && destination != null){
+                        start(destination)
                     }else{
                         stop()
                     }
@@ -77,7 +71,7 @@ class AdViewModel @Inject constructor(
 
             }
             is AdEvent.SetPremiumActive -> {
-                premiumActiveFlow.value = event.premiumActive
+                premiumActiveFlow.update { event.premiumActive }
                 if(event.premiumActive){
                     onEvent(AdEvent.Reset)
                     stop()
@@ -89,20 +83,27 @@ class AdViewModel @Inject constructor(
         }
     }
 
-    private fun start(){
+    private fun start(destination: String){
+        val unit = adFactors[destination]?.openingCountFactor ?: 1
+        _state.update { it.copy(
+            openingCount = it.openingCount + unit,
+            currentDestination = destination)
+        }
         setTimer()
-        openingCountFlow.value += 1
     }
 
     private fun stop(){
+        _state.update { it.copy(currentDestination = null) }
         timerJob?.cancel()
     }
 
     private fun setTimer(){
         timerJob?.cancel()
         timerJob = viewModelScope.launch {
-            ticker(K.Ad.consumeIntervalSeconds*1000L).receiveAsFlow().collectLatest {
-                consumeSecondsFlow.emit(consumeSecondsFlow.value + K.Ad.consumeIntervalSeconds)
+            ticker(consumeIntervalSeconds * 1000L).receiveAsFlow().collectLatest {
+                val unit = adFactors[_state.value.currentDestination]?.consumeSecondsFactor ?: 1
+                val changedUnit = consumeIntervalSeconds * unit
+                _state.update { it.copy(consumeSeconds = it.consumeSeconds + changedUnit) }
             }
         }
     }
@@ -110,15 +111,38 @@ class AdViewModel @Inject constructor(
     private fun listenAdShowState(){
         loadAdJob?.cancel()
         loadAdJob = viewModelScope.launch {
-            loadAdState.collectLatest {loadAd->
-                if(loadAd){
-                    _uiEventState.update { AdUiEvent.LoadAd}
+            _state.map {state->
+                    checkThreshold(state)
                 }
+                .distinctUntilChanged()
+                .filter { it }
+                .collectLatest { _ ->
+                    _uiEventState.update { AdUiEvent.LoadAd }
             }
         }
 
     }
 
+
+    private fun listenPrefValues(){
+        viewModelScope.launch {
+            appPreferences.dataFlow.collectLatest { pref->
+                consumeIntervalSeconds = pref[KPref.consumeIntervalSeconds]
+                thresholdConsumeSeconds = pref[KPref.thresholdConsumeSeconds]
+                thresholdOpeningCount = pref[KPref.thresholdOpeningCount]
+            }
+        }
+    }
+
+    private fun checkThreshold(state: AdState): Boolean{
+        return state.openingCount >= thresholdOpeningCount || state.consumeSeconds >= thresholdConsumeSeconds
+    }
+
+    private fun checkAdIfNotLoaded(){
+        if(_uiEventState.value == null && checkThreshold(_state.value)){
+            _uiEventState.update { AdUiEvent.LoadAd }
+        }
+    }
 
     override fun onCleared() {
         super.onCleared()
@@ -126,3 +150,28 @@ class AdViewModel @Inject constructor(
         loadAdJob?.cancel()
     }
 }
+
+private val adFactors = mapOf(
+    RouteSingleWordDetail to AdFactor(
+        openingCountFactor = 1,
+        consumeSecondsFactor = 2
+    ),
+    RouteSearch to AdFactor(
+        openingCountFactor = 3,
+        consumeSecondsFactor = 2
+    ),
+    RouteWordListForListDetail to AdFactor(
+        openingCountFactor = 2,
+        consumeSecondsFactor = 1
+    ),
+    RouteListDetailCategoryWords to AdFactor(
+        openingCountFactor = 2,
+        consumeSecondsFactor = 1
+    ),
+)
+
+private data class AdFactor(
+    val openingCountFactor: Int,
+    val consumeSecondsFactor: Int
+)
+
