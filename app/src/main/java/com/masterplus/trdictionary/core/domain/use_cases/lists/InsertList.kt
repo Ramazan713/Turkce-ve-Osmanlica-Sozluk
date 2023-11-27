@@ -8,7 +8,7 @@ class InsertList @Inject constructor(
     private val listRepo: ListRepo
 ) {
 
-    suspend fun invoke(listName: String){
+    suspend fun invoke(listName: String): Int{
         val pos = listRepo.getMaxPos() + 1
         val listModel = ListModel(
             name = listName,
@@ -17,6 +17,6 @@ class InsertList @Inject constructor(
             isArchive = false,
             id = null
         )
-        listRepo.insertList(listModel)
+        return listRepo.insertList(listModel).toInt()
     }
 }

@@ -11,6 +11,7 @@ plugins {
     id("kotlin-parcelize")
     id("com.google.devtools.ksp")
     id("org.jetbrains.kotlin.plugin.serialization")
+    id("de.mannodermaus.android-junit5") version "1.10.0.0"
 }
 
 val keystorePropertiesFile = rootProject.file("keystore.properties")
@@ -199,6 +200,17 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     implementation("androidx.datastore:datastore:1.0.0")
     implementation("androidx.datastore:datastore-core-android:1.1.0-alpha06")
+
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.0")
+
+    testImplementation("com.willowtreeapps.assertk:assertk:0.26.1")
+    testImplementation("io.mockk:mockk:1.12.5")
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.11.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
+    testImplementation("app.cash.turbine:turbine:0.7.0")
 
 }
 

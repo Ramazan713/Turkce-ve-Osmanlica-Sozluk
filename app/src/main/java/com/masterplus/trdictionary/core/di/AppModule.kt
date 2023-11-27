@@ -11,7 +11,7 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.masterplus.trdictionary.core.data.ConnectivityProviderImpl
 import com.masterplus.trdictionary.core.data.local.AppDatabase
-import com.masterplus.trdictionary.core.data.local.TransactionProvider
+import com.masterplus.trdictionary.core.data.local.TransactionProviderImpl
 import com.masterplus.trdictionary.core.domain.ConnectivityProvider
 import com.masterplus.trdictionary.core.domain.preferences.AppPreferences
 import dagger.Module
@@ -28,6 +28,7 @@ import com.masterplus.trdictionary.core.data.DefaultDispatcherProvider
 import com.masterplus.trdictionary.core.data.preferences.DefaultAppPreferencesImpl
 import com.masterplus.trdictionary.core.data.preferences.SettingsPreferencesImplApp
 import com.masterplus.trdictionary.core.domain.DispatcherProvider
+import com.masterplus.trdictionary.core.domain.TransactionProvider
 import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferencesApp
 import com.masterplus.trdictionary.core.domain.preferences.model.SettingsData
 import com.masterplus.trdictionary.core.domain.preferences.model.SettingsDataSerializer
@@ -67,10 +68,6 @@ object AppModule {
 
 
     @Provides
-    @Singleton
-    fun provideTransactionProvider(db: AppDatabase) = TransactionProvider(db)
-
-    @Provides
     fun provideConnectivityProvider(application: Application): ConnectivityProvider =
         ConnectivityProviderImpl(application)
 
@@ -104,6 +101,11 @@ object AppModule {
     @Singleton
     fun provideAppDataStore(application: Application): DataStore<Preferences> =
         application.dataStore
+
+    @Singleton
+    @Provides
+    fun provideTransactionProvider(appDatabase: AppDatabase): TransactionProvider =
+        TransactionProviderImpl(appDatabase)
 
 }
 

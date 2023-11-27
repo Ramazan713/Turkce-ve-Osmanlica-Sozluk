@@ -1,7 +1,8 @@
 package com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.repo
 
-import com.masterplus.trdictionary.core.data.local.TransactionProvider
+import com.masterplus.trdictionary.core.data.local.TransactionProviderImpl
 import com.masterplus.trdictionary.core.data.local.services.LocalBackupDao
+import com.masterplus.trdictionary.core.domain.TransactionProvider
 import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferencesApp
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.mapper.toBackupData
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.mapper.toData

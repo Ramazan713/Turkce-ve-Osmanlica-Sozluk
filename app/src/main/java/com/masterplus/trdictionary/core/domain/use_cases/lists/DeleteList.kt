@@ -1,8 +1,9 @@
 package com.masterplus.trdictionary.core.domain.use_cases.lists
 
-import com.masterplus.trdictionary.core.data.local.TransactionProvider
+import com.masterplus.trdictionary.core.data.local.TransactionProviderImpl
 import com.masterplus.trdictionary.core.domain.enums.SavePointDestination
 import com.masterplus.trdictionary.core.data.local.mapper.toListModel
+import com.masterplus.trdictionary.core.domain.TransactionProvider
 import com.masterplus.trdictionary.core.domain.model.ListView
 import com.masterplus.trdictionary.core.domain.repo.ListWordsRepo
 import com.masterplus.trdictionary.core.domain.repo.ListRepo

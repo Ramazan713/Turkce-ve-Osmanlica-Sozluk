@@ -11,7 +11,7 @@ class CopyList @Inject constructor(
     private val listWordsRepo: ListWordsRepo,
 ){
 
-    suspend fun invoke(listView: ListView){
+    suspend operator fun invoke(listView: ListView): Int{
         val pos = listRepo.getMaxPos() + 1
 
         val listModel = listView.toListModel()
@@ -29,5 +29,6 @@ class CopyList @Inject constructor(
             it.copy(listId = newListId)
         }
         listWordsRepo.insertListWord(newListContents)
+        return newListId
     }
 }
