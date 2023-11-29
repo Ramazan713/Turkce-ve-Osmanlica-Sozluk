@@ -38,12 +38,6 @@ class ShowListViewModel @Inject constructor(
                     dialogEvent = event.dialogEvent
                 )}
             }
-            is ShowListEvent.ShowModal -> {
-                _state.update { it.copy(
-                    showModal = event.showModal,
-                    modalEvent = event.modalEvent
-                )}
-            }
             is ShowListEvent.AddNewList -> {
                 viewModelScope.launch {
                     listUseCases.insertList.invoke(event.listName)

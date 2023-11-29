@@ -9,6 +9,4 @@ data class ShowListState(
     val message: UiText? = null,
     val showDialog: Boolean = false,
     val dialogEvent: ShowListDialogEvent? = null,
-    val showModal: Boolean = false,
-    val modalEvent: ShowListModelEvent? = null
 )

@@ -7,9 +7,6 @@ sealed class ShowListEvent{
     data class ShowDialog(val showDialog: Boolean,
                           val dialogEvent: ShowListDialogEvent? = null): ShowListEvent()
 
-    data class ShowModal(val showModal: Boolean,
-                         val modalEvent: ShowListModelEvent? = null): ShowListEvent()
-
     data class AddNewList(val listName: String): ShowListEvent()
 
     data class Rename(val listView: ListView, val newName: String): ShowListEvent()

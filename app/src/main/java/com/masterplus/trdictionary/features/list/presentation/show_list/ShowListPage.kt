@@ -144,12 +144,7 @@ fun ShowListPage(
 
     selectSheetState.showSheet()
 
-    if(state.showModal){
-        ShowModal(
-            state.modalEvent,
-            onEvent = {onEvent(it)}
-        )
-    }else if(state.showDialog){
+    if(state.showDialog){
         ShowDialog(
             event = state.dialogEvent,
             onEvent = {onEvent(it)}
@@ -234,20 +229,6 @@ private fun GetTopBar(
     )
 }
 
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun ShowModal(
-    event: ShowListModelEvent?,
-    onEvent: (ShowListEvent)->Unit
-){
-    CustomModalBottomSheet(
-        onDismissRequest = {onEvent(ShowListEvent.ShowModal(false))},
-        skipHalfExpanded = true
-    ){
-
-    }
-}
 
 private fun handleSelectMenuItem(
     menuEnum: ShowListBottomMenuEnum?,
