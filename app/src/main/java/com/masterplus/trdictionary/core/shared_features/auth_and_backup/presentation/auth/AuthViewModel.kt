@@ -1,5 +1,6 @@
 package com.masterplus.trdictionary.core.shared_features.auth_and_backup.presentation.auth
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.masterplus.trdictionary.R
@@ -175,10 +176,10 @@ class AuthViewModel @Inject constructor(
 
 
 
-    private fun <T> validateFields(
+    private fun validateFields(
         email: String? = null,
         password: String? = null,
-        call: suspend () -> T
+        call: suspend () -> Unit
     ){
         viewModelScope.launch {
             val passwordError = validatePasswordUseCase(password)

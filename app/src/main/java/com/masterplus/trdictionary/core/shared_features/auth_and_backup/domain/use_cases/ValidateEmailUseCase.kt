@@ -1,8 +1,10 @@
 package com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.use_cases
 
-import android.util.Patterns
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.utils.UiText
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
 
 class ValidateEmailUseCase {
 
@@ -11,9 +13,9 @@ class ValidateEmailUseCase {
         if(email.isBlank()){
             return UiText.Resource(R.string.email_field_can_not_be_empty)
         }
-        if(!Patterns.EMAIL_ADDRESS.matcher(email).find())
-            return UiText.Resource(R.string.enter_valid_email)
-        return null
+        val expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$"
+        val pattern: Pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE)
+        val matcher: Matcher = pattern.matcher(email)
+        return if(matcher.matches()) null else UiText.Resource(R.string.enter_valid_email)
     }
-
 }
