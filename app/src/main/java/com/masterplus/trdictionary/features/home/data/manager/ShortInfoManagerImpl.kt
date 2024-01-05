@@ -66,7 +66,7 @@ class ShortInfoManagerImpl @Inject constructor(
 
 
     override suspend fun refreshWords(){
-        ShortInfoEnum.values().forEach { info->
+        ShortInfoEnum.entries.forEach { info->
             refreshNumber(info)
         }
     }
@@ -99,19 +99,19 @@ class ShortInfoManagerImpl @Inject constructor(
         val randomNumber: Int = when(shortInfo){
             ShortInfoEnum.Proverb -> {
                 val proverbCount = shortInfoRepo.countWordsByTypeId(ProverbIdiomEnum.Proverb)
-                val random = (0..proverbCount).random()
+                val random = (0..<proverbCount).random()
                 preference.updateData { it.copy(proverbRandomNumber = random) }
                 random
             }
             ShortInfoEnum.Idiom -> {
                 val idiomCount = shortInfoRepo.countWordsByTypeId(ProverbIdiomEnum.Idiom)
-                val random = (0..idiomCount).random()
+                val random = (0..<idiomCount).random()
                 preference.updateData { it.copy(idiomRandomNumber = random) }
                 random
             }
             ShortInfoEnum.Word -> {
-                val wordCount = shortInfoRepo.countWordsByTypeId(ProverbIdiomEnum.Idiom)
-                val random = (0..wordCount).random()
+                val wordCount = shortInfoRepo.countWords()
+                val random = (0..<wordCount).random()
                 preference.updateData { it.copy(wordRandomNumber = random) }
                 random
             }
