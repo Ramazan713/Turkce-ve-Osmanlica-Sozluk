@@ -10,7 +10,10 @@ fun simpleWordResult(
     wordId: Int = 1,
     wordType: WordType = WordType.PureWord,
     word: Word = word(id = wordId, wordType = wordType),
-    meanings: List<Meaning> = listOf(meaning(wordId = wordId), meaning(id = 2, wordId = wordId))
+    meanings: List<Meaning> = listOf(
+        meaning(id = 1, wordId = word.id),
+        meaning(id = 2, wordId = word.id)
+    )
 ): SimpleWordResult{
     return SimpleWordResult(
         word, meanings

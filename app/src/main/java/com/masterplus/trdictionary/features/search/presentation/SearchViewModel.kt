@@ -48,9 +48,9 @@ class SearchViewModel @Inject constructor(
     private var historyLoadJob: Job? = null
     private var searchResultJob: Job? = null
 
-    private val queryFilterFlow = MutableSharedFlow<String>()
-    private val categoryFilterFlow = MutableSharedFlow<CategoryEnum>()
-    private val searchKindFilterFlow = MutableSharedFlow<SearchKind>()
+    private val queryFilterFlow = MutableSharedFlow<String>(replay = 1)
+    private val categoryFilterFlow = MutableSharedFlow<CategoryEnum>(replay = 1)
+    private val searchKindFilterFlow = MutableSharedFlow<SearchKind>(replay = 1)
 
     private val combinedDataFlow = combine(
         queryFilterFlow,
@@ -62,9 +62,10 @@ class SearchViewModel @Inject constructor(
 
 
     init {
+        setDefaultFilter()
         listenSearchResult()
         listenHistories()
-        setDefaultFilter()
+
     }
 
     fun onEvent(event: SearchEvent){
