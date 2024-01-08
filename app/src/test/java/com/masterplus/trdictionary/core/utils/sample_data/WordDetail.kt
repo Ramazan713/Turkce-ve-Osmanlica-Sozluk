@@ -1,5 +1,6 @@
 package com.masterplus.trdictionary.core.utils.sample_data
 
+import com.masterplus.trdictionary.core.data.local.views.WordDetailView
 import com.masterplus.trdictionary.core.domain.enums.DictType
 import com.masterplus.trdictionary.core.domain.enums.WordType
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.model.WordDetail
@@ -32,6 +33,42 @@ fun wordDetail(
         showTTS = showTTS,
         randomOrder = randomOrder,
         wordType = wordType,
+        searchWord = searchWord,
+        showInQuery = showInQuery
+    )
+}
+
+
+
+
+
+fun wordDetailView(
+    inAnyList: Boolean = true,
+    inFavorite: Boolean = true,
+    hasCompoundWords: Boolean = true,
+    id: Int = 1,
+    prefix: String? = null,
+    word: String = "word $id",
+    suffix: String? = null,
+    searchWord: String = word,
+    dictType: DictType = DictType.TR,
+    showTTS: Boolean = true,
+    showInQuery: Int = 1,
+    randomOrder: Int = 1,
+    wordType: WordType = WordType.PureWord
+): WordDetailView {
+    return WordDetailView(
+        inAnyList = inAnyList,
+        inFavorite = inFavorite,
+        hasCompoundWords = hasCompoundWords,
+        id = id,
+        prefix= prefix,
+        word = word,
+        suffix = suffix,
+        dictTypeId = dictType.dictId,
+        showTTS = showTTS,
+        randomOrder = randomOrder,
+        wordTypeId = wordType.id,
         searchWord = searchWord,
         showInQuery = showInQuery
     )

@@ -1,5 +1,6 @@
 package com.masterplus.trdictionary.core.utils.sample_data
 
+import com.masterplus.trdictionary.core.data.local.views.ExampleDetailsView
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.model.ExampleDetail
 
 
@@ -14,4 +15,18 @@ fun exampleDetail(
    return ExampleDetail(
        id, meaningId, authorId, orderItem, content, authorName
    )
+}
+
+
+fun exampleDetailView(
+    id: Int = 1,
+    meaningId: Int = 1,
+    authorId: Int = 1,
+    orderItem: Int = 1,
+    content: String = "content $id",
+    authorName: String = "Author Name $authorId"
+): ExampleDetailsView {
+    return ExampleDetailsView(
+        id, meaningId, authorId, orderItem, content, authorName
+    )
 }
