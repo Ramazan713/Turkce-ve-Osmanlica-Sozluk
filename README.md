@@ -31,6 +31,7 @@ The app is currently [available on the Play Store](https://play.google.com/store
 - [Dependency Injection With Hilt](https://developer.android.com/training/dependency-injection/hilt-android)
 - [Paging 3](https://developer.android.com/topic/libraries/architecture/paging/v3-overview)
 - [Widgets with Glance](https://developer.android.com/jetpack/compose/glance)
+- Unit Tests
 
 ## Screenshots
 ### Mobile
