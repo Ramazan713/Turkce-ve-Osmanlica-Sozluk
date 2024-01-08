@@ -1,7 +1,9 @@
 package com.masterplus.trdictionary.core.data.repo
 
 import androidx.compose.runtime.mutableStateListOf
+import com.masterplus.trdictionary.core.data.local.mapper.toListModel
 import com.masterplus.trdictionary.core.domain.model.ListModel
+import com.masterplus.trdictionary.core.domain.model.ListView
 import com.masterplus.trdictionary.core.domain.repo.ListRepo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -9,10 +11,13 @@ import kotlinx.coroutines.flow.update
 class ListRepoFake: ListRepo {
 
 
-    var favoriteListIds = listOf<Int>()
+    var favoriteListIds = mutableListOf<Int>()
     private val _items = mutableListOf<ListModel>()
     val items: List<ListModel> get() = _items
 
+    fun insertItem(listView: ListView){
+        _items.add(listView.toListModel())
+    }
 
     override suspend fun insertList(listModel: ListModel): Long {
         val lastId = _items.lastOrNull()?.id ?: 0

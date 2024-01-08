@@ -11,8 +11,6 @@ interface WordDetailRepo {
 
     suspend fun getWordMeaningsWithWordId(wordId: Int): WordDetailMeanings?
 
-    suspend fun getWordExamplesByWordCount(word: String, wordCount: Int, dictType: Int): WordDetailMeanings?
-
     suspend fun getCompoundSimpleWordsByWordId(wordId: Int): List<SimpleWordResult>
 
     suspend fun getProverbIdiomWordsBywordId(wordId: Int): List<SimpleWordResult>

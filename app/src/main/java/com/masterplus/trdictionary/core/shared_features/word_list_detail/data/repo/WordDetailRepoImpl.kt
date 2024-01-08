@@ -25,13 +25,6 @@ class WordDetailRepoImpl @Inject constructor(
         return singleWordDetailDao.getWordMeaningsByWordId(wordId)?.toWordMeanings()
     }
 
-    override suspend fun getWordExamplesByWordCount(
-        word: String,
-        wordCount: Int,
-        dictType: Int
-    ): WordDetailMeanings? {
-        return singleWordDetailDao.getWordExamplesByWordCount(word, dictType)?.toWordMeanings()
-    }
 
     override suspend fun getCompoundSimpleWordsByWordId(wordId: Int): List<SimpleWordResult> {
         return singleWordDetailDao.getCompoundSimpleWordsByWordId(wordId)
