@@ -35,14 +35,14 @@ The app is currently [available on the Play Store](https://play.google.com/store
 
 ## Screenshots
 ### Mobile
-<img alt="Screenshots" src="https://github.com/Ramazan713/Assets/blob/c002a82cf897a5cdca4a16e42455679d6be79c6c/images/app/tr%20dictionary/v1.0.0%20beta%202/screenshotsMobile.png" target="_blank">
+<img alt="Screenshots" src="https://github.com/Ramazan713/Assets/blob/0767917ea14d64d4e862f6950ff535cd8bd20ba8/images/app/tr%20dictionary/v1.0.1/screenshotsMobile.png" target="_blank">
 
 ### Tablet
-<img alt="Screenshots" src="https://github.com/Ramazan713/Assets/blob/c002a82cf897a5cdca4a16e42455679d6be79c6c/images/app/tr%20dictionary/v1.0.0%20beta%202/screenshotsTablet1.png" target="_blank">
+<img alt="Screenshots" src="https://github.com/Ramazan713/Assets/blob/0767917ea14d64d4e862f6950ff535cd8bd20ba8/images/app/tr%20dictionary/v1.0.1/screenshotsTablet1.png" target="_blank">
 
 ### Desktop
-<img alt="Screenshots" src="https://github.com/Ramazan713/Assets/blob/c002a82cf897a5cdca4a16e42455679d6be79c6c/images/app/tr%20dictionary/v1.0.0%20beta%202/screenshotsDesktop1.png" target="_blank">
-<img alt="Screenshots" src="https://github.com/Ramazan713/Assets/blob/c002a82cf897a5cdca4a16e42455679d6be79c6c/images/app/tr%20dictionary/v1.0.0%20beta%202/screenshotsDesktop2.png" target="_blank">
+<img alt="Screenshots" src="https://github.com/Ramazan713/Assets/blob/0767917ea14d64d4e862f6950ff535cd8bd20ba8/images/app/tr%20dictionary/v1.0.1/screenshotsDesktop1.png" target="_blank">
+<img alt="Screenshots" src="https://github.com/Ramazan713/Assets/blob/0767917ea14d64d4e862f6950ff535cd8bd20ba8/images/app/tr%20dictionary/v1.0.1/image.png" target="_blank">
 
    
 
