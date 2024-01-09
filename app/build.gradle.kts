@@ -29,7 +29,7 @@ android {
         versionCode = 4
         versionName = "1.0.1"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.masterplus.trdictionary.HiltTestRunner"
 
         vectorDrawables {
             useSupportLibrary = true
@@ -136,7 +136,9 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.activity:activity-compose:1.8.0")
     implementation("androidx.test.uiautomator:uiautomator:2.2.0")
+    implementation("androidx.navigation:navigation-testing:2.7.6")
     testImplementation("junit:junit:4.13.2")
+    androidTestImplementation(platform("androidx.compose:compose-bom:2023.10.01"))
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
@@ -146,6 +148,11 @@ dependencies {
 
     implementation("com.google.dagger:hilt-android:2.48.1")
     ksp("com.google.dagger:hilt-compiler:2.48.1")
+    testImplementation("com.google.dagger:hilt-android-testing:2.48.1")
+    kspTest("com.google.dagger:hilt-android-compiler:2.48.1")
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.48.1")
+    kspAndroidTest("com.google.dagger:hilt-android-compiler:2.48.1")
+
 
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
@@ -211,6 +218,8 @@ dependencies {
     testImplementation("com.squareup.okhttp3:mockwebserver:4.11.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
     testImplementation("app.cash.turbine:turbine:0.7.0")
+    androidTestImplementation("com.willowtreeapps.assertk:assertk:0.26.1")
+    androidTestImplementation("io.mockk:mockk:1.12.5")
 }
 
 
