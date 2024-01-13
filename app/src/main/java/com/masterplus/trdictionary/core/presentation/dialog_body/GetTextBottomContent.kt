@@ -15,6 +15,8 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -45,9 +47,9 @@ fun ShowGetTextDialog(
     val context = LocalContext.current
     val shape = MaterialTheme.shapes.medium
 
-    RotatableLaunchEffect {
-        focusRequester.requestFocus()
-    }
+//    RotatableLaunchEffect {
+//        focusRequester.requestFocus()
+//    }
 
     AlertDialog(
         onDismissRequest = onClosed,
@@ -89,6 +91,9 @@ fun ShowGetTextDialog(
                     .padding(horizontal = 1.dp, vertical = 13.dp)
                     .fillMaxWidth()
                     .padding(horizontal = 3.dp)
+                    .semantics {
+                        contentDescription = context.getString(R.string.text_field)
+                    }
             )
         },
         dismissButton = {

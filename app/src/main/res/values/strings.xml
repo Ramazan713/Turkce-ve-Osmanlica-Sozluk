@@ -216,4 +216,5 @@
     <string name="enter_valid_email">Geçerli bir e-posta yazınız</string>
     <string name="password_field_can_not_be_empty">Şifre alanı boş olamaz</string>
     <string name="password_field_must_be_at_least_seven_size">Şifre alanı en az 7 karekter olmalıdır</string>
+    <string name="menu_n">%1$s menu</string>
 </resources>

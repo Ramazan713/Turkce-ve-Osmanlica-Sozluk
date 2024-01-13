@@ -133,6 +133,7 @@ fun ShowListPage(
                                     items = ShowListBottomMenuEnum.from(item.isRemovable),
                                     key = item.id?.toString(),
                                     sheetTitle = stringResource(R.string.n_for_list_item, item.name),
+                                    contentDescription = stringResource(id = R.string.menu_n, item.name)
                                 )
                             },
                         )

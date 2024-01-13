@@ -1,5 +1,6 @@
 package com.masterplus.trdictionary.features.home.data.manager
 
+import android.util.Log
 import com.masterplus.trdictionary.core.domain.enums.ProverbIdiomEnum
 import com.masterplus.trdictionary.core.domain.model.SimpleWordResult
 import com.masterplus.trdictionary.features.home.domain.enums.ShortInfoEnum
@@ -13,6 +14,8 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import java.util.Calendar
 import javax.inject.Inject
+import kotlin.math.max
+import kotlin.math.min
 
 class ShortInfoManagerImpl @Inject constructor(
     private val shortInfoRepo: ShortInfoRepo,
@@ -99,19 +102,19 @@ class ShortInfoManagerImpl @Inject constructor(
         val randomNumber: Int = when(shortInfo){
             ShortInfoEnum.Proverb -> {
                 val proverbCount = shortInfoRepo.countWordsByTypeId(ProverbIdiomEnum.Proverb)
-                val random = (0..<proverbCount).random()
+                val random = (0..<max(1,proverbCount)).random()
                 preference.updateData { it.copy(proverbRandomNumber = random) }
                 random
             }
             ShortInfoEnum.Idiom -> {
                 val idiomCount = shortInfoRepo.countWordsByTypeId(ProverbIdiomEnum.Idiom)
-                val random = (0..<idiomCount).random()
+                val random = (0..<max(1,idiomCount)).random()
                 preference.updateData { it.copy(idiomRandomNumber = random) }
                 random
             }
             ShortInfoEnum.Word -> {
                 val wordCount = shortInfoRepo.countWords()
-                val random = (0..<wordCount).random()
+                val random = (0..<max(1,wordCount)).random()
                 preference.updateData { it.copy(wordRandomNumber = random) }
                 random
             }
