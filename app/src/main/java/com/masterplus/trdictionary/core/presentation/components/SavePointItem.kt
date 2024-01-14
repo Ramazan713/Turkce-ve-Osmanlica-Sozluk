@@ -3,6 +3,7 @@ package com.masterplus.trdictionary.core.presentation.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
@@ -44,7 +45,10 @@ fun SavePointItem(
             .padding(margins)
             .fillMaxWidth()
             .clip(shape)
-            .clickable { onClick() },
+            .selectable(
+                isSelected,
+                onClick = onClick
+            ),
         shape = shape,
         border = BorderStroke(1.dp,MaterialTheme.colorScheme.outlineVariant),
         colors = CardDefaults.cardColors(

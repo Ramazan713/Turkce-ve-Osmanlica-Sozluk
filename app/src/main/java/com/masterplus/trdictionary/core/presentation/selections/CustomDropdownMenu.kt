@@ -20,6 +20,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -114,13 +116,16 @@ fun <T: IMenuItemEnum> CustomDropdownMenu(
                         expanded = false
                         onItemChange?.invoke(item)
                     },
-                    modifier = Modifier.clip(shape),
+                    modifier = Modifier.clip(shape)
+                        .semantics {
+                            contentDescription = context.getString(R.string.n_menu_item,title)
+                        },
                     leadingIcon = if(!showIcons) null else {
                         {
                             item.iconInfo?.let { iconInfo->
                                 Icon(
                                     imageVector = iconInfo.imageVector,
-                                    contentDescription = stringResource(R.string.n_menu_item,title),
+                                    contentDescription = null,
                                     tint = iconInfo.tintColor?.asColor() ?: LocalContentColor.current,
                                 )
                             }
