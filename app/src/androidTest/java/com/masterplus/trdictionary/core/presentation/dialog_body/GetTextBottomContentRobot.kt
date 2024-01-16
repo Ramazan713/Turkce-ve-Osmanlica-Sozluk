@@ -5,7 +5,7 @@ import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performTextInput
 import com.masterplus.trdictionary.R
-import com.masterplus.trdictionary.core.app.AppComponentRule
+import com.masterplus.trdictionary.shared_test.rules.AppComponentRule
 
 class GetTextBottomContentRobot constructor(
     private val composeRule: AppComponentRule

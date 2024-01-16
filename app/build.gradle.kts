@@ -29,7 +29,7 @@ android {
         versionCode = 4
         versionName = "1.0.1"
 
-        testInstrumentationRunner = "com.masterplus.trdictionary.HiltTestRunner"
+        testInstrumentationRunner = "com.masterplus.trdictionary.shared_test.HiltTestRunner"
 
         vectorDrawables {
             useSupportLibrary = true
@@ -144,7 +144,6 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
-
 
     implementation("com.google.dagger:hilt-android:2.48.1")
     ksp("com.google.dagger:hilt-compiler:2.48.1")

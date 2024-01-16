@@ -8,9 +8,11 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -72,7 +74,18 @@ fun WordsPagerPosHandler(
         mutableStateOf(false)
     }
 
-    LaunchedEffect(state.selectedDetailPos,lifecycleOwner){
+    //current pager not active, when it is active then value set by currentValue
+    var isPagerPosNotSetByList by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    //current list not active, when it is active then value set by currentValue
+    var isListPosNotSetByPager by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+
+    LaunchedEffect(state.selectedDetailPos,lifecycleOwner.lifecycle){
         snapshotFlow { state.selectedDetailPos }
             .filterNotNull()
             .flowWithLifecycle(lifecycleOwner.lifecycle)
@@ -82,17 +95,18 @@ fun WordsPagerPosHandler(
             }
     }
 
-    LaunchedEffect(state.navigateToListPos,lifecycleOwner){
+    LaunchedEffect(state.navigateToListPos,lifecycleOwner.lifecycle){
         snapshotFlow { state.navigateToListPos }
             .filterNotNull()
             .flowWithLifecycle(lifecycleOwner.lifecycle)
             .collectLatest { pos->
                 currentOnClearPos()
+                currentPos = CurrentPos(pos,false)
                 currentLazyStaggeredState.scrollToItem(pos)
             }
     }
 
-    LaunchedEffect(state.navigateToPos,lifecycleOwner){
+    LaunchedEffect(state.navigateToPos,lifecycleOwner.lifecycle){
         snapshotFlow { state.navigateToPos }
             .filterNotNull()
             .flowWithLifecycle(lifecycleOwner.lifecycle)
@@ -103,67 +117,78 @@ fun WordsPagerPosHandler(
             }
     }
 
-    LaunchedEffect(currentPos,lifecycleOwner,listDetailContentType){
+    LaunchedEffect(currentPos,lifecycleOwner.lifecycle,listDetailContentType,state.isDetailOpen){
         snapshotFlow { currentPos }
             .distinctUntilChanged()
             .filter { it.scrollTo }
-            .filter { listDetailContentType == ListDetailContentType.DUAL_PANE }
             .map { it.pos }
             .flowWithLifecycle(lifecycleOwner.lifecycle)
             .collectLatest { pos->
-                currentLazyStaggeredState.customScrollToPos(pos, animate = !posForRefresh)
-                currentPagerState.customScrollToPos(pos, animate = !posForRefresh)
-                if(posForRefresh){
-                    posForRefresh = false
-                }
-            }
-    }
-
-    LaunchedEffect(currentPos,lifecycleOwner,listDetailContentType){
-        snapshotFlow { currentPos }
-            .distinctUntilChanged()
-            .filter { it.scrollTo }
-            .filter { listDetailContentType == ListDetailContentType.SINGLE_PANE }
-            .map { it.pos }
-            .flowWithLifecycle(lifecycleOwner.lifecycle)
-            .collectLatest { pos->
-                if(state.isDetailOpen){
-                    currentPagerState.customScrollToPos(pos, animate = !posForRefresh)
+                if(listDetailContentType == ListDetailContentType.SINGLE_PANE){
+                    if(state.isDetailOpen){
+                        isListPosNotSetByPager = true
+                        currentPagerState.customScrollToPos(pos, animate = !posForRefresh)
+                    }else{
+                        isPagerPosNotSetByList = true
+                        currentLazyStaggeredState.customScrollToPos(pos, animate = !posForRefresh)
+                    }
                 }else{
                     currentLazyStaggeredState.customScrollToPos(pos, animate = !posForRefresh)
+                    currentPagerState.customScrollToPos(pos, animate = !posForRefresh)
                 }
+
                 if(posForRefresh){
                     posForRefresh = false
                 }
             }
     }
 
-    LaunchedEffect(pagerState,lifecycleOwner){
+    LaunchedEffect(pagerState, lifecycleOwner.lifecycle, listDetailContentType){
         snapshotFlow { pagerState.currentPage }
             .debounce(300)
             .filter { state.isDetailOpen || listDetailContentType == ListDetailContentType.DUAL_PANE }
-            .distinctUntilChanged()
             .flowWithLifecycle(lifecycleOwner.lifecycle)
+            .distinctUntilChanged()
             .collectLatest {pos->
-                currentPos = CurrentPos(pos,false)
-                currentLazyStaggeredState.animateScrollToItem(pos)
+                if(isPagerPosNotSetByList){
+                    isPagerPosNotSetByList = false
+                    pagerState.animateScrollToPage(currentPos.pos)
+                }else{
+                    if(listDetailContentType == ListDetailContentType.DUAL_PANE){
+                        currentPos = CurrentPos(pos,false)
+                        currentLazyStaggeredState.animateScrollToItem(pos)
+                    }else{
+                        isListPosNotSetByPager = true
+                    }
+                }
             }
     }
 
 
-    LaunchedEffect(lazyStaggeredState,lifecycleOwner){
+    LaunchedEffect(lazyStaggeredState,lifecycleOwner.lifecycle, listDetailContentType){
+
         snapshotFlow { lazyStaggeredState.layoutInfo }
             .debounce(500)
             .filter { it.isNumberInRange(currentPos.pos) == false }
             .filter { !state.isDetailOpen || listDetailContentType == ListDetailContentType.DUAL_PANE }
             .map { it.visibleItemsInfo.firstOrNull()?.index ?: 0 }
-            .distinctUntilChanged()
             .flowWithLifecycle(lifecycleOwner.lifecycle)
+            .distinctUntilChanged()
             .collectLatest {pos->
-                currentPos = CurrentPos(pos,false)
-                currentPagerState.animateScrollToPage(pos)
+                if(listDetailContentType == ListDetailContentType.DUAL_PANE){
+                    if(isListPosNotSetByPager){
+                        isListPosNotSetByPager = false
+                        lazyStaggeredState.scrollToItem(currentPos.pos)
+                    }else{
+                        currentPos = CurrentPos(pos,false)
+                        currentPagerState.animateScrollToPage(pos)
+                    }
+                }else{
+                    isPagerPosNotSetByList = true
+                }
             }
     }
+
 }
 
 

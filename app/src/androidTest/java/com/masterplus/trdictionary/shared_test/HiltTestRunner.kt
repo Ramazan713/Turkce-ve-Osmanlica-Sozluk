@@ -1,4 +1,4 @@
-package com.masterplus.trdictionary
+package com.masterplus.trdictionary.shared_test
 
 import android.app.Application
 import android.content.Context

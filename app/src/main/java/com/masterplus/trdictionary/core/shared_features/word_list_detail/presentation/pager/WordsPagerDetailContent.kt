@@ -27,7 +27,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -67,6 +70,7 @@ fun WordsPagerDetailContent(
     onDetailFavoriteClick: (WordDetailMeanings) -> Unit,
     onDetailSelectListPressed: (WordDetailMeanings) -> Unit
 ) {
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val topBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
@@ -80,6 +84,7 @@ fun WordsPagerDetailContent(
         topBar = {
             WordsDetailTopBar(
                 title = title,
+                isDetail = true,
                 scrollBehavior = topBarScrollBehavior,
                 onNavigateBack = if(isFullPage) onNavigateBack else null,
                 onMenuClick = onTopBarMenuClick,
@@ -122,7 +127,12 @@ fun WordsPagerDetailContent(
                 }
 
                 HorizontalPager(
-                    modifier = Modifier.matchParentSize(),
+                    modifier = Modifier
+                        .matchParentSize()
+                        .semantics {
+                            contentDescription = context.getString(R.string.horizontal_pager)
+                        }
+                    ,
                     state = pagerState,
                     contentPadding = PaddingValues(),
                     key = {index-> index},

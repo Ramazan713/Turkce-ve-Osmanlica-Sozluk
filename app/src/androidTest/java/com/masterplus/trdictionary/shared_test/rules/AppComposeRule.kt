@@ -1,4 +1,4 @@
-package com.masterplus.trdictionary.core.app
+package com.masterplus.trdictionary.shared_test.rules
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.ExperimentalMaterial3Api

@@ -1,4 +1,4 @@
-package com.masterplus.trdictionary.core.app
+package com.masterplus.trdictionary.shared_test.rules
 
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule

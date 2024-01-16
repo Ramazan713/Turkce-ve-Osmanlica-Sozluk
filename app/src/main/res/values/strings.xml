@@ -44,7 +44,8 @@
     <string name="n_menu_item">%1$s menu item</string>
     <string name="dropdown_menu_text">Aşağıya açılan menu</string>
     <string name="n_info">%1$s bilgi</string>
-    <string name="navigator"> </string>
+    <string name="navigator">navigator</string>
+    <string name="navigator_n">%1$s navigator</string>
     <string name="n_savepoint">%1$s kayıt noktası</string>
     <string name="edit_title">Başlık düzenle</string>
     <string name="delete">Sil</string>
@@ -217,4 +218,9 @@
     <string name="password_field_can_not_be_empty">Şifre alanı boş olamaz</string>
     <string name="password_field_must_be_at_least_seven_size">Şifre alanı en az 7 karekter olmalıdır</string>
     <string name="menu_n">%1$s menu</string>
+    <string name="detail">Detay</string>
+    <string name="detail_top_bar">Detail top bar</string>
+    <string name="list_top_bar">List top bar</string>
+    <string name="lazy_vertical_list">vertical items list</string>
+    <string name="horizontal_pager">horizontal page list</string>
 </resources>

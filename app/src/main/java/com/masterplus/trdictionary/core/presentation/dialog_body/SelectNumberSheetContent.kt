@@ -12,6 +12,8 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -45,9 +47,9 @@ fun ShowSelectNumberDialog(
     val context = LocalContext.current
     val focusRequester = remember { FocusRequester() }
 
-    RotatableLaunchEffect {
-        focusRequester.requestFocus()
-    }
+//    RotatableLaunchEffect {
+//        focusRequester.requestFocus()
+//    }
 
     AlertDialog(
         onDismissRequest = onClose,
@@ -89,6 +91,9 @@ fun ShowSelectNumberDialog(
                     .focusRequester(focusRequester)
                     .fillMaxWidth()
                     .padding(vertical = 4.dp)
+                    .semantics {
+                        contentDescription = context.getString(R.string.text_field)
+                    },
             )
         },
         dismissButton = {

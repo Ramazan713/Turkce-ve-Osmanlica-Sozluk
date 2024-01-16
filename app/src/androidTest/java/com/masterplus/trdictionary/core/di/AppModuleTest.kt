@@ -4,38 +4,27 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
-import androidx.datastore.core.DataStoreFactory
-import androidx.datastore.core.ExperimentalMultiProcessDataStore
-import androidx.datastore.core.MultiProcessDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
-import androidx.room.RoomDatabase
-import androidx.sqlite.db.SupportSQLiteDatabase
+import com.masterplus.trdictionary.custom_init.InitRepo
 import com.masterplus.trdictionary.core.data.ConnectivityProviderImpl
 import com.masterplus.trdictionary.core.data.DefaultDispatcherProvider
 import com.masterplus.trdictionary.core.data.local.AppDatabase
 import com.masterplus.trdictionary.core.data.local.TransactionProviderImpl
 import com.masterplus.trdictionary.core.data.preferences.DefaultAppPreferencesImpl
-import com.masterplus.trdictionary.core.data.preferences.SettingsPreferencesImplApp
 import com.masterplus.trdictionary.core.domain.ConnectivityProvider
 import com.masterplus.trdictionary.core.domain.DispatcherProvider
 import com.masterplus.trdictionary.core.domain.TransactionProvider
 import com.masterplus.trdictionary.core.domain.preferences.AppPreferences
 import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferencesApp
-import com.masterplus.trdictionary.core.domain.preferences.model.SettingsData
-import com.masterplus.trdictionary.core.domain.preferences.model.SettingsDataSerializer
 import com.masterplus.trdictionary.core.preferences.SettingsPreferencesFake
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.test.StandardTestDispatcher
-import org.junit.Assert.*
-import java.io.File
 import javax.inject.Singleton
 
 @Module
@@ -94,6 +83,10 @@ object AppModuleTest {
     @Provides
     fun provideTransactionProvider(appDatabase: AppDatabase): TransactionProvider =
         TransactionProviderImpl(appDatabase)
+
+    @Provides
+    @Singleton
+    fun initRepo() = InitRepo()
 
 }
 

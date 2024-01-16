@@ -48,6 +48,7 @@ fun WordsPagerListContent(
         topBar = {
             WordsDetailTopBar(
                 title = title,
+                isDetail = false,
                 scrollBehavior = scrollBehavior,
                 onNavigateBack = onNavigateBack,
                 onMenuClick = onTopBarMenuClick,

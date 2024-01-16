@@ -18,7 +18,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -69,6 +72,7 @@ fun WordListContent(
     onListItemLongClick: (Int, WordDetailMeanings) -> Unit,
     onListItemClick: (Int, WordWithSimilar) -> Unit,
 ) {
+    val context = LocalContext.current
 
     Box (
         modifier = modifier
@@ -102,7 +106,10 @@ fun WordListContent(
                     columns = StaggeredGridCells.Adaptive(350.dp),
                     state = lazyStaggeredState,
                     horizontalArrangement = Arrangement.spacedBy(3.dp),
-                    verticalItemSpacing = 5.dp
+                    verticalItemSpacing = 5.dp,
+                    modifier = Modifier.semantics {
+                        contentDescription = context.getString(R.string.lazy_vertical_list)
+                    }
                 ){
                     items(
                         pagingWords.itemCount,

@@ -58,12 +58,35 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 
+
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @ObsoleteCoroutinesApi
 @ExperimentalFoundationApi
 @ExperimentalMaterial3Api
 @ExperimentalComposeUiApi
 @Composable
 fun MyApp(
+    navHostController: NavHostController = rememberNavController(),
+){
+    val context = LocalContext.current
+    val windowSizeClass = calculateWindowSizeClass(activity = context as Activity).widthSizeClass
+    val displayFeatures = calculateDisplayFeatures(activity = context)
+
+    MyApp(
+        navHostController = navHostController,
+        windowSizeClass = windowSizeClass,
+        displayFeatures = displayFeatures
+    )
+}
+
+@ObsoleteCoroutinesApi
+@ExperimentalFoundationApi
+@ExperimentalMaterial3Api
+@ExperimentalComposeUiApi
+@Composable
+fun MyApp(
+    windowSizeClass: WindowWidthSizeClass,
+    displayFeatures: List<DisplayFeature>,
     navHostController: NavHostController = rememberNavController(),
     adViewModel: AdViewModel = hiltViewModel(),
     premiumViewModel: PremiumViewModel = hiltViewModel(),
@@ -114,22 +137,23 @@ fun MyApp(
         navigationVisible = navigationVisible,
         navHostController = navHostController,
         currentNavRoute = currentNavRoute,
-        premiumViewModel = premiumViewModel
+        premiumViewModel = premiumViewModel,
+        windowSizeClass = windowSizeClass,
+        displayFeatures = displayFeatures
     )
 }
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun MyApp(
+    windowSizeClass: WindowWidthSizeClass,
+    displayFeatures: List<DisplayFeature>,
     navigationVisible: Boolean,
     navHostController: NavHostController,
     currentNavRoute: AppNavRoute?,
     premiumViewModel: PremiumViewModel,
 ) {
     val context = LocalContext.current
-
-    val windowSizeClass = calculateWindowSizeClass(activity = context as Activity).widthSizeClass
-    val displayFeatures = calculateDisplayFeatures(activity = context)
 
     val foldingFeature = displayFeatures.filterIsInstance<FoldingFeature>().firstOrNull()
     val devicePosture = DevicePosture.from(foldingFeature)

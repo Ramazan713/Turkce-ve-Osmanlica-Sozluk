@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -17,6 +19,7 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.android.billingclient.api.*
+import com.google.accompanist.adaptive.calculateDisplayFeatures
 import com.google.android.gms.ads.*
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ConfigUpdate
@@ -35,7 +38,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
-@OptIn(ObsoleteCoroutinesApi::class)
+@OptIn(ObsoleteCoroutinesApi::class, ExperimentalMaterial3WindowSizeClassApi::class)
 @ExperimentalComposeUiApi
 @ExperimentalMaterial3Api
 @ExperimentalFoundationApi
@@ -54,13 +57,17 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val navController = rememberNavController()
+            val windowSizeClass = calculateWindowSizeClass(activity = this).widthSizeClass
+            val displayFeatures = calculateDisplayFeatures(activity = this)
 
             TRDictionaryTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                 ) {
                     MyApp(
-                        navController,
+                        windowSizeClass = windowSizeClass,
+                        displayFeatures = displayFeatures,
+                        navHostController = navController,
                     )
                 }
             }

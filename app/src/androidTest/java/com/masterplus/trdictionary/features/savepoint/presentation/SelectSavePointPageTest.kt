@@ -10,14 +10,11 @@ import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import com.masterplus.trdictionary.HiltBaseClassForTest
+import com.masterplus.trdictionary.shared_test.HiltBaseClassForTest
 import com.masterplus.trdictionary.MainActivity
-import com.masterplus.trdictionary.core.app.AppRobot
-import com.masterplus.trdictionary.core.domain.constants.K
-import com.masterplus.trdictionary.core.domain.enums.CategoryEnum
+import com.masterplus.trdictionary.shared_test.robots.AppRobot
 import com.masterplus.trdictionary.core.domain.enums.SavePointDestination
 import com.masterplus.trdictionary.core.domain.enums.SavePointType
-import com.masterplus.trdictionary.core.domain.enums.SubCategoryEnum
 import com.masterplus.trdictionary.core.domain.model.SavePoint
 import com.masterplus.trdictionary.core.domain.repo.SavePointRepo
 import com.masterplus.trdictionary.core.utils.sample_data.savePoint

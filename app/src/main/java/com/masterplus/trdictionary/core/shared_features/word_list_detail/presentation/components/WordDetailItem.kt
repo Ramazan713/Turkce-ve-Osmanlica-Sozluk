@@ -87,7 +87,7 @@ fun WordDetailItem(
 
                 AdaptiveSelectSheetMenu(
                     state = selectSheetState,
-                    items = ShareItemEnum.values().toList(),
+                    items = ShareItemEnum.entries,
                 )
             }
 

@@ -4,7 +4,7 @@ import android.app.Application
 import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.isEqualTo
-import com.masterplus.trdictionary.HiltBaseClassForTest
+import com.masterplus.trdictionary.shared_test.HiltBaseClassForTest
 import com.masterplus.trdictionary.core.domain.enums.CategoryEnum
 import com.masterplus.trdictionary.core.domain.enums.SavePointDestination
 import com.masterplus.trdictionary.core.domain.enums.SavePointType

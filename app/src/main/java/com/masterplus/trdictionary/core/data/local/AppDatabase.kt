@@ -60,4 +60,6 @@ abstract class AppDatabase: RoomDatabase() {
 
     abstract fun localBackupDao(): LocalBackupDao
 
+    abstract fun wordsTestDao(): TestWordsDao
+
 }

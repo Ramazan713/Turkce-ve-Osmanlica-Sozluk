@@ -1,15 +1,18 @@
-package com.masterplus.trdictionary.core.app
+package com.masterplus.trdictionary.shared_test.robots
 
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
+import androidx.window.layout.DisplayFeature
 import com.masterplus.trdictionary.features.app.domain.model.AppNavRoute
 import com.masterplus.trdictionary.features.app.presentation.MyApp
+import com.masterplus.trdictionary.shared_test.rules.AppComposeRule
+import com.masterplus.trdictionary.shared_test.utils.AsyncTimer
 import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.runBlocking
 
@@ -18,6 +21,8 @@ import kotlinx.coroutines.runBlocking
 )
 class AppRobot(
     private val composeRule: AppComposeRule,
+    private val windowWidthSizeClass: WindowWidthSizeClass = WindowWidthSizeClass.Compact,
+    private val displayFeatures: List<DisplayFeature> = listOf()
 )  {
     private lateinit var navController: NavHostController
 
@@ -48,6 +53,15 @@ class AppRobot(
         }
     }
 
+    fun asyncWait(delay: Long = 1000): AppRobot {
+        AsyncTimer.start (delay)
+        composeRule.waitUntil (
+            condition = { AsyncTimer.expired},
+            timeoutMillis = delay + 1000
+        )
+        return this
+    }
+
     fun navigateTo(appNavRoute: AppNavRoute, popUp: Boolean = true){
         runBlocking<Unit> {
             composeRule.awaitIdle()
@@ -63,10 +77,13 @@ class AppRobot(
         }
     }
 
+
     private fun initPage(){
-        composeRule.activity.setContent {
+        composeRule.setContent {
             MyApp(
-                navHostController = navController
+                navHostController = navController,
+                displayFeatures = displayFeatures,
+                windowSizeClass = windowWidthSizeClass
             )
         }
     }
