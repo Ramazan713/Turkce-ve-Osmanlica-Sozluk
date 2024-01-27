@@ -218,7 +218,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
     testImplementation("app.cash.turbine:turbine:0.7.0")
     androidTestImplementation("com.willowtreeapps.assertk:assertk:0.26.1")
-    androidTestImplementation("io.mockk:mockk:1.12.5")
+    androidTestImplementation("io.mockk:mockk-android:1.12.5")
 }
 
 

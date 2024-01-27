@@ -1,5 +1,6 @@
 package com.masterplus.trdictionary.shared_test.robots
 
+import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
@@ -79,7 +80,7 @@ class AppRobot(
 
 
     private fun initPage(){
-        composeRule.setContent {
+        composeRule.activity.setContent {
             MyApp(
                 navHostController = navController,
                 displayFeatures = displayFeatures,
