@@ -36,13 +36,13 @@ import com.masterplus.trdictionary.features.settings.presentation.components.Tex
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun ShowCloudSelectBackup(
+fun ShowCloudSelectBackupDia(
     onClosed: ()->Unit,
     selectBackupViewModel: CloudSelectBackupViewModel = hiltViewModel(),
     windowWidthSizeClass: WindowWidthSizeClass
 ){
     val state by selectBackupViewModel.state.collectAsStateWithLifecycle()
-    ShowCloudSelectBackup(
+    ShowCloudSelectBackupDia(
         onClosed = onClosed,
         state = state,
         onEvent = selectBackupViewModel::onEvent,
@@ -54,7 +54,7 @@ fun ShowCloudSelectBackup(
     ExperimentalComposeUiApi::class
 )
 @Composable
-fun ShowCloudSelectBackup(
+fun ShowCloudSelectBackupDia(
     onClosed: () -> Unit,
     state: SelectBackupState,
     onEvent: (SelectBackupEvent) -> Unit,
@@ -137,7 +137,10 @@ fun ShowCloudSelectBackup(
                 }
             }
 
-            GetButtons(onEvent = onEvent)
+            GetButtons(
+                onEvent = onEvent,
+                selectedItem = state.selectedItem
+            )
         }
     }
 
@@ -191,6 +194,7 @@ private fun GetRefreshInfo(
 @Composable
 private fun GetButtons(
     onEvent: (SelectBackupEvent) -> Unit,
+    selectedItem: BackupMeta?
 ){
     Row(
         modifier = Modifier
@@ -199,6 +203,7 @@ private fun GetButtons(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Button(
+            enabled = selectedItem != null,
             onClick = {
                 onEvent(
                     SelectBackupEvent.ShowDialog(
@@ -213,6 +218,7 @@ private fun GetButtons(
         }
 
         Button(
+            enabled = selectedItem != null,
             onClick = {
                 onEvent(
                     SelectBackupEvent.ShowDialog(
@@ -264,7 +270,7 @@ fun ShowDialog(
 @Preview(showBackground = true)
 @Composable
 fun ShowCloudSelectBackupPreview() {
-    ShowCloudSelectBackup(
+    ShowCloudSelectBackupDia(
         onClosed = {},
         onEvent = {},
         windowWidthSizeClass = WindowWidthSizeClass.Expanded,
@@ -282,7 +288,7 @@ fun ShowCloudSelectBackupPreview() {
 @Preview(showBackground = true)
 @Composable
 fun ShowCloudSelectBackupPreview2() {
-    ShowCloudSelectBackup(
+    ShowCloudSelectBackupDia(
         onClosed = {},
         onEvent = {},
         windowWidthSizeClass = WindowWidthSizeClass.Expanded,

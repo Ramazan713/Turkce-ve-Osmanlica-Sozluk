@@ -23,7 +23,7 @@ import com.masterplus.trdictionary.core.presentation.dialog_body.CustomDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.LoadingDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDialog
 import com.masterplus.trdictionary.core.presentation.utils.ShowLifecycleToastMessage
-import com.masterplus.trdictionary.core.shared_features.auth_and_backup.presentation.backup_select.ShowCloudSelectBackup
+import com.masterplus.trdictionary.core.shared_features.auth_and_backup.presentation.backup_select.ShowCloudSelectBackupDia
 import com.masterplus.trdictionary.features.settings.presentation.components.TextIcon
 
 
@@ -118,7 +118,7 @@ fun ShowCloudSetting(
     if(state.isLoading){
         LoadingDialog()
     }else if(isVisibleSelectBackupDialog){
-        ShowCloudSelectBackup(
+        ShowCloudSelectBackupDia(
             onClosed = { isVisibleSelectBackupDialog = false},
             windowWidthSizeClass = windowWidthSizeClass
         )

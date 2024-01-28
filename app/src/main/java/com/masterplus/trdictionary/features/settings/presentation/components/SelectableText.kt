@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,7 +30,10 @@ fun SelectableText(
         modifier = modifier
             .clip(shape)
             .background(backgroundColor)
-            .clickable { onClick() }
+            .selectable(
+                selected = isSelected,
+                onClick = onClick,
+            )
             .border(1.dp, MaterialTheme.colorScheme.outlineVariant,shape)
             .padding(vertical = 13.dp, horizontal = 13.dp)
 

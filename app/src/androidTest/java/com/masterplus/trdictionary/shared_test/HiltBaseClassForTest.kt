@@ -24,6 +24,9 @@ abstract class HiltBaseClassForTest {
     @Inject
     lateinit var db: AppDatabase
 
+    @Inject
+    lateinit var appPreferences: AppPreferences
+
     protected lateinit var context: Context
 
     @Before
@@ -31,6 +34,9 @@ abstract class HiltBaseClassForTest {
         context = ApplicationProvider.getApplicationContext()
         hiltRule.inject()
         db.clearAllTables()
+        runBlocking {
+            appPreferences.clear()
+        }
     }
 
     @After

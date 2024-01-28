@@ -19,7 +19,7 @@ import com.masterplus.trdictionary.core.shared_features.premium.ShowPremiumProdu
 import com.masterplus.trdictionary.features.settings.presentation.SettingDialogEvent
 import com.masterplus.trdictionary.features.settings.presentation.SettingEvent
 import com.masterplus.trdictionary.features.settings.presentation.SettingState
-import com.masterplus.trdictionary.core.shared_features.auth_and_backup.presentation.backup_select.ShowCloudSelectBackup
+import com.masterplus.trdictionary.core.shared_features.auth_and_backup.presentation.backup_select.ShowCloudSelectBackupDia
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.presentation.cloud_backup_settings.ShowCloudSetting
 
 
@@ -72,7 +72,7 @@ fun ShowSettingDialog(
             )
         }
         is SettingDialogEvent.ShowSelectBackup -> {
-            ShowCloudSelectBackup(
+            ShowCloudSelectBackupDia(
                 onClosed = ::close,
                 windowWidthSizeClass = windowWidthSizeClass
             )
