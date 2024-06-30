@@ -8,16 +8,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MenuOpen
+import androidx.compose.material.icons.automirrored.filled.MenuOpen
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.NavigationDrawerItemDefaults
-import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
-import androidx.compose.material3.NavigationRailItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -55,7 +51,7 @@ fun AppModalDrawerNavigationBar(
             NavigationRailItem(
                 selected = false,
                 onClick = onDrawerMenuClick,
-                icon = { Icon(imageVector = Icons.Default.MenuOpen, contentDescription = "Menu") },
+                icon = { Icon(imageVector = Icons.AutoMirrored.Filled.MenuOpen, contentDescription = "Menu") },
             )
         }
 

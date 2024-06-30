@@ -2,7 +2,6 @@ package com.masterplus.trdictionary.features.home.di
 
 import android.app.Application
 import androidx.datastore.core.DataStore
-import androidx.datastore.core.ExperimentalMultiProcessDataStore
 import androidx.datastore.core.MultiProcessDataStoreFactory
 import com.masterplus.trdictionary.core.data.local.AppDatabase
 import com.masterplus.trdictionary.features.home.data.manager.ShortInfoManagerImpl
@@ -30,7 +29,6 @@ object HomeModule {
         ShortInfoRepoImpl(db.shortInfoDao())
 
 
-    @OptIn(ExperimentalMultiProcessDataStore::class)
     @Provides
     @Singleton
     fun provideShortInfoDataStore(application: Application): DataStore<ShortInfoPreferenceData> =

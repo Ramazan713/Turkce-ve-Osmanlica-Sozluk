@@ -1,11 +1,6 @@
 package com.masterplus.trdictionary.core.di
 
-import android.app.Application
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
-import com.masterplus.trdictionary.BuildConfig
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.manager.AuthManagerImpl
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.data.repo.FirebaseAuthRepo
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.manager.AuthManager

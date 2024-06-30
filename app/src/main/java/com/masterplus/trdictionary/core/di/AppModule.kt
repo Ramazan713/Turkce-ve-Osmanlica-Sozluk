@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
-import androidx.datastore.core.ExperimentalMultiProcessDataStore
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
@@ -81,7 +80,6 @@ object AppModule {
     fun provideCoroutineScope(provider: DispatcherProvider) = CoroutineScope( provider.io + SupervisorJob())
 
 
-    @OptIn(ExperimentalMultiProcessDataStore::class)
     @Provides
     @Singleton
     fun provideSettingsDataStore(application: Application) =

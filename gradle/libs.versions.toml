@@ -1,49 +1,48 @@
 [versions]
-agp = "8.1.1"
-kotlin = "1.9.10"
-googleKsp = "1.9.10-1.0.13"
+agp = "8.1.4"
+kotlin = "2.0.0"
+googleKsp = "2.0.0-1.0.21"
 accompanistAdaptive = "0.27.0"
-activityCompose = "1.8.0"
+activityCompose = "1.9.0"
 assertk = "0.26.1"
-billingVersion = "6.0.1"
-coilCompose = "2.4.0"
-composeBom = "2023.10.01"
+coilCompose = "2.6.0"
+composeBom = "2024.06.00"
 converterGson = "2.9.0"
-coreKtx = "1.12.0"
+coreKtx = "1.13.1"
 coreSplashscreen = "1.0.1"
-datastoreCoreAndroid = "1.1.0-alpha06"
-datastore = "1.0.0"
-espressoCore = "3.5.1"
-firebaseBom = "32.6.0"
-glance = "1.0.0"
+datastore = "1.1.1"
+espressoCore = "3.6.1"
+firebaseBom = "33.1.1"
+glance = "1.1.0"
 gson = "2.10.1"
-hilt = "2.48.1"
-googleServices = "4.4.0"
-firebaseCrashlyticsGradle = "2.9.9"
+hilt = "2.51.1"
+googleServices = "4.4.2"
+firebaseCrashlyticsGradle = "3.0.2"
 firebasePrefPlugin = "1.4.2"
-hiltNavigationCompose = "1.1.0"
+hiltNavigationCompose = "1.2.0"
 junit = "4.13.2"
 junitJupiter = "5.10.0"
-junitVersion = "1.1.5"
+junitVersion = "1.2.1"
 androidJunit5 = "1.10.0.0"
 kotlinxCoroutinesTest = "1.7.1"
-kotlinxSerializationJson = "1.6.0"
-lifecycle = "2.6.2"
-material3 = "1.2.0-alpha10"
-exoplayer3 = "1.1.1"
+kotlinxSerializationJson = "1.6.3"
+lifecycle = "2.8.2"
+material3 = "1.2.1"
+exoplayer3 = "1.3.1"
 mockk = "1.12.5"
 mockkAndroid = "1.12.5"
 mockwebserver = "4.11.0"
-navigationTesting = "2.7.6"
-navVersion = "2.7.5"
-paging = "3.2.1"
-playServicesAds = "22.5.0"
-playServicesAuth = "20.7.0"
+navigationTesting = "2.7.7"
+navVersion = "2.7.7"
+paging = "3.3.0"
+billingVersion = "7.0.0"
+playServicesAds = "23.2.0"
+playServicesAuth = "21.2.0"
 retrofit = "2.9.0"
 review = "2.0.1"
-room = "2.6.0"
+room = "2.6.1"
 turbine = "0.7.0"
-uiautomator = "2.2.0"
+uiautomator = "2.3.0"
 
 [libraries]
 activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
@@ -117,7 +116,7 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 androidx-glance-appwidget = { module = "androidx.glance:glance-appwidget", version.ref = "glance" }
 androidx-glance-material3 = { module = "androidx.glance:glance-material3", version.ref = "glance" }
 
-androidx-datastore-core-android = { module = "androidx.datastore:datastore-core-android", version.ref = "datastoreCoreAndroid" }
+androidx-datastore-core-android = { module = "androidx.datastore:datastore-core-android", version.ref = "datastore" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 
 accompanist-adaptive = { module = "com.google.accompanist:accompanist-adaptive", version.ref = "accompanistAdaptive" }
@@ -137,6 +136,7 @@ mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockkAndroid
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "googleKsp" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
@@ -146,6 +146,7 @@ firebase-crashlytics-gradle = { id = "com.google.firebase.crashlytics", version.
 firebase-perf-plugin = { id = "com.google.firebase.firebase-perf", version.ref = "firebasePrefPlugin" }
 android-junit5 = { id = "de.mannodermaus.android-junit5", version.ref = "androidJunit5" }
 room = { id = "androidx.room", version.ref = "room" }
+
 
 [bundles]
 firebase = [
