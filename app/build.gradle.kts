@@ -2,16 +2,16 @@ import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("com.google.dagger.hilt.android")
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
-    id("com.google.firebase.firebase-perf")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.google.devtools.ksp)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.google.google.services)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.firebase.crashlytics.gradle)
+    alias(libs.plugins.firebase.perf.plugin)
+    alias(libs.plugins.android.junit5)
     id("kotlin-parcelize")
-    id("com.google.devtools.ksp")
-    id("org.jetbrains.kotlin.plugin.serialization")
-    id("de.mannodermaus.android-junit5") version "1.10.0.0"
 }
 
 val keystorePropertiesFile = rootProject.file("keystore.properties")
@@ -118,107 +118,100 @@ android {
     }
 }
 
-
-
-
-private val roomVersion = "2.6.0"
-private val navVersion = "2.7.5"
-private val billingVersion = "6.0.1"
-
 dependencies {
-    implementation(platform("androidx.compose:compose-bom:2023.10.01"))
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3:1.2.0-alpha10")
-    implementation("androidx.compose.material:material-icons-core")
-    implementation("androidx.compose.material:material-icons-extended")
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
-    implementation("androidx.activity:activity-compose:1.8.0")
-    implementation("androidx.test.uiautomator:uiautomator:2.2.0")
-    implementation("androidx.navigation:navigation-testing:2.7.6")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2023.10.01"))
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    implementation(platform(libs.compose.bom))
+    implementation(libs.compose.ui)
+    implementation(libs.compose.ui.tooling.preview)
+    implementation(libs.material3)
+    implementation(libs.material.icons.core)
+    implementation(libs.material.icons.extended)
+    implementation(libs.core.ktx)
+    implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.activity.compose)
+    implementation(libs.androidx.uiautomator)
+    implementation(libs.androidx.navigation.testing)
+    testImplementation(libs.junit)
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation("com.google.dagger:hilt-android:2.48.1")
-    ksp("com.google.dagger:hilt-compiler:2.48.1")
-    testImplementation("com.google.dagger:hilt-android-testing:2.48.1")
-    kspTest("com.google.dagger:hilt-android-compiler:2.48.1")
-    androidTestImplementation("com.google.dagger:hilt-android-testing:2.48.1")
-    kspAndroidTest("com.google.dagger:hilt-android-compiler:2.48.1")
-
-
-    implementation("androidx.room:room-runtime:$roomVersion")
-    implementation("androidx.room:room-ktx:$roomVersion")
-    annotationProcessor("androidx.room:room-compiler:$roomVersion")
-    ksp("androidx.room:room-compiler:$roomVersion")
-    testImplementation("androidx.room:room-testing:$roomVersion")
-    implementation("androidx.room:room-paging:$roomVersion")
-
-    implementation("androidx.paging:paging-runtime-ktx:3.2.1")
-    implementation("androidx.paging:paging-compose:3.2.1")
-
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    testImplementation(libs.hilt.android.testing)
+    kspTest(libs.hilt.android.compiler)
+    androidTestImplementation(libs.dagger.hilt.android.testing)
+    kspAndroidTest(libs.dagger.hilt.android.compiler)
 
 
-    implementation("androidx.navigation:navigation-compose:$navVersion")
-    implementation("com.google.code.gson:gson:2.10.1")
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    annotationProcessor(libs.room.compiler)
+    ksp(libs.androidx.room.compiler)
+    testImplementation(libs.room.testing)
+    implementation(libs.androidx.room.paging)
 
-    implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
-    implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.android.gms:play-services-auth:20.7.0")
-    implementation("com.google.firebase:firebase-storage")
-    implementation("com.google.firebase:firebase-crashlytics")
-    implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.firebase:firebase-config")
-    implementation("com.google.firebase:firebase-perf")
+    implementation(libs.androidx.paging.runtime.ktx)
+    implementation(libs.androidx.paging.compose)
 
-    implementation("io.coil-kt:coil-compose:2.4.0")
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-
-    implementation("androidx.media3:media3-exoplayer:1.1.1")
-    implementation("androidx.media3:media3-exoplayer-dash:1.1.1")
-    implementation("androidx.media3:media3-ui:1.1.1")
-
-    implementation("com.google.android.gms:play-services-ads:22.5.0")
-    implementation("com.android.billingclient:billing-ktx:$billingVersion")
-
-    implementation("androidx.core:core-splashscreen:1.0.1")
-
-    implementation("com.google.android.play:review:2.0.1")
-    implementation("com.google.android.play:review-ktx:2.0.1")
-
-    implementation("com.google.accompanist:accompanist-adaptive:0.27.0")
-    implementation("androidx.compose.material3:material3-window-size-class")
-
-    implementation("androidx.glance:glance-appwidget:1.0.0")
-    implementation("androidx.glance:glance-material3:1.0.0")
-
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
-    implementation("androidx.datastore:datastore:1.0.0")
-    implementation("androidx.datastore:datastore-core-android:1.1.0-alpha06")
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
 
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.0")
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.gson)
 
-    testImplementation("com.willowtreeapps.assertk:assertk:0.26.1")
-    testImplementation("io.mockk:mockk:1.12.5")
-    testImplementation("com.squareup.okhttp3:mockwebserver:4.11.0")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
-    testImplementation("app.cash.turbine:turbine:0.7.0")
-    androidTestImplementation("com.willowtreeapps.assertk:assertk:0.26.1")
-    androidTestImplementation("io.mockk:mockk-android:1.12.5")
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+    implementation(libs.play.services.auth)
+    implementation(libs.firebase.storage)
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.config)
+    implementation(libs.firebase.perf)
+
+    implementation(libs.coil.compose)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.exoplayer.dash)
+    implementation(libs.androidx.media3.ui)
+
+    implementation(libs.play.services.ads)
+    implementation(libs.billing.ktx)
+
+    implementation(libs.androidx.core.splashscreen)
+
+    implementation(libs.review)
+    implementation(libs.review.ktx)
+
+    implementation(libs.accompanist.adaptive)
+    implementation(libs.androidx.material3.window.size)
+
+    implementation(libs.androidx.glance.appwidget)
+    implementation(libs.androidx.glance.material3)
+
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.datastore)
+    implementation(libs.androidx.datastore.core.android)
+
+
+    testImplementation(libs.junit.jupiter.api)
+    testRuntimeOnly(libs.junit.jupiter.engine)
+    testImplementation(libs.junit.jupiter.params)
+
+    testImplementation(libs.assertk)
+    testImplementation(libs.mockk)
+    testImplementation(libs.mockwebserver)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
+    androidTestImplementation(libs.assertk)
+    androidTestImplementation(libs.mockk.android)
 }
 
 
