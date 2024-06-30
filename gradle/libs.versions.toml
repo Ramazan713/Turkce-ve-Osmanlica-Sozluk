@@ -15,7 +15,7 @@ datastoreCoreAndroid = "1.1.0-alpha06"
 datastore = "1.0.0"
 espressoCore = "3.5.1"
 firebaseBom = "32.6.0"
-glanceAppwidget = "1.0.0"
+glance = "1.0.0"
 gson = "2.10.1"
 hilt = "2.48.1"
 googleServices = "4.4.0"
@@ -36,7 +36,7 @@ mockkAndroid = "1.12.5"
 mockwebserver = "4.11.0"
 navigationTesting = "2.7.6"
 navVersion = "2.7.5"
-pagingRuntimeKtx = "3.2.1"
+paging = "3.2.1"
 playServicesAds = "22.5.0"
 playServicesAuth = "20.7.0"
 retrofit = "2.9.0"
@@ -64,8 +64,7 @@ material-icons-core = { module = "androidx.compose.material:material-icons-core"
 material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
 
-dagger-hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
-dagger-hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hilt" }
+hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hilt" }
@@ -74,17 +73,18 @@ hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hil
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+room-paging = { module = "androidx.room:room-paging", version.ref = "room" }
 room-testing = { module = "androidx.room:room-testing", version.ref = "room" }
-androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
-androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "room" }
 
-androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "pagingRuntimeKtx" }
-androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "pagingRuntimeKtx" }
+paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging" }
+paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "paging" }
 
-androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
-androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
-androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+lifecycle-viewmodel-savedstate = { module = "androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "lifecycle" }
+lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
 lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
+lifecycle-compiler = { module = "androidx.lifecycle:lifecycle-compiler", version.ref = "lifecycle" }
 
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navVersion" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
@@ -114,10 +114,9 @@ review = { module = "com.google.android.play:review", version.ref = "review" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 
-androidx-glance-appwidget = { module = "androidx.glance:glance-appwidget", version.ref = "glanceAppwidget" }
-androidx-glance-material3 = { module = "androidx.glance:glance-material3", version.ref = "glanceAppwidget" }
+androidx-glance-appwidget = { module = "androidx.glance:glance-appwidget", version.ref = "glance" }
+androidx-glance-material3 = { module = "androidx.glance:glance-material3", version.ref = "glance" }
 
-androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "datastore" }
 androidx-datastore-core-android = { module = "androidx.datastore:datastore-core-android", version.ref = "datastoreCoreAndroid" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 
@@ -146,4 +145,32 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 firebase-crashlytics-gradle = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlyticsGradle" }
 firebase-perf-plugin = { id = "com.google.firebase.firebase-perf", version.ref = "firebasePrefPlugin" }
 android-junit5 = { id = "de.mannodermaus.android-junit5", version.ref = "androidJunit5" }
+room = { id = "androidx.room", version.ref = "room" }
 
+[bundles]
+firebase = [
+    "firebase-auth", "firebase-analytics", "firebase-config", "firebase-crashlytics",
+    "firebase-perf", "firebase-storage"
+]
+room = [
+    "room-paging", "room-runtime", "room-ktx"
+]
+paging = [
+    "paging-compose", "paging-runtime-ktx"
+]
+lifecycle = [
+    "lifecycle-runtime-compose", "lifecycle-runtime-ktx", "lifecycle-viewmodel-compose",
+    "lifecycle-viewmodel-ktx", "lifecycle-viewmodel-savedstate"
+]
+media3-exoplayer = [
+    "androidx-media3-exoplayer", "androidx-media3-exoplayer-dash", "androidx-media3-ui"
+]
+play-review = [
+    "review", "review-ktx"
+]
+glance = [
+    "androidx-glance-appwidget", "androidx-glance-material3"
+]
+datastore = [
+    "androidx-datastore-core-android", "androidx-datastore-preferences"
+]
