@@ -61,25 +61,25 @@ android {
 
     buildTypes {
         release {
+            manifestPlaceholders += mapOf("appNameSuffix" to "")
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs.getByName("release")
-            manifestPlaceholders += mapOf("appNameSuffix" to "")
 
             buildConfigField("String","AUTH_CLIENT_ID","\"${keystoreProperties["releaseAuthClientId"]}\"")
             buildConfigField("String","INTERSTITIAL_AD_ID","\"${keystoreProperties["interstitialAdId"]}\"")
         }
 
         debug {
-            applicationIdSuffix = ".debug"
             manifestPlaceholders += mapOf("appNameSuffix" to "_debug")
+            applicationIdSuffix = ".debug"
             buildConfigField("String","AUTH_CLIENT_ID","\"${keystoreProperties["debugAuthClientId"]}\"")
         }
 
         create("staging"){
+            manifestPlaceholders += mapOf("appNameSuffix" to "_staging")
             signingConfig = signingConfigs.getByName("staging")
             applicationIdSuffix = ".staging"
-            manifestPlaceholders += mapOf("appNameSuffix" to "_staging")
             buildConfigField("String","AUTH_CLIENT_ID","\"${keystoreProperties["stagingAuthClientId"]}\"")
         }
     }
@@ -92,6 +92,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.3"
