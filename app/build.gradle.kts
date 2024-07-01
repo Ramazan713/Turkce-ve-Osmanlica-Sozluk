@@ -173,9 +173,9 @@ dependencies {
     implementation(libs.bundles.glance)
     implementation(libs.bundles.paging)
     implementation(libs.bundles.datastore)
+    implementation(libs.bundles.credentials)
 
     implementation(libs.play.services.ads)
-    implementation(libs.play.services.auth)
     implementation(libs.billing.ktx)
     implementation(libs.bundles.play.review)
 
