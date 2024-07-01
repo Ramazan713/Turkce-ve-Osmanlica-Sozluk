@@ -20,6 +20,9 @@ interface AuthManager {
 
     suspend fun signOut(makeBackupBeforeSignOut: Boolean): Resource<UiText>
 
+    suspend fun deleteUser(credential: AuthCredential): Resource<UiText>
+
+
     fun currentUser(): User?
 
     suspend fun hasBackupMetas(): Boolean

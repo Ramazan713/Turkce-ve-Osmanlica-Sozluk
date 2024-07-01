@@ -15,17 +15,14 @@ fun AuthDialogEventHandler(
     dialogEvent: AuthDialogEvent,
     onEvent: (AuthEvent) -> Unit
 ) {
-
-    fun close(){
-        onEvent(AuthEvent.ShowDialog(null))
-    }
-
     when(dialogEvent){
         is AuthDialogEvent.EnterEmailForResetPassword -> {
             ShowGetTextDialog(
                 title = stringResource(id = R.string.enter_email_for_reset_password),
                 onApproved = dialogEvent.onResult,
-                onClosed = ::close,
+                onClosed = {
+                    onEvent(AuthEvent.ShowDialog(null))
+                },
                 content = dialogEvent.email,
             )
         }

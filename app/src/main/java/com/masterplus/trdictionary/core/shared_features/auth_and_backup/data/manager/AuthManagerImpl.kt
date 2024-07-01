@@ -53,6 +53,14 @@ class AuthManagerImpl @Inject constructor(
         }
     }
 
+    override suspend fun deleteUser(credential: AuthCredential): Resource<UiText> {
+        return authRepo.deleteUser(credential).also { result->
+            if(result.isSuccess){
+                backupManager.deleteAllLocalUserData(true)
+            }
+        }
+    }
+
     override fun currentUser(): User? {
         return authRepo.currentUser()
     }

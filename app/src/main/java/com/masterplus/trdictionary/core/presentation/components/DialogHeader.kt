@@ -1,6 +1,7 @@
 package com.masterplus.trdictionary.core.presentation.components
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -17,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.masterplus.trdictionary.R
 
@@ -55,6 +57,7 @@ fun DialogHeader(
     iconVector: ImageVector = Icons.Default.Close,
     contentDescription: String? = stringResource(id = R.string.close),
     tooltip: String? = contentDescription,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 48.dp),
 ) {
     Box(
         modifier = modifier.fillMaxWidth(),
@@ -64,7 +67,7 @@ fun DialogHeader(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 48.dp),
+                .padding(contentPadding),
             contentAlignment = Alignment.Center
         ) {
             content()

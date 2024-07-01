@@ -1,16 +1,16 @@
 package com.masterplus.trdictionary.core.shared_features.auth_and_backup.presentation.auth
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.EmailAuthProvider
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferencesApp
+import com.masterplus.trdictionary.core.domain.utils.Resource
+import com.masterplus.trdictionary.core.domain.utils.UiText
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.manager.AuthManager
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.manager.BackupManager
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.use_cases.ValidateEmailUseCase
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.use_cases.ValidatePasswordUseCase
-import com.masterplus.trdictionary.core.domain.utils.Resource
-import com.masterplus.trdictionary.core.domain.utils.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -103,6 +103,26 @@ class AuthViewModel @Inject constructor(
             }
             AuthEvent.ClearUiAction -> {
                 _state.update { it.copy(uiAction = null) }
+            }
+
+            is AuthEvent.DeleteUserWithCredentials -> {
+                viewModelScope.launch {
+                    _state.update { it.copy(isLoading = true) }
+                    val result = authManager.deleteUser(event.credential)
+                    _state.update { it.copy(
+                        isLoading = false,
+                        message = result.getSuccessData ?: result.getError
+                    ) }
+                }
+            }
+
+            is AuthEvent.DeleteUserWithEmail -> {
+                viewModelScope.launch {
+                    validateFields(email = event.email,password = event.password){
+                        val credential = EmailAuthProvider.getCredential(event.email, event.password)
+                        onEvent(AuthEvent.DeleteUserWithCredentials(credential))
+                    }
+                }
             }
         }
     }

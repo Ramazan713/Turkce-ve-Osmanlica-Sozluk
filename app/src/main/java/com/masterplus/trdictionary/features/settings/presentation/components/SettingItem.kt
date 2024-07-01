@@ -6,12 +6,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
@@ -23,6 +25,7 @@ fun SettingItem(
     modifier: Modifier = Modifier,
     subTitle: String? = null,
     @DrawableRes resourceId: Int? = null,
+    color: Color? = null
 ){
     val shape = MaterialTheme.shapes.small
     Row(
@@ -36,10 +39,11 @@ fun SettingItem(
         verticalAlignment = Alignment.CenterVertically
     ){
         resourceId?.let {
-            Icon(painter = painterResource(it),
+            Icon(
+                painter = painterResource(it),
                 contentDescription = null,
-                modifier = Modifier.padding(start = 7.dp)
-
+                modifier = Modifier.padding(start = 7.dp),
+                tint = color ?: LocalContentColor.current
             )
         }
         Column(
@@ -48,12 +52,16 @@ fun SettingItem(
         ) {
             Text(
                 title,
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = color ?: MaterialTheme.typography.titleMedium.color
+                )
             )
             subTitle?.let {
                 Text(
                     it,
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = color ?: MaterialTheme.typography.bodyMedium.color
+                    )
                 )
             }
         }

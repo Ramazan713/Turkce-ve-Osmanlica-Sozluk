@@ -24,5 +24,11 @@ sealed class SettingDialogEvent {
 
     data object AskDeleteAllData: SettingDialogEvent()
 
+    data object AskDeleteAccount: SettingDialogEvent()
+
+    data object AskReAuthenticateForDeletingAccount: SettingDialogEvent()
+
+    data object ShowReAuthenticateForDeletingAccount: SettingDialogEvent()
+
     data class ShowPremiumDia(val premiumProduct: PremiumProduct?): SettingDialogEvent()
 }

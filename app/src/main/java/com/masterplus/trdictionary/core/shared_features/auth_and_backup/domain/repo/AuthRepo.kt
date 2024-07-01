@@ -24,4 +24,6 @@ interface AuthRepo {
     fun currentUser(): User?
 
     suspend fun logOut(): Resource<UiText>
+
+    suspend fun deleteUser(credential: AuthCredential): Resource<UiText>
 }

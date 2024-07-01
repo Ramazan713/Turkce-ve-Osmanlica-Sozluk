@@ -16,25 +16,15 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.flowWithLifecycle
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.utils.UiText
 import com.masterplus.trdictionary.core.presentation.components.DefaultToolTip
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.map
 
 
 class DefaultSnackBar{
@@ -121,20 +111,13 @@ fun ShowLifecycleSnackBarMessage(
     snackBar: DefaultSnackBar,
     onDismiss: () -> Unit
 ) {
-    val currentOnDismiss by rememberUpdatedState(newValue = onDismiss)
-    val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
-
-    LaunchedEffect(message,lifecycleOwner.lifecycle){
-        snapshotFlow { message }
-            .filterNotNull()
-            .distinctUntilChanged()
-            .flowWithLifecycle(lifecycleOwner.lifecycle)
-            .map { it.asString(context) }
-            .collectLatest { message->
-                snackBar.showMessage(message, withDismissAction = true)
-                currentOnDismiss()
-            }
-    }
+    EventHandler(
+        event = message,
+        onEvent = { uiText ->
+            snackBar.showMessage(uiText.asString(context), withDismissAction = true)
+            onDismiss()
+        }
+    )
 }
 

@@ -102,7 +102,8 @@ fun SettingsPage(
             item {
                 AdvancedSettingSection(
                     state = state,
-                    onEvent = onEvent
+                    onEvent = onEvent,
+                    user = authState.user
                 )
             }
             item {

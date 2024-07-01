@@ -223,4 +223,10 @@
     <string name="list_top_bar">List top bar</string>
     <string name="lazy_vertical_list">vertical items list</string>
     <string name="horizontal_pager">horizontal page list</string>
+    <string name="delete_account_success">Hesap başarıyla silindi</string>
+    <string name="delete_account">Hesabı sil</string>
+    <string name="login_again_to_continue">Devam etmek için tekrar giriş yap</string>
+    <string name="q_delete_account">Hesabı silmek istediğinize emin misiniz?</string>
+    <string name="delete_account_warning">Hesabı sildiğinizde tüm verinize tekrar ulaşamayacaksınız</string>
+    <string name="or">veya</string>
 </resources>

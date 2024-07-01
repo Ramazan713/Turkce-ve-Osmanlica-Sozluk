@@ -27,4 +27,7 @@ sealed interface AuthEvent {
 
     data object DeleteAllUserData: AuthEvent
 
+    data class DeleteUserWithCredentials(val credential: AuthCredential): AuthEvent
+
+    data class DeleteUserWithEmail(val email: String, val password: String): AuthEvent
 }
