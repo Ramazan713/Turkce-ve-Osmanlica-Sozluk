@@ -16,6 +16,7 @@ class AuthRepoFake: AuthRepo {
     var returnedSignInWithCredentialResponse: Resource<User> = Resource.Success(user())
     var returnedResetPasswordResponse: Resource<UiText> = Resource.Success(UiText.Text(""))
     var returnedLogOutResponse: Resource<UiText> = Resource.Success(UiText.Text(""))
+    var returnedDeleteUserResponse: Resource<UiText> = Resource.Success(UiText.Text(""))
 
     var currentUser: User? = user()
     var returnedUserFlow: Flow<User?> = flow {  }
@@ -52,6 +53,10 @@ class AuthRepoFake: AuthRepo {
 
     override suspend fun logOut(): Resource<UiText> {
         return returnedLogOutResponse
+    }
+
+    override suspend fun deleteUser(credential: AuthCredential): Resource<UiText> {
+        return returnedDeleteUserResponse
     }
 
 }

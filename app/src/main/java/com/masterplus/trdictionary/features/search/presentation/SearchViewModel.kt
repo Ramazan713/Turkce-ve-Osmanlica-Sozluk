@@ -1,10 +1,5 @@
 package com.masterplus.trdictionary.features.search.presentation
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,21 +13,22 @@ import com.masterplus.trdictionary.features.search.presentation.navigation.Searc
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val historyRepo: HistoryRepo,
@@ -45,37 +41,22 @@ class SearchViewModel @Inject constructor(
 
     private val searchArgs = SearchArgs(savedStateHandle)
 
-    private var historyLoadJob: Job? = null
-    private var searchResultJob: Job? = null
-
-    private val queryFilterFlow = MutableSharedFlow<String>(replay = 1)
-    private val categoryFilterFlow = MutableSharedFlow<CategoryEnum>(replay = 1)
-    private val searchKindFilterFlow = MutableSharedFlow<SearchKind>(replay = 1)
-
-    private val combinedDataFlow = combine(
-        queryFilterFlow,
-        searchKindFilterFlow,
-        categoryFilterFlow
-    ){ query, searchKindFilter, categoryFilter->
-        SearchModel(query,categoryFilter,searchKindFilter)
-    }
-
-
     init {
-        setDefaultFilter()
-        listenSearchResult()
-        listenHistories()
-
+        init()
     }
 
     fun onEvent(event: SearchEvent){
         when(event){
             is SearchEvent.ClearQuery -> {
-                search("")
+                _state.update { it.copyAndSetQuery("")}
+            }
+            is SearchEvent.SetTextFieldValue -> {
+                _state.update { it.copy(
+                    queryFieldValue = event.textFieldValue
+                ) }
             }
             is SearchEvent.SearchQuery -> {
-                event.queryText?.let { search(it) }
-                event.query?.let { search(it) }
+                _state.update { it.copyAndSetQuery(event.query)}
             }
             is SearchEvent.DeleteHistory -> {
                 viewModelScope.launch {
@@ -83,7 +64,7 @@ class SearchViewModel @Inject constructor(
                 }
             }
             is SearchEvent.HistoryClicked -> {
-                search(event.history.content)
+                _state.update { it.copyAndSetQuery(event.history.content) }
             }
             is SearchEvent.ChangeFilter -> {
                 changeFilter(event)
@@ -103,6 +84,37 @@ class SearchViewModel @Inject constructor(
                     selectedWordId = event.wordWithSimilar.wordId
                 )}
             }
+
+            is SearchEvent.HasFocusChange -> {
+                _state.update { it.copy(
+                    hasSearchFocus = event.hasFocus
+                ) }
+            }
+
+            SearchEvent.ClearUIEvent -> {
+                _state.update { it.copy(
+                    searchUiEvent = null
+                ) }
+            }
+            SearchEvent.InsertHistoryBeforeNavigateUp -> {
+                viewModelScope.launch {
+                    val query = getValidQueryOrNull(_state.value.query)
+                    if(query != null){
+                        historyRepo.insertOrUpdateHistory(query)
+                    }
+                    _state.update { it.copy(
+                        searchUiEvent = SearchUiEvent.NavigateBack
+                    ) }
+                }
+            }
+
+            is SearchEvent.AddHistory -> {
+                viewModelScope.launch {
+                    if(isValidQuery(event.historyName)){
+                        historyRepo.insertOrUpdateHistory(event.historyName)
+                    }
+                }
+            }
         }
     }
 
@@ -113,22 +125,6 @@ class SearchViewModel @Inject constructor(
                 defaultCategory = cat,
                 categoryFilter = cat
             )}
-            searchKindFilterFlow.emit(_state.value.searchKind)
-            categoryFilterFlow.emit(cat)
-        }
-    }
-
-    private fun search(query: String){
-        search(_state.value.query.copy(text = query, selection = TextRange(query.length)))
-    }
-
-    private fun search(query: TextFieldValue){
-        viewModelScope.launch {
-            val text = query.text
-            if(text != _state.value.query.text){
-                _state.update { it.copy(query = query, selectedWordId = null)}
-                queryFilterFlow.emit(text)
-            }
         }
     }
 
@@ -141,25 +137,81 @@ class SearchViewModel @Inject constructor(
                     badge = findBadgeCount(event.catEnum,event.searchKind)
                 )
             }
-            searchKindFilterFlow.emit(event.searchKind)
-            categoryFilterFlow.emit(event.catEnum)
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
-    private fun listenSearchResult(){
 
-        searchResultJob?.cancel()
-        searchResultJob = viewModelScope.launch{
-            combinedDataFlow
+    private fun init(){
+        setDefaultFilter()
+        listenHistories()
+        listenSearchResult()
+        listenAddingHistory()
+        listenSelectedWordNullable()
+    }
+
+    private fun listenHistories(){
+        historyRepo
+            .getFlowHistories()
+            .onEach { histories ->
+                _state.update { it.copy(histories = histories)}
+            }
+            .launchIn(viewModelScope)
+    }
+
+
+    private fun listenSelectedWordNullable(){
+        _state
+            .map { it.query }
             .distinctUntilChanged()
+            .onEach {
+                _state.update {
+                    it.copy(selectedWordId = null)
+                }
+            }
+            .launchIn(viewModelScope)
+    }
+
+    private fun listenAddingHistory(){
+        _state
+            .map {
+                if(it.hasSearchFocus) return@map ""
+                it.query
+            }
+            .debounce(K.searchDelayMilliSeconds)
+            .distinctUntilChanged()
+            .filter { query ->
+                isValidQuery(query)
+            }
+            .onEach {query ->
+                historyRepo.insertOrUpdateHistory(query)
+            }
+            .launchIn(viewModelScope)
+
+        _state
+            .map { it.query }
+            .debounce(K.searchLastDelayMilliSeconds)
+            .distinctUntilChanged()
+            .filter { query ->
+                isValidQuery(query)
+            }
+            .onEach { query ->
+                historyRepo.insertOrUpdateHistory(query)
+            }
+            .launchIn(viewModelScope)
+    }
+
+    private fun listenSearchResult(){
+        _state
+            .distinctUntilChanged { old, new ->
+                old.equalSearchValue(new)
+            }
             .debounce {
                 _state.update { it.copy(searchLoading = true)}
                 K.searchDelayMilliSeconds
-            }.flatMapLatest { searchModel->
-
-                val query = searchModel.query
-                if (query.isBlank() || query.length == 1){
+            }
+            .flatMapLatest { searchState ->
+                val query = searchState.query
+                if (!isValidQuery(query)){
                     _state.update { state->
                         state.copy(
                             wordResults = emptyList(),
@@ -169,10 +221,10 @@ class SearchViewModel @Inject constructor(
                     }
                     return@flatMapLatest emptyFlow<List<WordWithSimilar>>()
                 }
-                historyRepo.insertOrUpdateHistory(query)
 
-                searchRepo.search(query,searchModel.categoryEnum,searchModel.searchKind)
-            }.collectLatest { searchResults->
+                searchRepo.search(query,searchState.categoryFilter,searchState.searchKind)
+            }
+            .onEach { searchResults ->
                 _state.update { state->
                     state.copy(
                         wordResults = searchResults,
@@ -180,17 +232,7 @@ class SearchViewModel @Inject constructor(
                         selectedWordId = state.selectedWordId ?: searchResults.firstOrNull()?.wordId
                     )
                 }
-            }
-        }
-    }
-
-    private fun listenHistories(){
-        historyLoadJob?.cancel()
-        historyLoadJob = viewModelScope.launch {
-            historyRepo.getFlowHistories().collectLatest { histories->
-                _state.update { it.copy(histories = histories)}
-            }
-        }
+            }.launchIn(viewModelScope)
     }
 
 
@@ -204,12 +246,17 @@ class SearchViewModel @Inject constructor(
             badgeCount += 1
         }
 
-        return if(badgeCount!=0) badgeCount.toString() else null
+        return if(badgeCount != 0) badgeCount.toString() else null
     }
-}
 
-private data class SearchModel(
-    val query: String,
-    val categoryEnum: CategoryEnum,
-    val searchKind: SearchKind
-)
+
+    private fun getValidQueryOrNull(query: String): String? {
+        if(isValidQuery(query)) return query
+        return null
+    }
+
+    private fun isValidQuery(query: String): Boolean{
+        return query.isNotBlank() && query.length > 1
+    }
+
+}

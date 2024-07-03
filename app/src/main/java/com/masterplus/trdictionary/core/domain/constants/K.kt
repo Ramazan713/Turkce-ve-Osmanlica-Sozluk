@@ -14,6 +14,8 @@ object K {
     const val wordListJumpThreshold = 100
 
     const val searchDelayMilliSeconds = 500L
+    const val searchLastDelayMilliSeconds = 5000L
+
 
     val twoPaneSpace = 24.dp
 

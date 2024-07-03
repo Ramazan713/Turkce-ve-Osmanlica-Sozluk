@@ -2,8 +2,10 @@ package com.masterplus.trdictionary.features.search.presentation.contents
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -30,6 +32,7 @@ import com.masterplus.trdictionary.core.presentation.utils.SampleDatas
 @Composable
 fun SearchDetailPageContent(
     onNavigateBack: (()->Unit)?,
+    isLoading: Boolean,
     audioState: AudioState,
     onEvent: (WordsListDetailEvent) -> Unit,
     wordWithSimilar: WordWithSimilar?,
@@ -50,16 +53,21 @@ fun SearchDetailPageContent(
             modifier = Modifier
                 .padding(padding)
                 .nestedScroll(scrollBehavior.nestedScrollConnection)
-                .fillMaxWidth()
+                .fillMaxSize()
         ) {
-            if(wordWithSimilar == null){
-                Box(modifier = Modifier.fillMaxWidth(),
+            if(wordWithSimilar == null || isLoading){
+                Box(modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ){
-                    Text(
-                        text = stringResource(id = R.string.no_result),
-                        style = MaterialTheme.typography.bodyLarge,
-                    )
+                    if(isLoading){
+                        CircularProgressIndicator()
+                    }else{
+                        Text(
+                            text = stringResource(id = R.string.no_result),
+                            style = MaterialTheme.typography.bodyLarge,
+                        )
+                    }
+
                 }
             }else{
                 WordsDetailAdaptiveContent(
@@ -84,6 +92,8 @@ fun SearchDetailContentPreview() {
         onNavigateBack = {},
         audioState = AudioState(),
         windowWidthSizeClass = WindowWidthSizeClass.Compact,
-        wordWithSimilar = SampleDatas.generateWordWithSimilar()
+        wordWithSimilar = SampleDatas.generateWordWithSimilar(),
+//        wordWithSimilar = null,
+        isLoading = false
     )
 }

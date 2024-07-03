@@ -19,6 +19,7 @@ class AuthManagerFake: AuthManager{
     var returnedSignInWithCredentialResponse: Resource<UiText> = Resource.Success(uiText)
     var returnedResetPasswordResponse: Resource<UiText> = Resource.Success(uiText)
     var returnedSignOutResponse: Resource<UiText> = Resource.Success(uiText)
+    var returnedDeleteUserResponse: Resource<UiText> = Resource.Success(uiText)
 
     var returnedHasBackupMetas: Boolean = true
     var returnedCurrentUser: User? = user()
@@ -46,6 +47,10 @@ class AuthManagerFake: AuthManager{
 
     override suspend fun signOut(makeBackupBeforeSignOut: Boolean): Resource<UiText> {
         return returnedSignOutResponse
+    }
+
+    override suspend fun deleteUser(credential: AuthCredential): Resource<UiText> {
+        return returnedDeleteUserResponse
     }
 
     override fun currentUser(): User? {

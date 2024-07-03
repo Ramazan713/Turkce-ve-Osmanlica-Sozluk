@@ -15,7 +15,6 @@ import assertk.assertions.isNotNull
 import assertk.assertions.isNull
 import assertk.assertions.isTrue
 import com.masterplus.trdictionary.core.domain.enums.CategoryEnum
-import com.masterplus.trdictionary.core.domain.enums.DictType
 import com.masterplus.trdictionary.core.domain.enums.WordType
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.model.WordWithSimilar
 import com.masterplus.trdictionary.core.utils.extensions.toDictType
@@ -30,17 +29,11 @@ import com.masterplus.trdictionary.core.utils.sample_data.wordWithSimilar
 import com.masterplus.trdictionary.features.search.data.HistoryRepoFake
 import com.masterplus.trdictionary.features.search.data.SearchRepoFake
 import com.masterplus.trdictionary.features.search.domain.constants.SearchKind
-import com.masterplus.trdictionary.features.search.domain.repo.HistoryRepo
-import com.masterplus.trdictionary.features.search.domain.repo.SearchRepo
 import com.masterplus.trdictionary.utils.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
-import org.junit.experimental.categories.Category
-import org.junit.jupiter.api.Assertions.*
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -66,7 +59,7 @@ class SearchViewModelTest {
     @Test
     fun clearQuery_whenEvent_clearQuery() = runTest {
         val firstQuery = "query 1"
-        viewModel.onEvent(SearchEvent.SearchQuery(queryText = firstQuery))
+        viewModel.onEvent(SearchEvent.SearchQuery(query = firstQuery))
 
         advanceUntilIdle()
         val firstState = viewModel.state.first()
@@ -76,44 +69,27 @@ class SearchViewModelTest {
         advanceUntilIdle()
         val lastState = viewModel.state.first()
 
-        assertThat(firstState.query.text).isEqualTo(firstQuery)
-        assertThat(lastState.query.text).isEmpty()
-    }
-
-    @Test
-    fun searchQuery_whenQueryIsSet_shouldBeQueryInStateAndSelectedWordIdSetNull() = runTest {
-        val query = "query 1"
-        viewModel.onEvent(SearchEvent.ShowDetail(wordWithSimilar = wordWithSimilar()))
-        advanceUntilIdle()
-        val firstState = viewModel.state.first()
-
-        viewModel.onEvent(SearchEvent.SearchQuery(queryText = query))
-        advanceUntilIdle()
-        val lastState = viewModel.state.first()
-
-        assertThat(firstState.query.text).isEmpty()
-        assertThat(firstState.selectedWordId).isNotNull()
-        assertThat(lastState.query.text).isEqualTo(query)
-        assertThat(lastState.selectedWordId).isNull()
+        assertThat(firstState.query).isEqualTo(firstQuery)
+        assertThat(lastState.query).isEmpty()
     }
 
     @Test
     fun searchQuery_whenQueryIsSameWithOldQuery_shouldBeNothingHappened() = runTest {
         val query = "query 1"
-        viewModel.onEvent(SearchEvent.SearchQuery(queryText = query))
+        viewModel.onEvent(SearchEvent.SearchQuery(query))
         advanceUntilIdle()
         viewModel.onEvent(SearchEvent.ShowDetail(wordWithSimilar = wordWithSimilar()))
         advanceUntilIdle()
         val firstState = viewModel.state.first()
 
-        viewModel.onEvent(SearchEvent.SearchQuery(queryText = query))
+        viewModel.onEvent(SearchEvent.SearchQuery(query))
         advanceUntilIdle()
         val lastState = viewModel.state.first()
 
         assertThat(firstState.selectedWordId).isNotNull()
         assertThat(lastState.selectedWordId).isNotNull()
-        assertThat(firstState.query.text).isEqualTo(query)
-        assertThat(lastState.query.text).isEqualTo(query)
+        assertThat(firstState.query).isEqualTo(query)
+        assertThat(lastState.query).isEqualTo(query)
     }
 
     @ParameterizedTest
@@ -124,17 +100,17 @@ class SearchViewModelTest {
         "word,false"
     )
     fun searchQuery_whenQueryLenZeroOrOne_shouldBeSearchingCancelled(query: String, isCancelled: Boolean) = runTest {
-        viewModel.onEvent(SearchEvent.SearchQuery(queryText = query))
+        viewModel.onEvent(SearchEvent.SearchQuery(query))
         advanceUntilIdle()
         val lastState = viewModel.state.first()
 
         if(isCancelled){
-            assertThat(lastState.query.text).isEqualTo(query)
+            assertThat(lastState.query).isEqualTo(query)
             assertThat(lastState.searchLoading).isFalse()
             assertThat(lastState.selectedWordId).isNull()
             assertThat(lastState.wordResults).isEmpty()
         }else{
-            assertThat(lastState.query.text).isEqualTo(query)
+            assertThat(lastState.query).isEqualTo(query)
             assertThat(lastState.wordResults).isNotEmpty()
         }
 
@@ -145,7 +121,7 @@ class SearchViewModelTest {
         val query = "query test"
         val firstState = viewModel.state.first()
 
-        viewModel.onEvent(SearchEvent.SearchQuery(queryText = query))
+        viewModel.onEvent(SearchEvent.SearchQuery(query))
         advanceUntilIdle()
         val lastState = viewModel.state.first()
 
@@ -165,14 +141,14 @@ class SearchViewModelTest {
         viewModel.state.test {
             awaitItem() // init state
             val query = "word"
-            viewModel.onEvent(SearchEvent.SearchQuery(queryText = query))
+            viewModel.onEvent(SearchEvent.SearchQuery(query))
             val changedQueryState = awaitItem()
             val loadingState = awaitItem()
             awaitItem() // insert history state
             val finishedState = awaitItem()
 
             assertThat(changedQueryState.searchLoading).isFalse()
-            assertThat(changedQueryState.query.text).isEqualTo(query)
+            assertThat(changedQueryState.query).isEqualTo(query)
             assertThat(loadingState.searchLoading).isTrue()
             assertThat(finishedState.searchLoading).isFalse()
             assertThat(finishedState.wordResults.size).isEqualTo(2)
@@ -196,7 +172,7 @@ class SearchViewModelTest {
         advanceUntilIdle()
         val query = "word"
 
-        viewModel.onEvent(SearchEvent.SearchQuery(queryText = query))
+        viewModel.onEvent(SearchEvent.SearchQuery(query))
         advanceUntilIdle()
         val lastState = viewModel.state.first()
 
@@ -224,7 +200,7 @@ class SearchViewModelTest {
         advanceUntilIdle()
         val query = "word"
 
-        viewModel.onEvent(SearchEvent.SearchQuery(queryText = query))
+        viewModel.onEvent(SearchEvent.SearchQuery(query))
         advanceUntilIdle()
         val lastState = viewModel.state.first()
 
@@ -246,7 +222,7 @@ class SearchViewModelTest {
             )
         }
         val query = "word"
-        viewModel.onEvent(SearchEvent.SearchQuery(queryText = query))
+        viewModel.onEvent(SearchEvent.SearchQuery(query))
         advanceUntilIdle()
         val initState = viewModel.state.first()
 
@@ -270,7 +246,7 @@ class SearchViewModelTest {
         }
 
         val query = "word"
-        viewModel.onEvent(SearchEvent.SearchQuery(queryText = query))
+        viewModel.onEvent(SearchEvent.SearchQuery(query))
         advanceUntilIdle()
         val initState = viewModel.state.first()
 
@@ -396,14 +372,16 @@ class SearchViewModelTest {
         advanceUntilIdle()
         val lastState = viewModel.state.first()
 
-        assertThat(initState.query.text).isEmpty()
-        assertThat(lastState.query.text).isEqualTo(history.content)
+        assertThat(initState.query).isEmpty()
+        assertThat(lastState.query).isEqualTo(history.content)
         assertThat(lastState.wordResults).isNotEmpty()
     }
 
     @Test
     fun hideDetail_whenDetailOpen_shouldBeStateInHide() = runTest {
-        viewModel.onEvent(SearchEvent.ShowDetail(wordWithSimilar()))
+        val word = wordWithSimilar()
+        viewModel.onEvent(SearchEvent.SearchQuery(word.wordDetail.word))
+        viewModel.onEvent(SearchEvent.ShowDetail(word))
         advanceUntilIdle()
         val firstState = viewModel.state.first()
 

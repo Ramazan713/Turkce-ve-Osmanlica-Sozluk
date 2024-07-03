@@ -29,6 +29,19 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="-1962504713">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Resizable_Experimental_API_33" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="-1893190665">
           <value>
             <AndroidTestResultsTableState>
@@ -180,6 +193,20 @@
                   <entry key="Duration" value="90" />
                   <entry key="Pixel_3a_API_33" value="120" />
                   <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="-1325370625">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Resizable_Experimental_API_33" value="120" />
+                  <entry key="Tests" value="360" />
+                  <entry key="Xiaomi Redmi Note 8 Pro" value="120" />
                 </map>
               </option>
             </AndroidTestResultsTableState>

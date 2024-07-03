@@ -1,8 +1,7 @@
 package com.masterplus.trdictionary.features.search.presentation.components
 
-import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -15,13 +14,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.Preview
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.presentation.components.DefaultToolTip
 import com.masterplus.trdictionary.core.presentation.components.RotatableLaunchEffect
@@ -35,24 +35,43 @@ fun SearchField(
     state: SearchState,
     onEvent: (SearchEvent) -> Unit,
     onBackPressed: ( )-> Unit,
+    modifier: Modifier = Modifier
 ) {
     val focusRequester = remember { FocusRequester() }
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     RotatableLaunchEffect {
         focusRequester.requestFocus()
     }
 
+
     TextField(
-        state.query,
+        value = state.queryFieldValue,
         onValueChange = {
-            onEvent(SearchEvent.SearchQuery(it))
+            onEvent(SearchEvent.SetTextFieldValue(it))
         },
-        modifier = Modifier
-            .fillMaxWidth()
-            .focusRequester(focusRequester),
+        modifier = modifier
+            .focusRequester(focusRequester)
+        ,
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Search
+        ),
+        keyboardActions = KeyboardActions(
+            onSearch = {
+                onEvent(SearchEvent.AddHistory(state.query))
+                focusRequester.freeFocus()
+                keyboardController?.hide()
+            }
+        ),
         leadingIcon = {
             DefaultToolTip(tooltip = stringResource(id = R.string.back)) {
-                IconButton(onClick = onBackPressed) {
+                IconButton(onClick = {
+                    if(state.hasSearchFocus){
+                        focusRequester.freeFocus()
+                    }else{
+                        onBackPressed()
+                    }
+                }) {
                     Icon(
                         Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(id = R.string.back)
@@ -64,6 +83,7 @@ fun SearchField(
             Row {
                 DefaultToolTip(tooltip = stringResource(id = R.string.clear_v)) {
                     IconButton(onClick = {
+                        onEvent(SearchEvent.AddHistory(state.query))
                         focusRequester.requestFocus()
                         onEvent(SearchEvent.ClearQuery)
                     }) {
@@ -94,5 +114,17 @@ fun SearchField(
             )
         },
         singleLine = true,
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SearchFieldPreview() {
+    SearchField(
+        state = SearchState(
+
+        ),
+        onEvent = {},
+        onBackPressed = {}
     )
 }

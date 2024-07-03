@@ -1,13 +1,6 @@
 package com.masterplus.trdictionary.features.search.presentation.contents
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.awaitEachGesture
-import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,14 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyGridScope
-import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridScope
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -33,8 +18,6 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -45,11 +28,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.PointerEventPass
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -69,12 +49,13 @@ fun SearchResultPageContent(
     state: SearchState,
     onEvent: (SearchEvent) -> Unit,
     gridState: LazyStaggeredGridState,
+    onFocusChange: (Boolean) -> Unit,
     isFullPage: Boolean
 ) {
 
-    val hasSearchActive by remember(state.query.text) {
+    val hasSearchActive by remember(state.query) {
         derivedStateOf {
-            state.query.text.isNotBlank()
+            state.query.isNotBlank()
         }
     }
 
@@ -90,6 +71,11 @@ fun SearchResultPageContent(
                 state = state,
                 onEvent = onEvent,
                 onBackPressed = onBackPressed,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .onFocusChanged {
+                        onFocusChange(it.isFocused)
+                    }
             )
 
             Box(
@@ -106,6 +92,21 @@ fun SearchResultPageContent(
                             .padding(vertical = 48.dp),
                         state = state
                     )
+                }
+
+                if(!state.searchLoading && !hasSearchActive && state.histories.isEmpty()){
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(vertical = 58.dp)
+                            .zIndex(2f),
+                        contentAlignment = Alignment.Center
+                    ){
+                        Text(
+                            text = stringResource(id = R.string.no_histories),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
                 }
 
                 LazyVerticalStaggeredGrid(
@@ -169,7 +170,7 @@ private fun SearchKeyboard(
                     .padding(vertical = 3.dp)
                     .fillMaxWidth()
             ) {text->
-                onEvent(SearchEvent.SearchQuery(queryText = state.query.text + text))
+                onEvent(SearchEvent.SearchQuery(query = state.query + text))
             }
         }
     }
@@ -232,10 +233,12 @@ fun SearchResultPageContentPreview() {
         onEvent = {},
         onBackPressed = {},
         state = SearchState(
-            query = TextFieldValue("asd"),
             searchLoading = true
         ),
         isFullPage = true,
-        gridState = LazyStaggeredGridState()
+        gridState = LazyStaggeredGridState(),
+        onFocusChange = {
+
+        }
     )
 }

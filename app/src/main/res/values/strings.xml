@@ -229,4 +229,5 @@
     <string name="q_delete_account">Hesabı silmek istediğinize emin misiniz?</string>
     <string name="delete_account_warning">Hesabı sildiğinizde tüm verinize tekrar ulaşamayacaksınız</string>
     <string name="or">veya</string>
+    <string name="no_histories">Geçmiş bulunmamaktadır</string>
 </resources>
