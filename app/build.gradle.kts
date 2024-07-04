@@ -41,6 +41,7 @@ android {
         buildConfigField("String","TTS_CLIENT_ID","\"${keystoreProperties["ttsClientId"]}\"")
         buildConfigField("String","TTS_KEY","\"${keystoreProperties["ttsKey"]}\"")
         buildConfigField("String","INTERSTITIAL_AD_ID","\"${keystoreProperties["interstitialTestAdId"]}\"")
+        buildConfigField("String","DATABASE_PASSPHRASE","\"${keystoreProperties["databasePassphrase"]}\"")
     }
     signingConfigs {
 
@@ -174,6 +175,7 @@ dependencies {
     implementation(libs.bundles.paging)
     implementation(libs.bundles.datastore)
     implementation(libs.bundles.credentials)
+    implementation(libs.bundles.sqlcipher)
 
     implementation(libs.play.services.ads)
     implementation(libs.billing.ktx)

@@ -5,33 +5,37 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
+import androidx.datastore.core.MultiProcessDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.masterplus.trdictionary.BuildConfig
 import com.masterplus.trdictionary.core.data.ConnectivityProviderImpl
+import com.masterplus.trdictionary.core.data.DefaultDispatcherProvider
 import com.masterplus.trdictionary.core.data.local.AppDatabase
 import com.masterplus.trdictionary.core.data.local.TransactionProviderImpl
+import com.masterplus.trdictionary.core.data.local.utils.SQLCipherUtils
+import com.masterplus.trdictionary.core.data.preferences.DefaultAppPreferencesImpl
+import com.masterplus.trdictionary.core.data.preferences.SettingsPreferencesImplApp
 import com.masterplus.trdictionary.core.domain.ConnectivityProvider
+import com.masterplus.trdictionary.core.domain.DispatcherProvider
+import com.masterplus.trdictionary.core.domain.TransactionProvider
 import com.masterplus.trdictionary.core.domain.preferences.AppPreferences
+import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferencesApp
+import com.masterplus.trdictionary.core.domain.preferences.model.SettingsData
+import com.masterplus.trdictionary.core.domain.preferences.model.SettingsDataSerializer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
-import javax.inject.Singleton
-import androidx.datastore.core.MultiProcessDataStoreFactory
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
-import com.masterplus.trdictionary.core.data.DefaultDispatcherProvider
-import com.masterplus.trdictionary.core.data.preferences.DefaultAppPreferencesImpl
-import com.masterplus.trdictionary.core.data.preferences.SettingsPreferencesImplApp
-import com.masterplus.trdictionary.core.domain.DispatcherProvider
-import com.masterplus.trdictionary.core.domain.TransactionProvider
-import com.masterplus.trdictionary.core.domain.preferences.SettingsPreferencesApp
-import com.masterplus.trdictionary.core.domain.preferences.model.SettingsData
-import com.masterplus.trdictionary.core.domain.preferences.model.SettingsDataSerializer
+import net.sqlcipher.database.SQLiteDatabase
+import net.sqlcipher.database.SupportFactory
 import java.io.File
+import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module
@@ -39,13 +43,26 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideDatabase(application: Application) =
-        Room.databaseBuilder(
-            application,
-            AppDatabase::class.java,
-            name = "dictDb.db"
-        )
-            .createFromAsset("dictDb.db")
+    fun provideDatabase(application: Application): AppDatabase{
+        val dbName = "dictDb.db"
+
+        val passphrase: ByteArray = SQLiteDatabase.getBytes(BuildConfig.DATABASE_PASSPHRASE.toCharArray())
+        val factory = SupportFactory(passphrase)
+        val state = SQLCipherUtils.getDatabaseState(application, dbName)
+
+        // Migrate the database to an encrypted one if it is currently unencrypted
+        if (state == SQLCipherUtils.State.UNENCRYPTED) {
+            SQLCipherUtils.migrateToEncryptedDatabase(dbName, application, BuildConfig.DATABASE_PASSPHRASE)
+        }
+
+        return Room
+            .databaseBuilder(
+                application,
+                AppDatabase::class.java,
+                name = dbName
+            )
+            .createFromAsset(dbName)
+            .openHelperFactory(factory)
             .addCallback(object: RoomDatabase.Callback(){
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     super.onCreate(db)
@@ -53,6 +70,7 @@ object AppModule {
                 }
             })
             .build()
+    }
 
 
     @Provides
