@@ -7,6 +7,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
+import com.masterplus.trdictionary.core.presentation.utils.EventHandler
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.presentation.auth.AuthUiAction
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
@@ -17,14 +18,7 @@ fun ListenAuthUiAction(
     onClose: (AuthUiAction) -> Unit
 ) {
     val currentOnClose by rememberUpdatedState(newValue = onClose)
-    val lifecycleOwner = LocalLifecycleOwner.current
-
-    LaunchedEffect(uiAction,lifecycleOwner.lifecycle){
-        snapshotFlow { uiAction }
-            .filterNotNull()
-            .flowWithLifecycle(lifecycleOwner.lifecycle)
-            .collectLatest {
-                currentOnClose(it)
-            }
+    EventHandler(event = uiAction) {
+        currentOnClose(it)
     }
 }

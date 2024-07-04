@@ -16,7 +16,9 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -112,11 +114,12 @@ fun ShowLifecycleSnackBarMessage(
     onDismiss: () -> Unit
 ) {
     val context = LocalContext.current
+    val currentOnDismiss by rememberUpdatedState(newValue = onDismiss)
     EventHandler(
         event = message,
         onEvent = { uiText ->
             snackBar.showMessage(uiText.asString(context), withDismissAction = true)
-            onDismiss()
+            currentOnDismiss()
         }
     )
 }

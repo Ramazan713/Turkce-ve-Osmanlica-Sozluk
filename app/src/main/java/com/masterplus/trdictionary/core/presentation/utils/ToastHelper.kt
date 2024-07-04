@@ -39,17 +39,10 @@ fun ShowLifecycleToastMessage(
 ) {
 
     val currentOnDismiss by rememberUpdatedState(newValue = onDismiss)
-
-    val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
 
-    LaunchedEffect(message,lifecycleOwner.lifecycle){
-        snapshotFlow { message }
-            .filterNotNull()
-            .flowWithLifecycle(lifecycleOwner.lifecycle)
-            .collectLatest {message->
-                ToastHelper.showMessage(message, context)
-                currentOnDismiss()
-            }
+    EventHandler(event = message) { msg->
+        ToastHelper.showMessage(msg, context)
+        currentOnDismiss()
     }
 }

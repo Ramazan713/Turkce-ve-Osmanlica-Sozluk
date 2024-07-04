@@ -1,34 +1,46 @@
 package com.masterplus.trdictionary.features.savepoint.presentation
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.flowWithLifecycle
 import com.masterplus.trdictionary.R
 import com.masterplus.trdictionary.core.domain.enums.CategoryEnum
 import com.masterplus.trdictionary.core.domain.model.SavePoint
-import com.masterplus.trdictionary.core.presentation.selections.CustomDropdownMenu
 import com.masterplus.trdictionary.core.presentation.components.SavePointItem
 import com.masterplus.trdictionary.core.presentation.components.navigation.CustomTopAppBar
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowGetTextDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDialog
+import com.masterplus.trdictionary.core.presentation.selections.CustomDropdownMenu
+import com.masterplus.trdictionary.core.presentation.utils.EventHandler
 import com.masterplus.trdictionary.core.presentation.utils.PreviewDesktop
 import com.masterplus.trdictionary.core.presentation.utils.SampleDatas
 import com.masterplus.trdictionary.core.presentation.utils.ShowLifecycleSnackBarMessage
 import com.masterplus.trdictionary.core.presentation.utils.rememberDefaultSnackBar
-import kotlinx.coroutines.flow.collectLatest
 
 @ExperimentalFoundationApi
 @ExperimentalComposeUiApi
@@ -43,9 +55,6 @@ fun SelectSavePointPage(
     state: SelectSavePointState,
     onEvent: (SelectSavePointEvent) -> Unit
 ){
-
-    val lifecycle = LocalLifecycleOwner.current.lifecycle
-
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
     val currentOnNavigateToList by rememberUpdatedState(onNavigateToList)
@@ -54,28 +63,22 @@ fun SelectSavePointPage(
     val currentOnNavigateToCatAlphabetic by rememberUpdatedState(onNavigateToCatAlphabetic)
     val currentOnEvent by rememberUpdatedState(newValue = onEvent)
 
-    state.uiEvent?.let { uiEvent->
-        LaunchedEffect(uiEvent,lifecycle){
-            snapshotFlow { uiEvent }
-                .flowWithLifecycle(lifecycle)
-                .collectLatest { event->
-                    when(event){
-                        is SelectSavePointUiEvent.NavigateToList -> {
-                            currentOnNavigateToList(event.listId,event.pos)
-                        }
-                        is SelectSavePointUiEvent.NavigateToCategoryAll -> {
-                            currentOnNavigateToCatAll(event.catEnum,event.pos)
-                        }
-                        is SelectSavePointUiEvent.NavigateToCategoryRandom -> {
-                            currentOnNavigateToCatRandom(event.catEnum,event.pos)
-                        }
-                        is SelectSavePointUiEvent.NavigateToCategoryAlphabetic -> {
-                            currentOnNavigateToCatAlphabetic(event.catEnum,event.c,event.pos)
-                        }
-                    }
-                    currentOnEvent(SelectSavePointEvent.ClearUiEvent)
-                }
+    EventHandler(event = state.uiEvent) { event ->
+        when(event){
+            is SelectSavePointUiEvent.NavigateToList -> {
+                currentOnNavigateToList(event.listId,event.pos)
+            }
+            is SelectSavePointUiEvent.NavigateToCategoryAll -> {
+                currentOnNavigateToCatAll(event.catEnum,event.pos)
+            }
+            is SelectSavePointUiEvent.NavigateToCategoryRandom -> {
+                currentOnNavigateToCatRandom(event.catEnum,event.pos)
+            }
+            is SelectSavePointUiEvent.NavigateToCategoryAlphabetic -> {
+                currentOnNavigateToCatAlphabetic(event.catEnum,event.c,event.pos)
+            }
         }
+        currentOnEvent(SelectSavePointEvent.ClearUiEvent)
     }
 
     val defaultSnackBar = rememberDefaultSnackBar()

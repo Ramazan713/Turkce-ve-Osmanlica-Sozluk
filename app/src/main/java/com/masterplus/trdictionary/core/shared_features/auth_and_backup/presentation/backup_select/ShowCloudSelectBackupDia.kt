@@ -29,6 +29,7 @@ import com.masterplus.trdictionary.core.presentation.dialog_body.LoadingDialog
 import com.masterplus.trdictionary.core.presentation.dialog_body.ShowQuestionDialog
 import com.masterplus.trdictionary.core.extensions.refreshApp
 import com.masterplus.trdictionary.core.presentation.components.DialogHeader
+import com.masterplus.trdictionary.core.presentation.utils.EventHandler
 import com.masterplus.trdictionary.core.presentation.utils.ShowLifecycleToastMessage
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.domain.model.BackupMeta
 import com.masterplus.trdictionary.features.settings.presentation.components.SelectableText
@@ -60,26 +61,18 @@ fun ShowCloudSelectBackupDia(
     onEvent: (SelectBackupEvent) -> Unit,
     windowWidthSizeClass: WindowWidthSizeClass
 ){
-
     val context = LocalContext.current
-    val lifecycle = LocalLifecycleOwner.current.lifecycle
 
     ShowLifecycleToastMessage(
         message = state.message,
         onDismiss = { onEvent(SelectBackupEvent.ClearMessage) }
     )
 
-    state.uiEvent?.let { uiEvent->
-        LaunchedEffect(uiEvent,lifecycle){
-            snapshotFlow { uiEvent }
-                .flowWithLifecycle(lifecycle)
-                .collectLatest { event->
-                    when(event){
-                        BackupSelectUiEvent.RestartApp -> {
-                            context.refreshApp()
-                        }
-                    }
-                }
+    EventHandler(event = state.uiEvent) {event->
+        when(event){
+            BackupSelectUiEvent.RestartApp -> {
+                context.refreshApp()
+            }
         }
     }
 

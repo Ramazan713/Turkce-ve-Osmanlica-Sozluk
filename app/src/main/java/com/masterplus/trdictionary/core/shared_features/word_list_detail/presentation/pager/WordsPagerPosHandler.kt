@@ -1,18 +1,13 @@
 package com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.pager
 
 import android.os.Parcelable
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -21,13 +16,13 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
 import com.masterplus.trdictionary.core.domain.enums.ListDetailContentType
 import com.masterplus.trdictionary.core.extensions.isNumberInRange
+import com.masterplus.trdictionary.core.presentation.utils.EventHandler
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.WordsListDetailState
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.parcelize.Parcelize
 
@@ -39,7 +34,6 @@ private suspend fun LazyStaggeredGridState.customScrollToPos(pos: Int, animate: 
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 private suspend fun PagerState.customScrollToPos(pos: Int, animate: Boolean = true){
     if(animate){
         animateScrollToPage(pos)
@@ -51,7 +45,7 @@ private suspend fun PagerState.customScrollToPos(pos: Int, animate: Boolean = tr
 
 
 
-@OptIn(ExperimentalFoundationApi::class, FlowPreview::class)
+@OptIn(FlowPreview::class)
 @Composable
 fun WordsPagerPosHandler(
     state: WordsListDetailState,
@@ -84,38 +78,23 @@ fun WordsPagerPosHandler(
         mutableStateOf(false)
     }
 
-
-    LaunchedEffect(state.selectedDetailPos,lifecycleOwner.lifecycle){
-        snapshotFlow { state.selectedDetailPos }
-            .filterNotNull()
-            .flowWithLifecycle(lifecycleOwner.lifecycle)
-            .collectLatest { pos->
-                currentOnClearPos()
-                currentPagerState.scrollToPage(pos)
-            }
+    EventHandler(event = state.selectedDetailPos) { pos->
+        currentOnClearPos()
+        currentPagerState.scrollToPage(pos)
     }
 
-    LaunchedEffect(state.navigateToListPos,lifecycleOwner.lifecycle){
-        snapshotFlow { state.navigateToListPos }
-            .filterNotNull()
-            .flowWithLifecycle(lifecycleOwner.lifecycle)
-            .collectLatest { pos->
-                currentOnClearPos()
-                currentPos = CurrentPos(pos,false)
-                currentLazyStaggeredState.scrollToItem(pos)
-            }
+    EventHandler(event = state.navigateToListPos) { pos->
+        currentOnClearPos()
+        currentPos = CurrentPos(pos,false)
+        currentLazyStaggeredState.scrollToItem(pos)
     }
 
-    LaunchedEffect(state.navigateToPos,lifecycleOwner.lifecycle){
-        snapshotFlow { state.navigateToPos }
-            .filterNotNull()
-            .flowWithLifecycle(lifecycleOwner.lifecycle)
-            .collectLatest { pos->
-                posForRefresh = true
-                currentPos = CurrentPos(pos)
-                currentOnClearPos()
-            }
+    EventHandler(event = state.navigateToPos) { pos->
+        posForRefresh = true
+        currentPos = CurrentPos(pos)
+        currentOnClearPos()
     }
+
 
     LaunchedEffect(currentPos,lifecycleOwner.lifecycle,listDetailContentType,state.isDetailOpen){
         snapshotFlow { currentPos }

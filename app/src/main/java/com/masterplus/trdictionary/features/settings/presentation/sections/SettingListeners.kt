@@ -3,13 +3,16 @@ package com.masterplus.trdictionary.features.settings.presentation.sections
 import android.app.Activity
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.lifecycle.flowWithLifecycle
-import com.masterplus.trdictionary.core.presentation.utils.ToastHelper
 import com.masterplus.trdictionary.core.extensions.refreshApp
+import com.masterplus.trdictionary.core.presentation.utils.EventHandler
+import com.masterplus.trdictionary.core.presentation.utils.ShowLifecycleToastMessage
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.presentation.auth.AuthEvent
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.presentation.auth.AuthState
 import com.masterplus.trdictionary.core.shared_features.auth_and_backup.presentation.auth.AuthUiAction
@@ -17,12 +20,10 @@ import com.masterplus.trdictionary.core.shared_features.auth_and_backup.presenta
 import com.masterplus.trdictionary.core.shared_features.premium.PremiumEvent
 import com.masterplus.trdictionary.core.shared_features.premium.PremiumState
 import com.masterplus.trdictionary.core.shared_features.premium.PremiumUiEvent
-import com.masterplus.trdictionary.core.presentation.utils.ShowLifecycleToastMessage
 import com.masterplus.trdictionary.features.settings.presentation.SettingDialogEvent
 import com.masterplus.trdictionary.features.settings.presentation.SettingEvent
 import com.masterplus.trdictionary.features.settings.presentation.SettingSheetEvent
 import com.masterplus.trdictionary.features.settings.presentation.SettingState
-import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class,
     ExperimentalFoundationApi::class
@@ -35,27 +36,28 @@ fun SettingListeners(
     onEvent: (SettingEvent)->Unit,
     authState: AuthState,
     onAuthEvent: (AuthEvent) -> Unit
-){
+) {
     val context = LocalContext.current
-    val lifecycle = LocalLifecycleOwner.current.lifecycle
 
-    LaunchedEffect(true){
+    LaunchedEffect(true) {
         onEvent(SettingEvent.LoadData)
     }
 
     ListenAuthUiAction(
         uiAction = authState.uiAction,
-        onClose = {action->
+        onClose = { action ->
             onAuthEvent(AuthEvent.ClearUiAction)
-            when(action){
+            when (action) {
                 AuthUiAction.RefreshApp -> {
                     context.refreshApp()
                 }
+
                 AuthUiAction.ShowBackupSectionForLogin -> {
-                    onEvent(SettingEvent.ShowSheet(
-                        SettingSheetEvent.BackupSectionInit {
-                            onAuthEvent(AuthEvent.LoadLastBackup)
-                        })
+                    onEvent(
+                        SettingEvent.ShowSheet(
+                            SettingSheetEvent.BackupSectionInit {
+                                onAuthEvent(AuthEvent.LoadLastBackup)
+                            })
                     )
                 }
             }
@@ -72,24 +74,22 @@ fun SettingListeners(
         onDismiss = { onAuthEvent(AuthEvent.ClearMessage) }
     )
 
-    LaunchedEffect(premiumState,lifecycle){
-        snapshotFlow { premiumState }
-            .flowWithLifecycle(lifecycle)
-            .collectLatest { preState->
-                when(val uiEvent = preState.uiEvent){
-                    is PremiumUiEvent.LaunchBillingFlow -> {
-                        uiEvent.billingClient.launchBillingFlow(context as Activity,uiEvent.billingFlowParams)
-                        onPremiumEvent(PremiumEvent.ClearUiEvent)
-                    }
-                    null -> {}
-                }
-
-                preState.message?.let { message->
-                    ToastHelper.showMessage(message,context)
-                    onPremiumEvent(PremiumEvent.ClearMessage)
-                }
+    EventHandler(event = premiumState.uiEvent) { uiEvent ->
+        when (uiEvent) {
+            is PremiumUiEvent.LaunchBillingFlow -> {
+                uiEvent.billingClient.launchBillingFlow(
+                    context as Activity,
+                    uiEvent.billingFlowParams
+                )
+                onPremiumEvent(PremiumEvent.ClearUiEvent)
             }
+        }
     }
+
+    ShowLifecycleToastMessage(
+        message = premiumState.message,
+        onDismiss = { onPremiumEvent(PremiumEvent.ClearMessage) }
+    )
 
     val isPremiumPurchased by remember(premiumState.isPremium) {
         derivedStateOf {
@@ -98,14 +98,9 @@ fun SettingListeners(
         }
     }
 
-    LaunchedEffect(isPremiumPurchased,lifecycle){
-        snapshotFlow { isPremiumPurchased }
-            .flowWithLifecycle(lifecycle)
-            .collectLatest {
-                if(it){
-                    onEvent(SettingEvent.ShowDialog(null))
-                }
-            }
+    EventHandler(event = isPremiumPurchased) {
+        if (it) {
+            onEvent(SettingEvent.ShowDialog(null))
+        }
     }
-
 }
