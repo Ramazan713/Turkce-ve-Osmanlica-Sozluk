@@ -28,8 +28,8 @@ android {
         applicationId = "com.masterplus.trdictionary"
         minSdk = 24
         targetSdk = 34
-        versionCode = 5
-        versionName = "1.0"
+        versionCode = 6
+        versionName = "1.1.0"
 
         testInstrumentationRunner = "com.masterplus.trdictionary.shared_test.HiltTestRunner"
 
@@ -62,7 +62,7 @@ android {
     buildTypes {
         release {
             manifestPlaceholders += mapOf("appNameSuffix" to "")
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs.getByName("release")
 

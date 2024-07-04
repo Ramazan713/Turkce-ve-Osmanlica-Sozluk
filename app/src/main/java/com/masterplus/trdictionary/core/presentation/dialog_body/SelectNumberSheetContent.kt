@@ -79,9 +79,9 @@ fun ShowSelectNumberDialog(
                     },
                 ),
                 keyboardOptions = KeyboardOptions(
+                    autoCorrectEnabled = false,
                     keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Done,
-                    autoCorrect = false,
+                    imeAction = ImeAction.Done
                 ),
                 isError = errorState != null,
                 label = { errorState?.let { Text(it) } },

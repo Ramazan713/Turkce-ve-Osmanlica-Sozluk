@@ -102,12 +102,12 @@ fun HomePage(
 
             item {
                 state.proverbShortInfo.let { info->
+                    Modifier
+                        .animateContentSize()
                     ShortInfoGroup(
                         title = stringResource(R.string.one_proverb_c),
                         infoModel = info,
-                        modifier = Modifier
-                            .animateContentSize()
-                            .animateItemPlacement(),
+                        modifier = Modifier.animateItem(),
                         onClicked = {
                             onNavigateToWordDetail(it)
                         },
@@ -125,7 +125,7 @@ fun HomePage(
                         infoModel = info,
                         modifier = Modifier
                             .animateContentSize()
-                            .animateItemPlacement(),
+                            .animateItem(),
                         onClicked = {
                             onNavigateToWordDetail(it)
                         },

@@ -189,7 +189,7 @@ private fun LazyStaggeredGridScope.searchResults(
     ){ i,word->
         SimpleWordItem(
             onClicked = { onClick(word) },
-            modifier = Modifier.animateItemPlacement(),
+            modifier = Modifier.animateItem(),
             word = word,
             meaningMaxLines = 3,
             selected = state.selectedWordId == word.wordId && !isFullPage,

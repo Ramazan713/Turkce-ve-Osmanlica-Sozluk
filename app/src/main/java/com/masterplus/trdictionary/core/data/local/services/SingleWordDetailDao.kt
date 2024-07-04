@@ -2,6 +2,7 @@ package com.masterplus.trdictionary.core.data.local.services
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.RewriteQueriesToDropUnusedColumns
 import androidx.room.Transaction
 import com.masterplus.trdictionary.core.data.local.entities.relations.SimpleWordResultRelation
 import com.masterplus.trdictionary.core.data.local.entities.relations.WordMeaningsRelation
@@ -29,12 +30,14 @@ interface SingleWordDetailDao {
 
 
     @Transaction
+    @RewriteQueriesToDropUnusedColumns
     @Query("""
         select W.* from compoundWords CW, wordDetailsView W where W.id = CW.compoundWordId and CW.wordId = :wordId
     """)
     suspend fun getCompoundSimpleWordsByWordId(wordId: Int): List<SimpleWordResultRelation>
 
     @Transaction
+    @RewriteQueriesToDropUnusedColumns
     @Query("""
         select W.* from wordDetailsView W, proverbIdiomWords PW where W.id = PW.wordId and wordTypeId != 1 and wordId != :wordId 
         and PW.groupId = (select groupId from proverbIdiomWords where wordId = :wordId)

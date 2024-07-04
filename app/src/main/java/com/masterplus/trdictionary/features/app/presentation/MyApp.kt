@@ -1,16 +1,10 @@
 package com.masterplus.trdictionary.features.app.presentation
 
 import android.app.Activity
-import android.util.Log
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandIn
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.PermanentNavigationDrawer
 import androidx.compose.material3.Scaffold
@@ -22,7 +16,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -53,10 +46,6 @@ import com.masterplus.trdictionary.features.app.presentation.in_app.InAppEvent
 import com.masterplus.trdictionary.features.app.presentation.in_app.InAppFeaturesViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.ObsoleteCoroutinesApi
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.filterNotNull
 
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
@@ -143,7 +132,6 @@ fun MyApp(
     )
 }
 
-@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun MyApp(
     windowSizeClass: WindowWidthSizeClass,
@@ -153,8 +141,6 @@ fun MyApp(
     currentNavRoute: AppNavRoute?,
     premiumViewModel: PremiumViewModel,
 ) {
-    val context = LocalContext.current
-
     val foldingFeature = displayFeatures.filterIsInstance<FoldingFeature>().firstOrNull()
     val devicePosture = DevicePosture.from(foldingFeature)
     val navigationType = AppNavigationType.from(windowSizeClass, devicePosture)
