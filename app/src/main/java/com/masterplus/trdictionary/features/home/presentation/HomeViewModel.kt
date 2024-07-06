@@ -1,8 +1,5 @@
 package com.masterplus.trdictionary.features.home.presentation
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.masterplus.trdictionary.features.home.domain.enums.ShortInfoEnum
@@ -12,7 +9,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,7 +25,6 @@ class HomeViewModel @Inject constructor(
 
 
     init {
-        initLoading()
         listenDataChanges()
     }
 
@@ -63,24 +60,21 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-
-    private fun initLoading(){
-        viewModelScope.launch {
-            shortInfoManager.checkDayForRefresh()
-        }
-    }
-
     private fun listenDataChanges(){
         viewModelScope.launch {
-            shortInfoManager.getWordsFlow().collectLatest { result->
-                _state.update { state->
-                    state.copy(
-                        wordShortInfo = state.wordShortInfo.copy(simpleWord = result.word,isLoading = false),
-                        proverbShortInfo = state.proverbShortInfo.copy(simpleWord = result.proverb,isLoading = false),
-                        idiomShortInfo = state.idiomShortInfo.copy(simpleWord = result.idiom,isLoading = false)
-                    )
+            shortInfoManager.checkDayForRefresh()
+            shortInfoManager
+                .getWordsFlow()
+                .onEach { result->
+                    _state.update { state->
+                        state.copy(
+                            wordShortInfo = state.wordShortInfo.copy(simpleWord = result.word,isLoading = false),
+                            proverbShortInfo = state.proverbShortInfo.copy(simpleWord = result.proverb,isLoading = false),
+                            idiomShortInfo = state.idiomShortInfo.copy(simpleWord = result.idiom,isLoading = false)
+                        )
+                    }
                 }
-            }
+                .launchIn(this)
         }
     }
 }
