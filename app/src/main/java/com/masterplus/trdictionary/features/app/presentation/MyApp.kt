@@ -76,6 +76,7 @@ fun MyApp(
 fun MyApp(
     windowSizeClass: WindowWidthSizeClass,
     displayFeatures: List<DisplayFeature>,
+    modifier: Modifier = Modifier,
     navHostController: NavHostController = rememberNavController(),
     adViewModel: AdViewModel = hiltViewModel(),
     premiumViewModel: PremiumViewModel = hiltViewModel(),
@@ -123,6 +124,7 @@ fun MyApp(
     )
 
     MyApp(
+        modifier = modifier,
         navigationVisible = navigationVisible,
         navHostController = navHostController,
         currentNavRoute = currentNavRoute,
@@ -140,6 +142,7 @@ fun MyApp(
     navHostController: NavHostController,
     currentNavRoute: AppNavRoute?,
     premiumViewModel: PremiumViewModel,
+    modifier: Modifier = Modifier,
 ) {
     val foldingFeature = displayFeatures.filterIsInstance<FoldingFeature>().firstOrNull()
     val devicePosture = DevicePosture.from(foldingFeature)
@@ -147,6 +150,7 @@ fun MyApp(
 
 
     PermanentNavigationDrawer(
+        modifier = modifier,
         drawerContent = {
             NavigationAnimatedVisibility(
                 visible = navigationVisible && windowSizeClass == WindowWidthSizeClass.Expanded,

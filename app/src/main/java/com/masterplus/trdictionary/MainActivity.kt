@@ -4,10 +4,19 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -55,14 +64,22 @@ class MainActivity : ComponentActivity() {
             val windowSizeClass = calculateWindowSizeClass(activity = this).widthSizeClass
             val displayFeatures = calculateDisplayFeatures(activity = this)
 
-            TRDictionaryTheme {
-                Surface(
+            TRDictionaryTheme { _, lightColorScheme ->
+                Box(
                     modifier = Modifier.fillMaxSize(),
                 ) {
                     MyApp(
+                        modifier = Modifier
+                            .safeDrawingPadding(),
                         windowSizeClass = windowSizeClass,
                         displayFeatures = displayFeatures,
                         navHostController = navController,
+                    )
+                    Spacer(
+                        modifier = Modifier.windowInsetsTopHeight(WindowInsets.statusBars)
+                            .fillMaxWidth()
+                            .align(Alignment.TopCenter)
+                            .background(lightColorScheme.primary)
                     )
                 }
             }

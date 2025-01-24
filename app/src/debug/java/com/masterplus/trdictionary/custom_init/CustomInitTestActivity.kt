@@ -56,7 +56,7 @@ class CustomInitTestActivity: ComponentActivity() {
             }
 
 
-            TRDictionaryTheme {
+            TRDictionaryTheme { _,_ ->
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                 ) {

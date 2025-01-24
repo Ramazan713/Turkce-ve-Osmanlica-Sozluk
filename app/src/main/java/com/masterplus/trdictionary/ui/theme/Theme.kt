@@ -13,6 +13,8 @@ import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.masterplus.trdictionary.core.domain.model.ThemeModel
+import com.masterplus.trdictionary.core.extensions.getLightThemeScheme
+import com.masterplus.trdictionary.core.extensions.getThemeScheme
 import com.masterplus.trdictionary.core.shared_features.theme.ThemeViewModel
 
 private val LightColors = lightColorScheme(
@@ -85,7 +87,7 @@ private val DarkColors = darkColorScheme(
 fun TRDictionaryTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     themeViewModel: ThemeViewModel = hiltViewModel(),
-    content: @Composable () -> Unit
+    content: @Composable (colorScheme: ColorScheme, lightColorScheme: ColorScheme) -> Unit
 ){
     val state by themeViewModel.state.collectAsStateWithLifecycle()
 
@@ -100,35 +102,28 @@ fun TRDictionaryTheme(
 fun TRDictionaryTheme(
     useDarkTheme: Boolean = false,
     state: ThemeModel,
-    content: @Composable () -> Unit
+    content: @Composable (colorScheme: ColorScheme, lightColorScheme: ColorScheme) -> Unit
 ) {
 
     val context = LocalContext.current
+    val colorScheme = state.getThemeScheme(darkColorScheme = DarkColors, lightColorScheme = LightColors)
+    val lightColorScheme = state.getLightThemeScheme(lightColorScheme = LightColors)
 
-    val colorScheme = if(state.useDynamicColor){
-        if(state.themeEnum.hasDarkTheme(useDarkTheme))
-            dynamicDarkColorScheme(context)
-        else
-            dynamicLightColorScheme(context)
-    }else{
-        if(state.themeEnum.hasDarkTheme(useDarkTheme))
-            DarkColors  else LightColors
-    }
 
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
             (view.context as? Activity)?.window?.let { currentWindow->
-                currentWindow.statusBarColor = colorScheme.primary.toArgb()
-                WindowCompat.getInsetsController(currentWindow, view).isAppearanceLightStatusBars = state.themeEnum.hasDarkTheme(useDarkTheme)
-
+                WindowCompat.getInsetsController(currentWindow, currentWindow.decorView).isAppearanceLightStatusBars = false
             }
         }
     }
 
     MaterialTheme(
         colorScheme = colorScheme,
-        content = content,
+        content = {
+            content(colorScheme, lightColorScheme)
+        },
         shapes = MyShapes,
     )
 }
