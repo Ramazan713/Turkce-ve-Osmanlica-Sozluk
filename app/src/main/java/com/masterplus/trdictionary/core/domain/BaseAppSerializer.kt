@@ -2,7 +2,7 @@ package com.masterplus.trdictionary.core.domain
 
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
-import androidx.datastore.preferences.protobuf.InvalidProtocolBufferException
+import com.google.protobuf.InvalidProtocolBufferException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.KSerializer

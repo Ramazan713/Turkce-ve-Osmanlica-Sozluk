@@ -19,9 +19,9 @@ class GetAppSha1UseCase @Inject constructor(
             application.packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES)
         }
         val firstSignature = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            info.signingInfo.apkContentsSigners.firstOrNull()
+            info.signingInfo?.apkContentsSigners?.firstOrNull()
         } else {
-            info.signatures.firstOrNull()
+            info.signatures?.firstOrNull()
         }
 
         val md = MessageDigest.getInstance("SHA1")

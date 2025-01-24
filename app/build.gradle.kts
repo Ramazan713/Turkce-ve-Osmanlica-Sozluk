@@ -22,14 +22,14 @@ keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 
 android {
     namespace = "com.masterplus.trdictionary"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.masterplus.trdictionary"
         minSdk = 24
-        targetSdk = 34
-        versionCode = 6
-        versionName = "1.1.0"
+        targetSdk = 35
+        versionCode = 7
+        versionName = "1.2.0"
 
         testInstrumentationRunner = "com.masterplus.trdictionary.shared_test.HiltTestRunner"
 
@@ -97,9 +97,6 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.3"
     }
     packaging {
         resources {
