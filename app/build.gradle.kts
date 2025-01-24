@@ -37,26 +37,28 @@ android {
             useSupportLibrary = true
         }
 
-        manifestPlaceholders["adMobAppId"] = "${keystoreProperties["adMobAppId"]}"
-        buildConfigField("String","TTS_CLIENT_ID","\"${keystoreProperties["ttsClientId"]}\"")
-        buildConfigField("String","TTS_KEY","\"${keystoreProperties["ttsKey"]}\"")
-        buildConfigField("String","INTERSTITIAL_AD_ID","\"${keystoreProperties["interstitialTestAdId"]}\"")
-        buildConfigField("String","DATABASE_PASSPHRASE","\"${keystoreProperties["databasePassphrase"]}\"")
+        manifestPlaceholders["crashlyticsCollectionEnabled"] = true
+        manifestPlaceholders["ADMOB_APP_ID"] = "${keystoreProperties["ADMOB_APP_ID"]}"
+        buildConfigField("String","APP_CHECK_DEBUG_TOKEN","\"${keystoreProperties["APP_CHECK_DEBUG_TOKEN"]}\"")
+        buildConfigField("String","TTS_CLIENT_ID","\"${keystoreProperties["TTS_CLIENT_ID"]}\"")
+        buildConfigField("String","TTS_KEY","\"${keystoreProperties["TTS_KEY"]}\"")
+        buildConfigField("String","INTERSTITIAL_AD_ID","\"${keystoreProperties["INTERSTITIAL_TEST_AD_ID"]}\"")
+        buildConfigField("String","DATABASE_PASSPHRASE","\"${keystoreProperties["DATABASE_PASSPHRASE"]}\"")
     }
     signingConfigs {
 
         create("release"){
-            keyAlias = "${keystoreProperties["releaseKeyAlias"]}"
-            keyPassword = "${keystoreProperties["releaseKeyPassword"]}"
-            storeFile = file(keystoreProperties["releaseStoreFile"]!!)
-            storePassword = "${keystoreProperties["releaseStorePassword"]}"
+            keyAlias = "${keystoreProperties["RELEASE_KEY_ALIAS"]}"
+            keyPassword = "${keystoreProperties["RELEASE_KEY_PASSWORD"]}"
+            storeFile = file(keystoreProperties["RELEASE_STORE_FILE"]!!)
+            storePassword = "${keystoreProperties["RELEASE_STORE_PASSWORD"]}"
         }
 
         create("staging"){
-            keyAlias = "${keystoreProperties["stagingKeyAlias"]}"
-            keyPassword = "${keystoreProperties["stagingKeyPassword"]}"
-            storeFile = file(keystoreProperties["stagingStoreFile"]!!)
-            storePassword = "${keystoreProperties["stagingStorePassword"]}"
+            keyAlias = "${keystoreProperties["STAGING_KEY_ALIAS"]}"
+            keyPassword = "${keystoreProperties["STAGING_KEY_PASSWORD"]}"
+            storeFile = file(keystoreProperties["STAGING_STORE_FILE"]!!)
+            storePassword = "${keystoreProperties["STAGING_STORE_PASSWORD"]}"
         }
     }
 
@@ -67,21 +69,22 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs.getByName("release")
 
-            buildConfigField("String","AUTH_CLIENT_ID","\"${keystoreProperties["releaseAuthClientId"]}\"")
-            buildConfigField("String","INTERSTITIAL_AD_ID","\"${keystoreProperties["interstitialAdId"]}\"")
+            buildConfigField("String","AUTH_CLIENT_ID","\"${keystoreProperties["RELEASE_AUTH_CLIENT_ID"]}\"")
+            buildConfigField("String","INTERSTITIAL_AD_ID","\"${keystoreProperties["INTERSTITIAL_AD_ID"]}\"")
         }
 
         debug {
             manifestPlaceholders += mapOf("appNameSuffix" to "_debug")
             applicationIdSuffix = ".debug"
-            buildConfigField("String","AUTH_CLIENT_ID","\"${keystoreProperties["debugAuthClientId"]}\"")
+            manifestPlaceholders["crashlyticsCollectionEnabled"] = false
+            buildConfigField("String","AUTH_CLIENT_ID","\"${keystoreProperties["DEBUG_AUTH_CLIENT_ID"]}\"")
         }
 
         create("staging"){
             manifestPlaceholders += mapOf("appNameSuffix" to "_staging")
             signingConfig = signingConfigs.getByName("staging")
             applicationIdSuffix = ".staging"
-            buildConfigField("String","AUTH_CLIENT_ID","\"${keystoreProperties["stagingAuthClientId"]}\"")
+            buildConfigField("String","AUTH_CLIENT_ID","\"${keystoreProperties["STAGING_AUTH_CLIENT_ID"]}\"")
         }
     }
     compileOptions {

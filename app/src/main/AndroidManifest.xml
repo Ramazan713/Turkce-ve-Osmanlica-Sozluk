@@ -36,8 +36,11 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="${adMobAppId}"/>
+            android:value="${ADMOB_APP_ID}"/>
 
+        <meta-data
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="${crashlyticsCollectionEnabled}" />
 
         <receiver android:name=".features.home.presentation.widget.OneWordWidgetReceiver"
             android:exported="true">

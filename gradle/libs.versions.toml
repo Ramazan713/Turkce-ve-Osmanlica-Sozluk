@@ -98,6 +98,8 @@ firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 firebase-storage = { module = "com.google.firebase:firebase-storage" }
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
+appcheck-playintegrity = { module = "com.google.firebase:firebase-appcheck-playintegrity" }
+appcheck-debug = { module = "com.google.firebase:firebase-appcheck-debug" }
 
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
@@ -160,7 +162,7 @@ room = { id = "androidx.room", version.ref = "room" }
 [bundles]
 firebase = [
     "firebase-auth", "firebase-analytics", "firebase-config", "firebase-crashlytics",
-    "firebase-perf", "firebase-storage"
+    "firebase-perf", "firebase-storage", "appcheck-playintegrity", "appcheck-debug"
 ]
 room = [
     "room-paging", "room-runtime", "room-ktx"
