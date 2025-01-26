@@ -26,9 +26,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.masterplus.trdictionary.R
+import com.masterplus.trdictionary.core.extensions.isEmptyResult
 import com.masterplus.trdictionary.core.extensions.isLoading
 import com.masterplus.trdictionary.core.presentation.components.SimpleWordItem
+import com.masterplus.trdictionary.core.presentation.components.loading.SharedLoadingLazyVerticalGrid
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.model.WordDetailMeanings
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.domain.model.WordWithSimilar
 import com.masterplus.trdictionary.core.shared_features.word_list_detail.presentation.WordsListDetailEvent
@@ -74,64 +78,50 @@ fun WordListContent(
 ) {
     val context = LocalContext.current
 
-    Box (
+    Column(
         modifier = modifier
-    ){
-        if(pagingWords.loadState.isLoading(false)){
-            CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center)
-            )
-        }else if(pagingWords.itemCount == 0){
+    ) {
+        if(listHeaderDescription != null){
             Text(
-                stringResource(R.string.not_fount_any_result),
-                modifier = Modifier.align(Alignment.Center),
-                style = MaterialTheme.typography.bodyLarge,
+                listHeaderDescription,
+                style = MaterialTheme.typography.bodyLarge
+                    .copy(fontWeight = FontWeight.W500),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 3.dp, horizontal = 3.dp),
                 textAlign = TextAlign.Center
             )
-        }else{
-            Column {
-                if(listHeaderDescription != null){
-                    Text(
-                        listHeaderDescription,
-                        style = MaterialTheme.typography.bodyLarge
-                            .copy(fontWeight = FontWeight.W500),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 3.dp, horizontal = 3.dp),
-                        textAlign = TextAlign.Center
-                    )
-                }
+        }
 
-                LazyVerticalStaggeredGrid(
-                    columns = StaggeredGridCells.Adaptive(350.dp),
-                    state = lazyStaggeredState,
-                    horizontalArrangement = Arrangement.spacedBy(3.dp),
-                    verticalItemSpacing = 5.dp,
-                    modifier = Modifier.semantics {
-                        contentDescription = context.getString(R.string.lazy_vertical_list)
-                    }
-                ){
-                    items(
-                        pagingWords.itemCount,
-                        key = { i -> pagingWords[i]?.wordId ?: i },
-                    ){i->
-                        val word = pagingWords[i]
-                        if (word != null){
-                            SimpleWordItem(
-                                order = i + 1,
-                                word = word,
-                                selected = selectedPod == i,
-                                onClicked = {
-                                    onListItemClick(i,word)
-                                },
-                                onLongClicked = {
-                                    onListItemLongClick(i,word.wordDetailMeanings)
-                                }
-                            )
-                        }else{
-                            Text("Loading")
+        SharedLoadingLazyVerticalGrid(
+            state = lazyStaggeredState,
+            isLoading = pagingWords.isLoading(),
+            isEmptyResult = pagingWords.isEmptyResult(),
+            columns = StaggeredGridCells.Adaptive(350.dp),
+            modifier = Modifier.semantics {
+                contentDescription = context.getString(R.string.lazy_vertical_list)
+            }
+        ) {
+            items(
+                pagingWords.itemCount,
+                key = pagingWords.itemKey { it.wordId },
+                contentType = pagingWords.itemContentType {  }
+            ){i->
+                val word = pagingWords[i]
+                if (word != null){
+                    SimpleWordItem(
+                        order = i + 1,
+                        word = word,
+                        selected = selectedPod == i,
+                        onClicked = {
+                            onListItemClick(i,word)
+                        },
+                        onLongClicked = {
+                            onListItemLongClick(i,word.wordDetailMeanings)
                         }
-                    }
+                    )
+                }else{
+                    Text("Loading")
                 }
             }
         }
